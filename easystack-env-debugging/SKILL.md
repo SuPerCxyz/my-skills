@@ -1,6 +1,6 @@
 ---
 name: easystack-env-debugging
-description: "Use when independently investigating live EasyStack Kubernetes/OpenStack incidents, performing authorized runtime changes, or handling high-performance/Alcubierre volume unmap requests through env-access. Offline logs, resource tests, repository CI, and Web E2E are separate optional workflows."
+description: "Use when entering or investigating live BJ-xx or 172.18.0.x environments for Linux system/service issues, OpenStack resource or service failures (nova, cinder, neutron, glance, keystone, placement, ironic, octavia), or Kubernetes component/resource failures (kube-apiserver, kube-controller-manager, kube-scheduler, kubelet, etcd, kube-proxy, ingress). Also use for authorized runtime debugging or high-performance/Alcubierre volume unmap. Do not use for offline-log-only analysis, repository CI, resource tests, or Web E2E."
 ---
 
 # EasyStack Environment Debugging
