@@ -9,7 +9,7 @@
 | [context-efficient-rules](context-efficient-rules/) | 上下文精简 Agent 规则 - 适用于 Claude Code / Router / ccswitch, 通过输出预防、先过滤再截断、渐进读取、搜索限流、MCP/子 Agent 约束和 Autocompact 恢复摘要减少 token 消耗 |
 | [easystack-ci-test](easystack-ci-test/) | EasyStack OpenStack 项目 CI 验证与定向修复, 通过后按授权 amend 当前 Gerrit change 并用指定 remote 续提 |
 | [easystack-cloud-web-e2e](easystack-cloud-web-e2e/) | EasyStack 云平台 Web UI 端到端自动化测试 — 基于 agent-browser 的原子操作库、页面知识库与测试编排规范，支持云主机 / 云硬盘 / 网络等资源操作的 UI 自动化 |
-| [easystack-env-debugging](easystack-env-debugging/) | EasyStack 实时环境排查、授权调试和 Alcubierre 批量解挂, 支持普通跳板与 JumpServer 访问 |
+| [easystack-env-debugging](easystack-env-debugging/) | EasyStack OpenStack/Kubernetes 资源故障调查、授权调试和 Alcubierre 批量解挂, 支持普通跳板与 JumpServer 访问 |
 | [easystack-log-analysis](easystack-log-analysis/) | EasyStack `.eslog` 安全解压、跨服务跨节点根因定位, 与 env-debugging 使用相同的行首安全、无表格报告格式 |
 | [easystack-test-executor](easystack-test-executor/) | EasyStack OpenStack Compute、Storage、Network、Image、Security、Bare Metal 影响分析, 基于 immutable contract 的确定性执行器、worker 日志证据和中文 Markdown 报告 |
 | [feature-parity](feature-parity/) | 参考项目功能对齐与复刻 - 证据驱动的行为分解、parity matrix 追踪、实现门禁与差分验证, 将参考项目视为可执行行为规范复现到目标项目 |

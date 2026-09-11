@@ -1,6 +1,6 @@
 ---
 name: easystack-env-debugging
-description: "Use when entering or investigating live BJ-xx or 172.18.0.x environments for Linux system/service issues, OpenStack resource or service failures (nova, cinder, neutron, glance, keystone, placement, ironic, octavia), or Kubernetes component/resource failures (kube-apiserver, kube-controller-manager, kube-scheduler, kubelet, etcd, kube-proxy, ingress). Also use for authorized runtime debugging or high-performance/Alcubierre volume unmap. Do not use for offline-log-only analysis, repository CI, resource tests, or Web E2E."
+description: "Use for live EasyStack OpenStack/Kubernetes resource investigations, such as instances, volumes, networks, pods, or deployments, and their failures. Also use for authorized runtime debugging or Alcubierre volume unmap. Do not use for generic SSH node checks such as Docker, GPU, or OS status inspection, offline logs, CI, resource tests, or Web E2E."
 ---
 
 # EasyStack Environment Debugging
@@ -16,7 +16,9 @@ OpenStack 服务运行在 Kubernetes 中, 通常通过 Helm 部署在 `openstack
 同等有效的入口: 在线问题调查, 以及用户明确授权后的 runtime code、overlay 或
 patch 路径验证。完整资源功能和回归用例由 `easystack-test-executor` 执行。
 
-当目标是可访问的运行中环境时使用本 skill。仅分析离线 `.eslog` 或已解压的
+当用户调查 EasyStack 的 OpenStack / Kubernetes 资源或资源异常时使用本 skill,
+例如云主机、云硬盘、网络、Pod、Deployment 等。单纯通过 SSH 查看节点上的
+Docker、GPU 或 OS 状态不使用本 skill。仅分析离线 `.eslog` 或已解压的
 `ecs.*` 目录时使用离线日志分析流程。资源功能测试、仓库 CI 和 EasyStack Cloud Web UI
 分别属于独立的测试工作流, 不作为本 skill 的前置条件。用户另行要求结合离线日志或
 UI 证据时, 可读取其已有结果作为补充证据, 但本 skill 仍独立完成在线调查路径。
