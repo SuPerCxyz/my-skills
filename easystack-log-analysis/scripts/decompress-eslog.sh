@@ -4,10 +4,12 @@ set -euo pipefail
 
 usage() {
     cat <<'EOF'
-Usage: decompress-eslog.sh [--input PATH] [--output DIR]
+Usage: bash decompress-eslog.sh [--input PATH] [--output DIR]
 
 PATH may be one .eslog file or a directory containing top-level .eslog files.
-Both paths default to the current working directory.
+With no arguments, input and output default to the current working directory.
+For an explicit input file, output defaults to its parent directory; for an input directory,
+output defaults to that directory. --output overrides the default.
 Every .log.gz file is expanded to a readable .log file. The original .log.gz is kept.
 A cross-platform components/ view is built from copied .log files; larger files win name conflicts.
 EOF
@@ -15,6 +17,7 @@ EOF
 
 input_path=$PWD
 output_dir=$PWD
+output_explicit=false
 password=${ESLOG_PASSWORD:-easycloud}
 while (($#)); do
     case "$1" in
@@ -24,6 +27,7 @@ while (($#)); do
             ;;
         --output)
             output_dir=${2:?missing value for --output}
+            output_explicit=true
             shift 2
             ;;
         -h|--help)
@@ -38,15 +42,12 @@ while (($#)); do
     esac
 done
 
-for command in awk cp df find gzip mktemp mv realpath sort tar unzip wc; do
+for command in awk cp df dirname find gzip mktemp mv realpath sort tar unzip wc; do
     command -v "$command" >/dev/null 2>&1 || {
         echo "Required command not found: $command" >&2
         exit 1
     }
 done
-
-mkdir -p -- "$output_dir"
-output_dir=$(realpath -- "$output_dir")
 
 declare -a bundles=()
 if [[ -f $input_path ]]; then
@@ -55,11 +56,13 @@ if [[ -f $input_path ]]; then
         exit 2
     }
     bundles+=("$(realpath -- "$input_path")")
+    [[ $output_explicit == true ]] || output_dir=$(dirname -- "${bundles[0]}")
 elif [[ -d $input_path ]]; then
     input_path=$(realpath -- "$input_path")
     while IFS= read -r -d '' bundle; do
         bundles+=("$bundle")
     done < <(find "$input_path" -maxdepth 1 -type f -name '*.eslog' -print0 | sort -z)
+    [[ $output_explicit == true ]] || output_dir=$input_path
 else
     echo "Input path does not exist: $input_path" >&2
     exit 2
@@ -69,6 +72,9 @@ fi
     echo "No top-level .eslog files found under: $input_path" >&2
     exit 1
 }
+
+mkdir -p -- "$output_dir"
+output_dir=$(realpath -- "$output_dir")
 
 validate_tar_listing() {
     local archive_label=$1 entry normalized top_level

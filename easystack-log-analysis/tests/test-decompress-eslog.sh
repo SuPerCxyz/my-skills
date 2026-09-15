@@ -42,6 +42,27 @@ cp "$fixture/nested.zip" "$fixture/sample.eslog.0"
   zip -q "$test_root/sample.eslog" sample.eslog.0
 )
 
+default_file_dir=$test_root/default-file
+mkdir "$default_file_dir"
+cp "$test_root/sample.eslog" "$default_file_dir/bundle.eslog"
+(
+  cd "$test_root"
+  bash "$skill_dir/scripts/decompress-eslog.sh" \
+    --input "$default_file_dir/bundle.eslog"
+)
+default_file_result=$default_file_dir/ecs.node-1.20260724.0/openstack/nova/nova-compute.node-1.log
+[[ -f $default_file_result ]] || fail "file input did not default output to its parent directory"
+
+default_dir=$test_root/default-dir
+mkdir "$default_dir"
+cp "$test_root/sample.eslog" "$default_dir/bundle.eslog"
+(
+  cd "$test_root"
+  bash "$skill_dir/scripts/decompress-eslog.sh" --input "$default_dir"
+)
+default_dir_result=$default_dir/ecs.node-1.20260724.0/openstack/nova/nova-compute.node-1.log
+[[ -f $default_dir_result ]] || fail "directory input did not default output to the input directory"
+
 bash "$skill_dir/scripts/decompress-eslog.sh" \
   --input "$test_root/sample.eslog" --output "$output"
 

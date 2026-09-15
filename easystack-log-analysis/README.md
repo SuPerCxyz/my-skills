@@ -15,16 +15,20 @@ EasyStack OpenStack 集群日志(`.eslog`)安全解压、目录映射、跨服�
 ## 快速开始
 
 ```bash
-# Explicit input and output
+# Explicit input; without --output, results are placed beside the bundle
+bash scripts/decompress-eslog.sh --input /path/to/bundle.eslog
+
+# Explicit input and output override
 bash scripts/decompress-eslog.sh --input /path/to/bundle.eslog --output /path/to/output
 
-# Default: all top-level .eslog files in the current directory
+# Default: input and output are the current directory
 bash scripts/decompress-eslog.sh
 ```
 
 脚本保留原始 `ecs.*`、`.log.gz` 和 `.log`, 并在输出目录下额外复制一份按组件整理的
 `components/` 普通日志文件, 便于跨平台直接读取。组件视图不保留 `ecs.node-*` 中间层,
-同名文件按源文件大小保留较大者。
+同名文件按源文件大小保留较大者。指定外部 bundle 且未传 `--output` 时, 输出目录就是
+该 bundle 的父目录。
 
 ## 文件说明
 
@@ -37,7 +41,7 @@ bash scripts/decompress-eslog.sh
 | [cross-domain-analysis.md](cross-domain-analysis.md) | 跨域关联分析矩阵(各场景必看哪些日志) |
 | [decompress.md](decompress.md) | eslog 解压方法 |
 | [scripts/decompress-eslog.sh](scripts/decompress-eslog.sh) | 安全解压与跨平台组件视图脚本 |
-| [tests/test-decompress-eslog.sh](tests/test-decompress-eslog.sh) | `.log`、merge 和组件视图回归测试 |
+| [tests/test-decompress-eslog.sh](tests/test-decompress-eslog.sh) | `.log`、merge 和组件视图回归测试, 使用 `bash` 执行 |
 | [log-format.md](log-format.md) | 日志行格式、字段、awk 配方 |
 | [directory-map.md](directory-map.md) | 日志目录结构映射 |
 | [search-patterns.md](search-patterns.md) | 按问题类型的搜索模式 |

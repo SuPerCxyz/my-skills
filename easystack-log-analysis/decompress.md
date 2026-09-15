@@ -7,9 +7,11 @@ extracted `ecs.*` directory, skip to [directory-map.md](directory-map.md) and
 ## Input Selection 输入选择
 
 - 用户指定 `.eslog` 文件或目录时, 通过 `--input` 原样传入。
-- 用户未指定路径时, `--input` 默认使用当前工作目录。
+- 用户未指定路径时, `--input` 默认使用当前工作目录, 输出也默认使用当前工作目录。
 - 输入目录只匹配顶层 `*.eslog`, 不递归扫描其他位置。
-- `--output` 默认使用当前工作目录; 建议显式指定独立输出目录。
+- 指定单个 `.eslog` 文件且未传 `--output` 时, 输出默认使用该文件的父目录。
+- 指定输入目录且未传 `--output` 时, 输出默认使用该输入目录, 即顶层压缩日志所在的目录。
+- 显式传入 `--output` 时, 始终使用用户指定的输出目录。
 - 同一 bundle 已有经过校验的对应输出目录时, 不重复解压。只有输出缺失、不完整或用户
   明确要求刷新时才重新解压; 刷新时使用新的输出目录, 或先明确旧目录会被合并。
 - 发生明确刷新时, 同路径文件使用本次内容覆盖, 新文件追加, 本次 bundle 未包含的旧文件
@@ -20,10 +22,12 @@ extracted `ecs.*` directory, skip to [directory-map.md](directory-map.md) and
 使用仓库内置脚本, 不要从文档复制临时脚本:
 
 ```bash
-# One explicit bundle
+# One explicit bundle; without --output, results are placed beside the bundle
+bash scripts/decompress-eslog.sh --input /path/to/ecs.example.eslog
+
+# Override the default output directory when needed
 bash scripts/decompress-eslog.sh \
-  --input /path/to/ecs.example.eslog \
-  --output /path/to/output
+  --input /path/to/ecs.example.eslog --output /path/to/output
 
 # All top-level .eslog files in the current directory
 bash scripts/decompress-eslog.sh
@@ -57,6 +61,9 @@ bash scripts/decompress-eslog.sh --input /path/to/ecs.example.eslog
   计入输出目录容量规划。
 - 展开前应确认输出目录空间; 空间不足时脚本失败并报告, 不回退到压缩日志分析。
 - 默认密码来自 `ESLOG_PASSWORD`, 未设置时使用 EasyStack 默认值。
+
+指定外部 bundle 且未传 `--output` 时, 解压完成后应在该 bundle 的父目录继续执行目录清单和
+日志检索; 不要默认回到启动脚本的当前目录。
 
 如果缺少 `unzip`、`tar`、`gzip` 等依赖, 先报告缺失命令和建议安装命令, 获得用户
 确认后再安装。不要自动修改系统依赖。

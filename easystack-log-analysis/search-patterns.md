@@ -16,7 +16,7 @@ Use this file after the issue domain and time window are known. For cross-servic
 ## Common Patterns
 
 > **重要**: 默认搜索所有节点目录(`ecs.node-*`), 除非用户指定特定节点。
-> 必须先运行 `scripts/decompress-eslog.sh`; 后续只搜索脚本生成的 `.log`。
+> 必须先运行 `bash scripts/decompress-eslog.sh`; 后续只搜索脚本生成的 `.log`。
 
 ```bash
 # 列出所有可用节点

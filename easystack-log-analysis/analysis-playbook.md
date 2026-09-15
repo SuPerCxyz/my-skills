@@ -21,6 +21,7 @@ when it proves a key event, rather than relying on a later repeat search.
 ├──────────────────────────────────────────────────────────────┤
 │ 2. Decompress (only if output is missing or incomplete)       │
 │    bash scripts/decompress-eslog.sh --input <path>           │
+│    (output defaults to the bundle's parent directory)        │
 ├──────────────────────────────────────────────────────────────┤
 │ 3. Inventory: which nodes, which time range                  │
 │    ls -d ecs.*/                                              │
@@ -46,6 +47,9 @@ when it proves a key event, rather than relying on a later repeat search.
 │ 9. Output using the report template below                    │
 └──────────────────────────────────────────────────────────────┘
 ```
+
+未指定 `--input` 时, 输入和输出都默认是当前目录。指定当前目录外的 bundle 且未传
+`--output` 时, 解压结果位于 bundle 父目录; 后续 inventory 和日志检索应切换到该目录。
 
 ## Identifier Resolution Cheatsheet
 

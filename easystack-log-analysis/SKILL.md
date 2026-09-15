@@ -32,7 +32,7 @@ skill 范围。
 | **跨域关联分析矩阵(云主机/云硬盘/网络/镜像/裸金属 必看哪些日志)** | [cross-domain-analysis.md](cross-domain-analysis.md) |
 | 解压 eslog 并生成组件视图 | [decompress.md](decompress.md) |
 | 安全解压脚本 | [scripts/decompress-eslog.sh](scripts/decompress-eslog.sh) |
-| 验证 `.log`、merge 和组件视图行为 | [tests/test-decompress-eslog.sh](tests/test-decompress-eslog.sh) |
+| 验证 `.log`、merge 和组件视图行为 | [tests/test-decompress-eslog.sh](tests/test-decompress-eslog.sh), 使用 `bash` 执行 |
 | 日志行格式(wrapper / 字段 / awk 配方) | [log-format.md](log-format.md) |
 | 日志目录结构映射 | [directory-map.md](directory-map.md) |
 | 按问题类型检索的模式 | [search-patterns.md](search-patterns.md) |
@@ -54,7 +54,9 @@ skill 范围。
 ### Step 1: 解压
 
 用户指定路径时显式传给 `--input`; 未指定时脚本默认处理当前目录顶层的所有
-`.eslog`。输出目录默认是当前目录, 也可通过 `--output` 指定:
+`.eslog`, 此时输出目录也是当前目录。指定单个 `.eslog` 文件时, 未传 `--output` 则输出到
+该文件的父目录; 指定输入目录时, 未传 `--output` 则输出到该目录。显式传入 `--output` 时
+始终以指定目录为准:
 
 ```bash
 bash scripts/decompress-eslog.sh --input <FILE_OR_DIR> --output <OUTPUT_DIR>
@@ -68,6 +70,9 @@ bash scripts/decompress-eslog.sh --input <FILE_OR_DIR> --output <OUTPUT_DIR>
 文件复制到组件视图中。组件视图不保留 `ecs.node-*` 中间层; 同名文件按源文件大小保留
 较大者。确认输出目录包含目标 bundle 的完整日志后, 停止解压并进入时间窗确认。后续分析
 仍以原始 `ecs.*` 下的 `.log` 作为证据来源, 不直接读取压缩日志。
+
+当 `--input` 指向当前目录外的 bundle 且未指定 `--output` 时, 后续清单和检索命令应在
+该 bundle 的父目录执行, 或显式使用脚本实际输出目录作为工作目录。
 
 > **时间窗提示**: eslog 文件名本身编码了采集时间范围:
 > `ecs.20260618-20260623183823.eslog` = 2026-06-18 00:00 -> 2026-06-23 18:38:23。
