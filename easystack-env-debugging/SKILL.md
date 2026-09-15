@@ -78,7 +78,7 @@ apply/patch/restart/scale/rollback 或数据库写入都必须先说明影响、
 负责封装直连、`172.18.*` 跳板、BJ-xx SSH config 跳板直达和 JumpServer 菜单
 fallback。需要先经过普通 SSH 跳板机时使用 `--via <SSH_TARGET>`, 再与现有
 `ssh`、`jump18` 或 `jumpserver` mode 组合。
-调用脚本时优先使用 `bash [script] ...`, 不要依赖直接执行位; 这样即使安装副本
+调用本地 shell 脚本时 MUST 使用 `bash [script] ...`, 不要依赖直接执行位; 这样即使安装副本
 丢了 `+x` 也能继续工作。
 一次性只读命令的默认超时与超时后重试也由 `env-access.sh` 统一处理; 详细规则见
 [access.md](access.md#查询超时选择)。
@@ -209,8 +209,8 @@ request ID、资源标识、调用组件或依赖关系继续追查: 哪个组�
 | 通过 env-access 发送 Alcubierre 固定脚本, 不在远端落盘 | [scripts/run-alcubierre-unmap.sh](scripts/run-alcubierre-unmap.sh) |
 | 统一环境访问脚本, 登录链路封装后追加业务命令 | [scripts/env-access.sh](scripts/env-access.sh) |
 | JumpServer 菜单内部 fallback 脚本, 由统一访问脚本调用 | [scripts/jumpserver-env.sh](scripts/jumpserver-env.sh) |
-| 验证访问参数、安全重试和 JumpServer 传参 | [tests/test-access-scripts.sh](tests/test-access-scripts.sh) |
-| 验证批量解挂、mapping 批处理、阶段耗时、UUID 去重和中断恢复 | [tests/test-alcubierre-unmap.sh](tests/test-alcubierre-unmap.sh) |
+| 验证访问参数、安全重试和 JumpServer 传参 | [tests/test-access-scripts.sh](tests/test-access-scripts.sh), 使用 `bash` 执行 |
+| 验证批量解挂、mapping 批处理、阶段耗时、UUID 去重和中断恢复 | [tests/test-alcubierre-unmap.sh](tests/test-alcubierre-unmap.sh), 使用 `bash` 执行 |
 | 根因排查顺序、当前 pod 日志、fluentd 历史日志回退 | [logs.md](logs.md) |
 | 含问题原因、操作时间线和关键日志的问题调查报告格式 | [report-format.md](report-format.md) |
 | kernel 或系统软件包源码调研、版本对齐和证据记录 | [source-analysis.md](source-analysis.md) |

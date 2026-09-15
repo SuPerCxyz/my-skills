@@ -10,15 +10,15 @@
 `kubectl get`、`kubectl describe`、`kubectl logs --tail=<N>` 等无影响命令。
 不要在未获得明确授权时执行 `edit/delete/apply/patch/rollout restart/helm rollback` 等变更命令。
 
-外部进入目标环境时, MUST 使用 [scripts/env-access.sh](scripts/env-access.sh)。
+外部进入目标环境时, MUST 使用 `bash <path>/scripts/env-access.sh`。
 不要手写 `ssh`、`ssh js`、多层跳板命令或临时 expect 脚本来登录环境。
 也不要直接修改 [scripts/env-access.sh](scripts/env-access.sh) 或
 [scripts/jumpserver-env.sh](scripts/jumpserver-env.sh)。如果脚本执行确实有问题,
 先向用户抛出目标、命令、错误输出和建议改动点; 获得明确允许后再修改脚本。
-调用这些脚本时优先通过 `bash` 启动, 不要依赖执行位; 这样同步后的安装副本
+调用这些脚本时 MUST 通过 `bash` 启动, 不要依赖执行位; 这样同步后的安装副本
 即使暂时缺少 `+x` 也能正常运行。
 
-标准 `BJ-<N>` 请求直接执行 `env-access.sh --env BJ-<N>`。首次调用前不要
+标准 `BJ-<N>` 请求通过 `bash <path>/env-access.sh --env BJ-<N>` 执行。首次调用前不要
 `grep`/`cat ~/.ssh/config`、列出 SSH key 或读取脚本源码; `env-access.sh` 会通过
 `ssh -G` 自行解析配置并选择连接路径。只有脚本明确报告配置或连接问题时, 才进入
 本文件后续配置排查。
@@ -157,7 +157,7 @@ bash easystack-env-debugging/scripts/env-access.sh --target 172.<ENV_ID>.0.2 --c
 
 ## 跳板机模式(IP 以 172.18. 开头)
 
-必须使用 `env-access.sh --target <JUMP_IP> --control-node <CONTROL_NODE_IP> -- <CMD...>`。
+必须使用 `bash <path>/env-access.sh --target <JUMP_IP> --control-node <CONTROL_NODE_IP> -- <CMD...>`。
 不要手写外层跳板机和内层控制节点的多层 SSH 命令。
 
 ```bash
@@ -192,7 +192,7 @@ bash easystack-env-debugging/scripts/env-access.sh --target <TARGET_IP> --cmd 'w
 
 ## SSH 直连/跳板补充说明
 
-- **复杂命令避免嵌套 SSH 引号传递** — 无论是跳板机双层 SSH 还是直连后跳 node，引号和变量展开都容易丢失。通过 `env-access.sh --cmd '<CMD>'` 执行短命令; 复杂排查先用脚本进入交互式会话
+- **复杂命令避免嵌套 SSH 引号传递** — 无论是跳板机双层 SSH 还是直连后跳 node，引号和变量展开都容易丢失。通过 `bash <path>/env-access.sh --cmd '<CMD>'` 执行短命令; 复杂排查先用脚本进入交互式会话
 - 直连和 `172.18.*` 跳板模式不要求排障者手写 SSH 命令, 密码或密钥由脚本的对应模式处理
 - **不要从本机直连 K8s 节点内网 IP**(如 10.10.1.x)，必须通过控制节点中转
 - 默认只允许查看操作；变更操作必须获得用户明确授权
@@ -209,7 +209,7 @@ bash easystack-env-debugging/scripts/env-access.sh --target <TARGET_IP> --cmd 'w
 
 ```
 确认用户指定的资产名或环境名
-调用 env-access.sh --asset <ASSET_NAME> --mode jumpserver
+调用 bash <path>/env-access.sh --asset <ASSET_NAME> --mode jumpserver
 脚本进入 JumpServer 菜单并选择资产
 脚本切换到 root 或报告权限/认证/超时问题
 ```

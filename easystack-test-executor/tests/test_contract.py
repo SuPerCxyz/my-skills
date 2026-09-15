@@ -55,6 +55,14 @@ class ContractSafetyTest(unittest.TestCase):
         )
         validate_step("CASE-01", step, set())
 
+    def test_env_access_rejects_direct_script(self) -> None:
+        step = action(
+            "env_access",
+            ["/skills/env-access.sh", "--target", "example", "--", "whoami"],
+        )
+        with self.assertRaisesRegex(ContractError, "cannot execute env-access.sh"):
+            validate_step("CASE-01", step, set())
+
     def test_env_access_rejects_opaque_command_string(self) -> None:
         step = action(
             "env_access",

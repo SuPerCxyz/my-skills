@@ -15,9 +15,8 @@
 
 ## Access Routing 访问路由
 
-默认通过 [scripts/env-access.sh](scripts/env-access.sh) 进入环境。用户指定普通
-跳板机时增加 `--via <SSH_TARGET>`。批量操作统一通过
-[run-alcubierre-unmap.sh](scripts/run-alcubierre-unmap.sh) 发送固定脚本:
+默认通过 `bash scripts/env-access.sh` 进入环境。用户指定普通跳板机时增加
+`--via <SSH_TARGET>`。批量操作统一通过 `bash scripts/run-alcubierre-unmap.sh` 发送固定脚本:
 
 ```bash
 bash scripts/run-alcubierre-unmap.sh \

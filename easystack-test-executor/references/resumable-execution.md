@@ -36,9 +36,9 @@ python3 scripts/checkpoint.py next --result-root <RESULT_ROOT>
 
 ## Step 3: Run Bound Action 执行绑定动作
 
-`launcher_argv` 调用 `run-action.py`, runner 只执行 contract 中的 argv。它自动记录
+`launcher_argv` 使用显式 Python 解释器调用 `run-action.py`, runner 只执行 contract 中的 argv。它自动记录
 local time、duration、return code、timeout、Request ID、stdout/stderr hash 和 status。
-V3 禁止 `record-command.py`、`checkpoint.py step` 和手填 PASS/FAIL。
+V3 禁止 `python3 scripts/record-command.py`、`python3 scripts/checkpoint.py step` 和手填 PASS/FAIL。
 
 Expected non-zero 通过 `expected.return_codes` 表达。实际返回码属于允许集合且未超时才
 为 PASS。Command exit 0 不能替代 declarative check。
@@ -51,8 +51,8 @@ type、ID 和 name selector。Command、resource capture 和 status 写入同一
 
 ## Step 5: Collect Logs 收集日志
 
-required/optional 日志先后执行 `collect-logs.py snapshot --stage before/after`, 再执行
-`collect-logs.py collect`。工具按 Pod UID 合并滚动期间的实例, 保存 raw log、
+required/optional 日志先后执行 `python3 scripts/collect-logs.py snapshot --stage before/after`, 再执行
+`python3 scripts/collect-logs.py collect`。工具按 Pod UID 合并滚动期间的实例, 保存 raw log、
 correlation ID、UTC 原始时间和本地时间。required 目标未覆盖时不能标记 COMPLETE。
 
 optional 日志未采集派生为 `OPTIONAL_NOT_COLLECTED`, 不产生功能失败或虚假的 PARTIAL。
@@ -81,9 +81,9 @@ checks、严格日志关联、resources、verdict、cleanup 和 Markdown。exit 
 
 ## Recovery Rules 恢复规则
 
-1. Context compaction 后只读 `resume.md`, 再运行 `checkpoint.py next`。
+1. Context compaction 后只读 `resume.md`, 再运行 `python3 scripts/checkpoint.py next`。
 2. 不重做有 terminal event 的 Action。
 3. 不修改 event、contract、projection、verdict 或 report。
 4. 超时后先核对后台 task 和资源, 只有 contract 允许才重试。
-5. 需要中止时使用 `checkpoint.py abort`, 再生成 partial report。
+5. 需要中止时使用 `python3 scripts/checkpoint.py abort`, 再生成 partial report。
 6. V2 结果只读校验和渲染, 不继续执行任意命令。

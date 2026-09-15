@@ -78,7 +78,7 @@ Kubernetes 实例按 Pod UID 识别, 不只按 pod name。记录 pod、UID、nod
 count 和 readiness。
 涉及 compute 或 storage 节点时不得只收 controller Pod 日志。
 
-使用 `collect-logs.py snapshot` 在操作前后固化实例。target 参数格式为
+使用 `python3 scripts/collect-logs.py snapshot` 在操作前后固化实例。target 参数格式为
 `SERVICE|LABEL_SELECTOR|CONTAINER`; collection 必须以两个快照的 Pod UID 并集为准。
 
 ## Target Priority 目标优先级

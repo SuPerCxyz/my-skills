@@ -29,8 +29,8 @@ Bare Metal 及跨服务测试计划, 并在 live 环境中统一执行资源操�
 1. 提供目标环境、改动点和原始测试计划。
 2. 展开测试义务, 复用环境 profile, 标准化已授权用例。
 3. 确认清理策略、破坏性操作和结果目录。
-4. 用 `compile-plan.py --profile ...` 编译 V3 contract。
-5. 只执行 `checkpoint.py next` 返回的 `launcher_argv`。
+4. 用 `python3 scripts/compile-plan.py --profile ...` 编译 V3 contract。
+5. 只执行 `python3 scripts/checkpoint.py next` 返回的 `launcher_argv`。
 6. 自动派生 verdict/result, 生成报告并通过 validator。
 
 ## Files 文件说明
@@ -72,6 +72,7 @@ Bare Metal 及跨服务测试计划, 并在 live 环境中统一执行资源操�
 
 ## Safety 安全
 
-环境访问优先复用 `easystack-env-debugging/env-access.sh`; standalone 模式只使用用户
+环境访问优先复用 `easystack-env-debugging/scripts/env-access.sh`, 调用时使用
+`bash <path>/scripts/env-access.sh`; standalone 模式只使用用户
 提供且已授权的等价入口。环境发现默认只读, 用例外变更必须明确授权。结果文件不得
 记录密码、Token、Secret payload、私钥或完整密钥材料。

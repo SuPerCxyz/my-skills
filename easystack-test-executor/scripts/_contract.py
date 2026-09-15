@@ -44,9 +44,9 @@ ACTION_KINDS = {"openstack", "kubectl", "env_access", "assertion", "cleanup"}
 ALLOWED_EXECUTABLES = {
     "openstack": {"openstack"},
     "kubectl": {"kubectl"},
-    "env_access": {"bash", "env-access.sh"},
+    "env_access": {"bash"},
     "assertion": {"false", "grep", "jq", "test", "true"},
-    "cleanup": {"bash", "env-access.sh", "kubectl", "openstack"},
+    "cleanup": {"bash", "kubectl", "openstack"},
 }
 DESTRUCTIVE_TOKENS = {
     "apply", "clean", "cordon", "delete", "drain", "edit", "evacuate",

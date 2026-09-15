@@ -16,6 +16,7 @@ Use this file whenever a plan may move, rename, write, delete, or roll back file
 
 - `_rename_mapping.json` 必须记录用户确认的 `plan_id`
 - 所有计划修改必须先写入 `_rename_mapping.json`, 再生成 `_rollback.sh`
+- `_rollback.sh` 必须通过 `bash _rollback.sh` 调用, 不依赖脚本执行位
 - operation 支持 `rename`、`move`、`create`、`replace_backup`、`rmdir`
 - 每项记录 `status=pending|completed|failed`; 真实操作成功后原子更新状态
 - `create` 回滚只删除状态为 `completed`、由本次运行创建且 hash 匹配的文件

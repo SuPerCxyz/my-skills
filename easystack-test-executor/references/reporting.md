@@ -9,7 +9,7 @@ all required functional checks PASS -> functional_status=PASS -> 成功
 otherwise                           -> functional_status=FAIL -> 失败
 ```
 
-模型不得手填 Functional status。`finalize-case.py` 使用 contract evaluator 和
+模型不得手填 Functional status。`python3 scripts/finalize-case.py` 使用 contract evaluator 和
 Action evidence 自动派生:
 
 ```text

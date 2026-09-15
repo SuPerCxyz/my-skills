@@ -141,7 +141,7 @@ Use this file as the ordered execution flow for media organization. Read the spe
    - source root
    - execution options
    - source inventory(size + mtime)
-   - `plan_id`:由 `scripts/plan-gate.py build` 对 normalized roots、options、
+   - `plan_id`:由 `python3 scripts/plan-gate.py build` 对 normalized roots、options、
      inventory 和 mappings 计算 canonical JSON SHA-256
 ```
 
@@ -186,13 +186,13 @@ python3 scripts/plan-gate.py build --input <PLAN_INPUT_JSON> --output <PLAN_JSON
 
 1. 重新计算预览绑定内容, 确认 hash 等于用户确认的 `plan_id`
 2. 创建包含全部计划操作和 `plan_id` 的 `_rename_mapping.json`
-3. 根据 mapping 生成 `_rollback.sh`, 并先执行 rollback dry-run 校验
+3. 根据 mapping 生成 `_rollback.sh`, 并通过 `bash _rollback.sh` 先执行 rollback dry-run 校验
 4. 按映射执行移动 / 重命名, 成功后原子更新 operation 状态
 5. 生成 NFO 前记录 `create` operation, 成功后记录 hash 和 `completed`
 6. 下载图片前记录 `create` operation, 成功后记录 hash 和 `completed`
 7. 删除空目录前记录 `rmdir` operation, 并再次确认目录为空
 8. 校验结果和 mapping 状态
-9. 再次执行 rollback dry-run, 确认所有已完成操作均可回滚
+9. 再次通过 `bash _rollback.sh` 执行 rollback dry-run, 确认所有已完成操作均可回滚
 
 **文件名安全清洗:**
 

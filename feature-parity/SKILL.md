@@ -102,6 +102,11 @@ A user-accepted blocked difference must be reclassified as `Intentional divergen
 ## Matrix audit protocol
 
 Resolve `scripts/parity_audit.py` relative to the directory containing this `SKILL.md`, not the target repository working directory. Pass the actual persisted `PARITY_MATRIX.md` path explicitly. Run the audit:
+
+```bash
+python3 scripts/parity_audit.py <matrix-path>
+```
+
 - after creating the initial matrix;
 - after a batch of structural/status changes;
 - before Gate B, Gate C, and final completion.

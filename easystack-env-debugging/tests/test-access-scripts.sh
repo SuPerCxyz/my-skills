@@ -32,11 +32,11 @@ assert_contains "$skill_dir/alcubierre-unmap.md" \
 assert_contains "$skill_dir/access.md" \
   "临时认证 Profile"
 
-"$skill_dir/scripts/env-access.sh" --help >"$test_root/env-help"
+bash "$skill_dir/scripts/env-access.sh" --help >"$test_root/env-help"
 assert_contains "$test_root/env-help" "Usage:"
 
 set +e
-"$skill_dir/scripts/env-access.sh" --env invalid >"$test_root/out" 2>"$test_root/err"
+bash "$skill_dir/scripts/env-access.sh" --env invalid >"$test_root/out" 2>"$test_root/err"
 rc=$?
 set -e
 [[ $rc -eq 2 ]] || fail "invalid env returned $rc"
@@ -51,21 +51,21 @@ EOF
 chmod +x "$fake_bin/timeout"
 
 ACCESS_TEST_LOG=$test_root/timeout.log PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" --target 192.0.2.10 --mode ssh \
+  bash "$skill_dir/scripts/env-access.sh" --target 192.0.2.10 --mode ssh \
   --no-root --timeout 1 -- hostname
 assert_contains "$test_root/timeout.log" "-F $HOME/.ssh/config"
 assert_contains "$test_root/timeout.log" "root@192.0.2.10"
 
 : >"$test_root/timeout.log"
 ACCESS_TEST_LOG=$test_root/timeout.log PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" --via eswork \
+  bash "$skill_dir/scripts/env-access.sh" --via eswork \
   --target 192.0.2.10 --mode ssh --no-root --timeout 1 -- hostname
 assert_contains "$test_root/timeout.log" "-J eswork"
 assert_contains "$test_root/timeout.log" "root@192.0.2.10"
 
 : >"$test_root/timeout.log"
 ACCESS_TEST_LOG=$test_root/timeout.log PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" --via eswork \
+  bash "$skill_dir/scripts/env-access.sh" --via eswork \
   --target 172.18.0.118 --mode jump18 --control-node 10.20.0.3 \
   --no-root --timeout 1 -- hostname
 assert_contains "$test_root/timeout.log" "-J eswork"
@@ -73,7 +73,7 @@ assert_contains "$test_root/timeout.log" "root@172.18.0.118"
 
 : >"$test_root/timeout.log"
 ACCESS_TEST_LOG=$test_root/timeout.log PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" \
+  bash "$skill_dir/scripts/env-access.sh" \
   --target 172.18.0.118 --mode jump18 --control-node 10.20.0.3 \
   --no-root --timeout 1 -- hostname
 assert_contains "$test_root/timeout.log" "-F $HOME/.ssh/config"
@@ -82,7 +82,7 @@ assert_contains "$test_root/timeout.log" "root@172.18.0.118"
 : >"$test_root/timeout.log"
 set +e
 ACCESS_TEST_LOG=$test_root/timeout.log ACCESS_TIMEOUT_RC=124 PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" --target 192.0.2.10 --mode ssh \
+  bash "$skill_dir/scripts/env-access.sh" --target 192.0.2.10 --mode ssh \
   --no-root -- "openstack server delete test"
 rc=$?
 set -e
@@ -93,7 +93,7 @@ set -e
 : >"$test_root/timeout.log"
 set +e
 ACCESS_TEST_LOG=$test_root/timeout.log ACCESS_TIMEOUT_RC=124 PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" --target 192.0.2.10 --mode ssh \
+  bash "$skill_dir/scripts/env-access.sh" --target 192.0.2.10 --mode ssh \
   --no-root -- \
   "curl -X POST http://alcubierre/v2/volumes/id/disconnections"
 rc=$?
@@ -102,11 +102,11 @@ set -e
 [[ $(wc -l <"$test_root/timeout.log") -eq 1 ]] ||
   fail "Alcubierre POST command was retried"
 
-"$skill_dir/scripts/jumpserver-env.sh" --help >"$test_root/js-help"
+bash "$skill_dir/scripts/jumpserver-env.sh" --help >"$test_root/js-help"
 assert_contains "$test_root/js-help" "Usage:"
 
 set +e
-"$skill_dir/scripts/jumpserver-env.sh" --asset node --jumpserver-host host \
+bash "$skill_dir/scripts/jumpserver-env.sh" --asset node --jumpserver-host host \
   >"$test_root/out" 2>"$test_root/err"
 rc=$?
 set -e
@@ -127,20 +127,20 @@ EOF
 chmod +x "$fake_bin/expect"
 touch "$test_root/id"
 ACCESS_TEST_LOG=$test_root/expect.log PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/jumpserver-env.sh" --asset node --cmd hostname --no-root \
+  bash "$skill_dir/scripts/jumpserver-env.sh" --asset node --cmd hostname --no-root \
   --jumpserver-host host --jumpserver-user user --jumpserver-port 2222 \
   --jumpserver-identity-file "$test_root/id" --timeout 1
 assert_contains "$test_root/expect.log" "node|hostname|0"
 
 ACCESS_TEST_LOG=$test_root/expect.log PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/jumpserver-env.sh" --via eswork \
+  bash "$skill_dir/scripts/jumpserver-env.sh" --via eswork \
   --asset node --cmd hostname --no-root \
   --jumpserver-host host --jumpserver-user user --jumpserver-port 2222 \
   --jumpserver-identity-file "$test_root/id" --timeout 1
 assert_contains "$test_root/expect.log" "-J eswork"
 
 ACCESS_TEST_LOG=$test_root/expect.log PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" --via eswork \
+  bash "$skill_dir/scripts/env-access.sh" --via eswork \
   --asset node --mode jumpserver --cmd hostname --no-root \
   --jumpserver-host host --jumpserver-user user --jumpserver-port 2222 \
   --jumpserver-identity-file "$test_root/id" --timeout 1
@@ -153,7 +153,7 @@ profile_cache=$test_root/auth-cache
 
 ACCESS_TEST_LOG=$test_root/expect.log \
 EXPECTED_JS_PASSWORD=profile-password PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/jumpserver-env.sh" --asset node --cmd hostname --no-root \
+  bash "$skill_dir/scripts/jumpserver-env.sh" --asset node --cmd hostname --no-root \
   --jumpserver-host host --jumpserver-user user --jumpserver-port 2222 \
   --jumpserver-password-file "$test_root/password" --timeout 1
 assert_contains "$test_root/expect.log" "PubkeyAuthentication=no"
@@ -161,7 +161,7 @@ assert_contains "$test_root/expect.log" "PubkeyAuthentication=no"
 ACCESS_TEST_LOG=$test_root/expect.log \
 EXPECTED_JS_PASSWORD=profile-password \
 EASYSTACK_AUTH_CACHE_DIR=$profile_cache PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/jumpserver-env.sh" --via eswork \
+  bash "$skill_dir/scripts/jumpserver-env.sh" --via eswork \
   --auth-profile bj-123 --save-auth-profile \
   --asset node --cmd hostname --no-root \
   --jumpserver-host host --jumpserver-user user --jumpserver-port 2222 \
@@ -180,7 +180,7 @@ EASYSTACK_AUTH_CACHE_DIR=$profile_cache PATH="$fake_bin:$PATH" \
 ACCESS_TEST_LOG=$test_root/expect.log \
 EXPECTED_JS_PASSWORD=profile-password \
 EASYSTACK_AUTH_CACHE_DIR=$profile_cache PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/jumpserver-env.sh" \
+  bash "$skill_dir/scripts/jumpserver-env.sh" \
   --auth-profile bj-123 --asset node --cmd hostname --no-root --timeout 1
 assert_contains "$test_root/expect.log" "-J eswork"
 assert_contains "$test_root/expect.log" "HostName=host"
@@ -188,7 +188,7 @@ assert_contains "$test_root/expect.log" "HostName=host"
 ACCESS_TEST_LOG=$test_root/expect.log \
 EXPECTED_JS_PASSWORD=profile-password \
 EASYSTACK_AUTH_CACHE_DIR=$profile_cache PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/env-access.sh" \
+  bash "$skill_dir/scripts/env-access.sh" \
   --auth-profile bj-123 --asset node --mode jumpserver \
   --cmd hostname --no-root --timeout 1
 assert_contains "$test_root/expect.log" "-J eswork"
@@ -199,7 +199,7 @@ mkdir -p "$unsafe_cache/profiles"
 ln -s "$test_root" "$unsafe_cache/profiles/unsafe"
 set +e
 EASYSTACK_AUTH_CACHE_DIR=$unsafe_cache PATH="$fake_bin:$PATH" \
-  "$skill_dir/scripts/jumpserver-env.sh" \
+  bash "$skill_dir/scripts/jumpserver-env.sh" \
   --auth-profile unsafe --asset node --cmd hostname --no-root --timeout 1 \
   >"$test_root/out" 2>"$test_root/err"
 rc=$?

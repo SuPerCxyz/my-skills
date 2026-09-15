@@ -47,7 +47,7 @@ def write_resume(root: Path, state: dict) -> None:
         f"- Run ID: `{state['run_id']}`",
         f"- Current case: `{case_id}`",
         "- Current phase: `NOT_STARTED`",
-        "- Allowed action: `checkpoint.py next`",
+        "- Allowed action: `python3 scripts/checkpoint.py next`",
         "",
         "恢复时先运行:",
         "",

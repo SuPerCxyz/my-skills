@@ -10,8 +10,8 @@
     {
       "id": 2,
       "prompt": "一个 30 用例测试执行到第 17 个用例后发生 context compaction。继续执行并保证不遗漏步骤时间和日志。",
-      "expected_output": "只读取 resume.md 并运行 checkpoint.py next; 只执行 launcher_argv, 不从聊天推断进度或手工补 PASS。",
-      "expectations": ["先运行 checkpoint.py next", "只执行 launcher_argv", "不手工填写 PASS"]
+      "expected_output": "只读取 resume.md 并运行 python3 scripts/checkpoint.py next; 只执行 launcher_argv, 不从聊天推断进度或手工补 PASS。",
+      "expectations": ["先运行 python3 scripts/checkpoint.py next", "只执行 launcher_argv", "不手工填写 PASS"]
     },
     {
       "id": 3,

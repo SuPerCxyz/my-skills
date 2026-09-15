@@ -4,18 +4,18 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  env-access.sh --target <TARGET> [--via <SSH_TARGET>] [--mode auto|ssh|jump18|jumpserver] [-- CMD...]
-  env-access.sh --env <BJ_ENV> [-- CMD...]
-  env-access.sh --asset <ASSET_NAME> --mode jumpserver [-- CMD...]
-  env-access.sh --target <TARGET> --cmd 'kubectl get nodes -o name'
+  bash env-access.sh --target <TARGET> [--via <SSH_TARGET>] [--mode auto|ssh|jump18|jumpserver] [-- CMD...]
+  bash env-access.sh --env <BJ_ENV> [-- CMD...]
+  bash env-access.sh --asset <ASSET_NAME> --mode jumpserver [-- CMD...]
+  bash env-access.sh --target <TARGET> --cmd 'kubectl get nodes -o name'
 
 Examples:
-  env-access.sh --env BJ-<ENV_ID>
-  env-access.sh --env BJ-<ENV_ID> -- whoami
-  env-access.sh --target 172.<ENV_ID>.0.2 -- kubectl get nodes -o name
-  env-access.sh --via eswork --target 192.168.3.3 -- hostname
-  env-access.sh --target 172.18.0.118 --control-node 10.20.0.3 -- hostname
-  env-access.sh --via eswork --asset <ASSET_NAME> --mode jumpserver -- whoami
+  bash env-access.sh --env BJ-<ENV_ID>
+  bash env-access.sh --env BJ-<ENV_ID> -- whoami
+  bash env-access.sh --target 172.<ENV_ID>.0.2 -- kubectl get nodes -o name
+  bash env-access.sh --via eswork --target 192.168.3.3 -- hostname
+  bash env-access.sh --target 172.18.0.118 --control-node 10.20.0.3 -- hostname
+  bash env-access.sh --via eswork --asset <ASSET_NAME> --mode jumpserver -- whoami
 
 Options:
   --target TARGET       SSH target, IP, alias, or BJ-xx name.
@@ -615,7 +615,7 @@ run_jumpserver() {
     exit 2
   fi
 
-  "$script_dir/jumpserver-env.sh" "${args[@]}"
+  bash "$script_dir/jumpserver-env.sh" "${args[@]}"
 }
 
 case "$mode" in

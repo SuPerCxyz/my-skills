@@ -39,7 +39,7 @@
 每次更新 `PARITY_MATRIX.md` 后运行:
 
 ```bash
-python scripts/parity_audit.py <matrix-path>
+python3 scripts/parity_audit.py <matrix-path>
 ```
 
 仅在退出码为 0 时继续下一阶段; 非 0 先修复矩阵再重跑。

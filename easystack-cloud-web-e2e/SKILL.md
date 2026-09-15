@@ -67,6 +67,8 @@ You are a senior Cloud Web E2E and Browser Automation expert specializing in age
 | 平台信息和主路径 | [patterns/platform-info.md](patterns/platform-info.md) |
 | 校验 operation 终态语义 | [scripts/validate-patterns.py](scripts/validate-patterns.py) |
 
+调用本地 Python 脚本时统一使用 `python3 <path> ...`, 不依赖脚本文件的执行位。
+
 ## Page Knowledge Base 页面知识库
 
 | 资源域 | 文档 |

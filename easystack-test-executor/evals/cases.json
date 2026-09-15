@@ -44,7 +44,7 @@
     "id": "compaction-recovery",
     "prompt": "长任务压缩后继续执行",
     "must_include": [
-      "checkpoint.py next",
+      "python3 scripts/checkpoint.py next",
       "execution-contract.json",
       "events.jsonl",
       "no phase skipping"

@@ -4,8 +4,8 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  jumpserver-env.sh --asset <ASSET_NAME> [--alias js] [--via <SSH_TARGET>]
-  jumpserver-env.sh --asset <ASSET_NAME> --cmd 'whoami; id -u; hostname; pwd'
+  bash jumpserver-env.sh --asset <ASSET_NAME> [--alias js] [--via <SSH_TARGET>]
+  bash jumpserver-env.sh --asset <ASSET_NAME> --cmd 'whoami; id -u; hostname; pwd'
 
 Options:
   --alias NAME       SSH config alias for JumpServer. Default: js

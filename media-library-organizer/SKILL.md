@@ -40,14 +40,15 @@ You are a senior Media Library Metadata and File-Safety Automation expert specia
 ## Key Safety Rules 关键安全规则
 
 1. **默认永远 dry-run**,不允许直接修改文件。
-2. Dry-run 必须通过 `scripts/plan-gate.py build` 生成 `plan_id`; 只有用户看到预览后明确回复
+2. Dry-run 必须通过 `python3 scripts/plan-gate.py build` 生成 `plan_id`; 只有用户看到预览后明确回复
    `确认执行 <plan_id>` 或 `apply <plan_id>`, 才允许执行真实修改。
 3. 目标文件已存在时默认跳过。只有 plan 明确使用 `replace`、预览列出备份且用户确认
    当前 `plan_id` 时才允许覆盖。
 4. TMDB 匹配置信度不足时,必须列出候选项让用户选择。
    API 与网页结果冲突时同样停止自动选择并列出候选。两者都无法匹配时保留
    `guessed` / `unknown`, 继续 dry-run 预览, 不执行真实修改。
-5. 所有真实修改前必须生成 `_rename_mapping.json` 和可执行的 `_rollback.sh`。
+5. 所有真实修改前必须生成 `_rename_mapping.json` 和 `_rollback.sh`; 回滚脚本通过
+   `bash _rollback.sh` 调用, 不依赖执行位。
 6. 回滚范围必须覆盖 rename/move、本次新建的 NFO/图片/目录、替换前备份和本次删除
    的空目录; 回滚前先校验 mapping, 并支持 dry-run。
 7. Kodi / Jellyfin / Emby 剧集识别依赖文件名中的 `SxxExx`,因此即使生成 NFO,文件名也必须保留标准季集号。
@@ -93,7 +94,7 @@ Skill 会自动扫描并逐个处理。
 - `确认执行 <plan_id>`
 - `apply <plan_id>`
 
-执行前必须运行 `scripts/plan-gate.py validate --plan <PLAN_FILE>`。source inventory、
+执行前必须运行 `python3 scripts/plan-gate.py validate --plan <PLAN_FILE>`。source inventory、
 参数、root 或目标映射变化时确认立即失效, 必须重新生成预览和新的 `plan_id`。
 
 以下回复不允许执行:

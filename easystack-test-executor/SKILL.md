@@ -40,16 +40,19 @@ skill 的前置条件或阻塞当前功能测试。
    可见性、引用资源状态和权限; 任一关键项不匹配时仅更新对应引用或标记 `BLOCKED`,
    不重建全部 profile。
 3. 标准化 plan, 固化 profile、impact、authorization、cleanup 和 declarative checks。
-4. 使用 `compile-plan.py` 生成 immutable V3 contract。
-5. 每次只执行 `checkpoint.py next` 返回的 `launcher_argv`; 禁止手工选择 action。
-6. Action 必须通过 `run-action.py`; 禁止 V3 使用 `record-command.py` 或手填 PASS/FAIL。
+4. 使用 `python3 scripts/compile-plan.py` 生成 immutable V3 contract。
+5. 每次只执行 `python3 scripts/checkpoint.py next` 返回的 `launcher_argv`; 禁止手工选择 action。
+6. Action 必须通过 `python3 scripts/run-action.py`; 禁止 V3 使用 `python3 scripts/record-command.py` 或手填 PASS/FAIL。
 7. 按 contract 收集 worker logs、资源和 evidence, 再派生 immutable verdict。
-8. verdict 后执行 cleanup, 生成 final result、报告并运行 `validate-run.py`。
+8. verdict 后执行 cleanup, 生成 final result、报告并运行 `python3 scripts/validate-run.py`。
 
 ## Core Execution Rules 核心执行规则
 
+本 skill 的本地 Python 入口统一使用 `python3 scripts/<name>.py ...`; 执行器生成的
+`launcher_argv` 已包含显式解释器, 必须原样执行。
+
 Autocompact、模型切换或中断后, 只读取 `<RESULT_ROOT>/resume.md`, 再执行
-`checkpoint.py next`; 不从对话恢复进度。`allowed_action`、`bound_argv`、gate reason
+`python3 scripts/checkpoint.py next`; 不从对话恢复进度。`allowed_action`、`bound_argv`、gate reason
 和 artifact 均以 contract/event ledger 为准。
 
 ## Quick Reference 快速参考
@@ -72,8 +75,8 @@ Autocompact、模型切换或中断后, 只读取 `<RESULT_ROOT>/resume.md`, 再
 
 只有满足以下条件才能声明完成:
 
-1. `checkpoint.py next` 返回 `run_complete`。
-2. `validate-run.py` 返回 0; warning 已在报告说明。
+1. `python3 scripts/checkpoint.py next` 返回 `run_complete`。
+2. `python3 scripts/validate-run.py` 返回 0; warning 已在报告说明。
 3. 每个 Action 有 terminal event、时间和 Command ID 或明确 skip reason。
 4. Required logs 有严格 correlation 和 artifact hash; optional/none 有明确状态。
 5. verdict、cleanup、remaining resources 和 final result 已对账。

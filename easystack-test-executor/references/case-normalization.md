@@ -30,7 +30,7 @@ cleanup_policy
 `preconditions`、`inputs`、`timeouts`、`retry`、`destructive_operations` 和
 `expected_created_resources` 按场景添加。编译前可使用
 [`execution-plan.schema.json`](../schemas/execution-plan.schema.json) 做基础 schema
-检查, 最终以 `compile-plan.py` 的语义校验为准。
+检查, 最终以 `python3 scripts/compile-plan.py` 的语义校验为准。
 
 `domain` 使用 `nova`、`cinder`、`glance`、`neutron` 或 `cross-service`。Security
 Group 用例归入 `neutron`。关联服务写入 `log_targets`, 不创建模糊的通用领域。
@@ -69,7 +69,7 @@ Group 用例归入 `neutron`。关联服务写入 `log_targets`, 不创建模糊
 17. Action kind 与 executable 必须匹配 compiler allowlist; 禁止 `bash -c`、`sh -c`
     或其它 shell wrapper。Server stop/reboot/migrate 等控制面状态变更也必须绑定
     已授权的 `destructive_operation`。
-18. `env_access` 只允许 `bash <path>/env-access.sh ... -- <ARGV...>` 或直接执行该
+18. `env_access` 只允许 `bash <path>/env-access.sh ... -- <ARGV...>`, 不允许直接执行该
     script。只读 Action 禁止 `--cmd` opaque string; compiler 无法证明只读时必须绑定
     已授权的 `destructive_operation`。
 
@@ -134,4 +134,4 @@ NVMe、kernel 或 storage driver。
 
 将标准化清单保存为 YAML 或 JSON, 使用
 [`../examples/test-case.example.yaml`](../examples/test-case.example.yaml) 作为结构参考。
-运行 `compile-plan.py` 后, immutable 副本保存为 `normalized-cases.json`。
+运行 `python3 scripts/compile-plan.py` 后, immutable 副本保存为 `normalized-cases.json`。

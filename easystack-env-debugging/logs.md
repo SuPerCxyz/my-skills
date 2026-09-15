@@ -114,7 +114,7 @@ kubectl exec -n openstack <fluentd-pod> -c httpd -- zcat /var/www/html/td-agent/
 
 **Search across all fluentd pods** (requires shell on target node entered by env-access):
 ```bash
-# First enter the target node via env-access.sh, then run:
+# First enter the target node via `bash <path>/env-access.sh`, then run:
 fluentd_pods=$(kubectl get pods -n openstack -o name | sed 's#^pod/##' | grep '^fluentd-[0-9]\+$')
 for pod in $fluentd_pods; do
   echo "=== $pod ==="

@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  alcubierre-unmap.sh preflight|execute|verify UUID...
+  bash alcubierre-unmap.sh preflight|execute|verify UUID...
 EOF
 }
 

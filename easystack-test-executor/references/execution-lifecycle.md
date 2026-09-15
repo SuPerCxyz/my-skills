@@ -28,7 +28,7 @@ Action phases 可包含 0 到多个 contract action。其余 phase 由 harness g
 
 ## Invariants 必守不变量
 
-1. 只执行 `checkpoint.py next` 的 `launcher_argv`; phase 只推进一个相邻状态。
+1. 只执行 `python3 scripts/checkpoint.py next` 的 `launcher_argv`; phase 只推进一个相邻状态。
 2. Action argv、allowed return codes、capture 和 evaluator 编译后不可变。
 3. Action terminal status 由 runner 自动派生; expected non-zero 可判定为 PASS。
 4. 每个 Action 保存 local time、offset、monotonic duration、Command ID 和 output hash。
@@ -37,7 +37,7 @@ Action phases 可包含 0 到多个 contract action。其余 phase 由 harness g
 7. Worker log 只能用已知 Request/Resource ID 关联, 并保存 Pod UID 和 Container。
 8. 先收集证据再 cleanup; 只删除 contract 授权且由本运行创建的资源。
 9. `执行结果` 只映射 Functional status。timing、evidence、cleanup 只产生说明。
-10. 恢复只信任 contract、hash-chained events 和 `checkpoint.py next`。
+10. 恢复只信任 contract、hash-chained events 和 `python3 scripts/checkpoint.py next`。
 
 ## Command Records 命令记录
 
@@ -60,7 +60,7 @@ event。只在 contract 声明幂等或明确允许时重试。
 ## Failure Handling 失败处理
 
 Action 失败仍关闭窗口、收集日志和资源、派生 verdict、执行 cleanup policy、生成结果。
-失败依赖的后续用例自动 skip; 独立用例继续。全局中止使用 `checkpoint.py abort`,
+失败依赖的后续用例自动 skip; 独立用例继续。全局中止使用 `python3 scripts/checkpoint.py abort`,
 随后以 `--allow-partial` 生成报告。
 
 ## Retry Handling 重试处理
