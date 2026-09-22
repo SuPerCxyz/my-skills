@@ -28,7 +28,8 @@ UI 证据时, 可读取其已有结果作为补充证据, 但本 skill 仍独立
 用户已明确给出运行中环境名称或 IP, 且任务需要在线查询时,
 加载本文件后的第一项环境相关命令 MUST 直接调用
 [scripts/env-access.sh](scripts/env-access.sh)。
-`BJ-<N>` 直接使用 `--env BJ-<N>`; 不要先读取组件参考文档、检查
+`BJ-<N>` 只用 `--env BJ-<N>`; 用户给出的 IP (如 `172.18.0.66`) 只用 `--target <IP>`,
+两者不互相转换。不要先读取组件参考文档、检查
 `~/.ssh/config`、列出 SSH key 或查看访问脚本源码。脚本会完成环境地址转换、
 SSH config 解析、连接模式选择和 fallback。
 

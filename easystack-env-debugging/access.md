@@ -18,7 +18,7 @@
 调用这些脚本时 MUST 通过 `bash` 启动, 不要依赖执行位; 这样同步后的安装副本
 即使暂时缺少 `+x` 也能正常运行。
 
-标准 `BJ-<N>` 请求通过 `bash <path>/env-access.sh --env BJ-<N>` 执行。首次调用前不要
+标准 `BJ-<N>` 请求通过 `bash <path>/env-access.sh --env BJ-<N>` 执行; 用户给出 IP 时用 `--target <IP>`, 两者不互相转换。首次调用前不要
 `grep`/`cat ~/.ssh/config`、列出 SSH key 或读取脚本源码; `env-access.sh` 会通过
 `ssh -G` 自行解析配置并选择连接路径。只有脚本明确报告配置或连接问题时, 才进入
 本文件后续配置排查。
@@ -150,7 +150,7 @@ bash easystack-env-debugging/scripts/env-access.sh --target 172.<ENV_ID>.0.2 --c
 
 适用边界:
 
-- 适用: 用户给出 `xx 环境` / `BJ-xx` 环境, 且可确定 SSH 目标或资产 IP 为 `172.<N>.0.2`。
+- 适用: 用户直接给出 IP 或 SSH alias, 且可确定目标或资产 IP 为 `172.<N>.0.2`。
 - 适用: 本机已有上述 `Host 172.*.0.2` SSH config 或用户提供等价配置。
 - 不适用: 非 `172.*.0.2` 资产、需要通过 JumpServer 菜单搜索的资产、或本机缺少对应 SSH config。
 - 统一访问脚本的 SSH 模式失败时, 不要临时改脚本或新写 expect; 改用统一访问脚本的 [JumpServer 堡垒机模式](#jumpserver-堡垒机模式) 参数入口。
