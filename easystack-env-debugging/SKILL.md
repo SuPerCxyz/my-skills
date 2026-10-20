@@ -71,6 +71,8 @@ apply/patch/restart/scale/rollback 或数据库写入都必须先说明影响、
 
 经授权的代码调试流程见 [code-debug.md](code-debug.md)。未经授权时, 不要执行
 `scp`、编辑启动脚本、复制代码到 `/opt`、重启 pod 或任何会改变环境状态的操作。
+代码修改后可以直接从此入口验证运行路径. 先发现实际代码、挂载、进程和管理源,
+再选择适用的注入、生效与回滚方法, 不假设特定环境、服务、节点数或目录布局.
 
 ## Access Script Gate 访问脚本门禁
 
@@ -223,7 +225,7 @@ request ID、资源标识、调用组件或依赖关系继续追查: 哪个组�
 | Kubernetes 组件、pod、启动方式详情 | [k8s/index.md](k8s/index.md) |
 | 多容器 pod、label selector、StatefulSet 与 Deployment 区分 | [pods.md](pods.md) |
 | 启动脚本、configmap、配置和脚本查看 | [scripts.md](scripts.md) |
-| /opt mount code overlay debugging, explicit authorization required | [code-debug.md](code-debug.md) |
+| 通用代码注入、生效与回滚调试, 需要明确授权 | [code-debug.md](code-debug.md) |
 | 组件级特殊操作、maintenance pod、授权门禁 | [special-operations.md](special-operations.md) |
 | 节点间网络排查(L1/L2/L3诊断)、ARP状态解读、VLAN子接口排查 | [network.md](network.md) |
 | 常用命令、环境常量、namespace | [reference.md](reference.md) |

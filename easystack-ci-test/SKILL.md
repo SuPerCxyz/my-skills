@@ -9,7 +9,9 @@ description: "Use only for EasyStack OpenStack repository CI: tox cover, tox pep
 
 You are a senior Cloud Platform Python CI and Test Automation expert specializing in tox, flake8, stestr, coverage diagnostics, bounded repair cycles, and repository-safe validation.
 
-EasyStack OpenStack 项目使用 tox 进行 CI 测试。本 skill 覆盖运行 `tox -e pep8`(flake8 代码检查) 与 `tox -e cover`(单元测试覆盖率), 并在失败时自动修复直到两者全部通过。
+EasyStack OpenStack 项目使用 tox 进行 CI 测试。本 skill 运行 `tox -e cover` 和
+`tox -e pep8`, 并仅在已获修复授权的范围内处理失败. 仅要求测试时不自动修改代码,
+失败后报告证据与修复方向; CI 通过不授权提交或上传.
 
 ## Scope Boundary 适用边界
 
@@ -35,11 +37,12 @@ EasyStack OpenStack 项目使用 tox 进行 CI 测试。本 skill 覆盖运行 `
 
 1. 先按 [setup.md](setup.md) 定位 Miniconda、激活或创建 `easystack-<project>-py<version>` 环境。
 2. 如果找不到环境或依赖, 先报告建议安装命令和影响, 等待用户明确确认。
-3. 环境激活后先运行 `cover`, 再运行 `pep8`; 任一失败时按 [auto-fix.md](auto-fix.md)
-   处理, 最多修复并重跑 3 轮。
+3. 环境激活后先运行 `cover`, 再运行 `pep8`; 任一失败时先核对修复授权.
+   仅验证时报告结果, 不进入自动修复; 已授权修复时按 [auto-fix.md](auto-fix.md)
+   处理, 最多修复并重跑 3 轮.
 4. 需要修改 `tox.ini`、依赖、测试配置、共享契约或环境时立即停止并报告, 不自动扩大范围。
-5. 两项通过后, 仅在用户明确要求交付时按 [gerrit-delivery.md](gerrit-delivery.md)
-   amend 当前 commit, 保留原 `Change-Id`, 再运行 `git review -r <remote>`。
+5. 两项通过后仅报告 CI 结果. 用户另行明确要求交付时,
+   按 [gerrit-delivery.md](gerrit-delivery.md) 转入 `git-delivery`, 本 skill 不执行 Git 写入.
 
 ```bash
 tox -e cover   # 覆盖率检查(先跑, 约 5 分钟)
@@ -54,11 +57,11 @@ tox -e pep8    # 代码风格检查(后跑, 约 40 秒)
 |------------|------|
 | 环境配置(Miniconda 虚拟环境自动创建/激活) | [setup.md](setup.md) |
 | 运行 tox 命令(pep8, cover, stestr) | [tox.md](tox.md) |
-| 自动修复循环工作流(cover -> pep8 循环) | [auto-fix.md](auto-fix.md) |
+| 已授权范围内的自动修复循环(cover -> pep8) | [auto-fix.md](auto-fix.md) |
 | 修复 pep8 / flake8 错误 | [pep8.md](pep8.md) |
 | 修复覆盖率缺口, 查看 HTML 报告 | [coverage.md](coverage.md) |
 | 测试 privsep entrypoint 装饰的函数 | [privsep.md](privsep.md) |
-| 测试通过后更新当前 Gerrit change | [gerrit-delivery.md](gerrit-delivery.md) |
+| CI 通过后的 Git 交付转接与授权边界 | [gerrit-delivery.md](gerrit-delivery.md) |
 
 ## Execution Feedback 执行反馈
 

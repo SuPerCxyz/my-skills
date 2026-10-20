@@ -1,46 +1,20 @@
 # Gerrit Delivery
 
-Use this file only after the requested CI checks pass and the user explicitly asks to upload the
-current fix to Gerrit. Uploading is a remote write operation and is never implied by running tests.
+## Handoff And Authorization 转接与授权
 
-## Preconditions 前置条件
+本文件只定义 CI 结束后的交付转接, 不执行 amend 或上传, 不维护另一套 Git 命令.
+CI 通过不授权 Git 写入, 测试或修复授权也不能推导 commit、amend 或远程操作权限.
 
-1. `tox -e cover` 和 `tox -e pep8` 已通过。
-2. 当前 `HEAD` 就是需要更新的 Gerrit change, commit message 中存在原 `Change-Id`。
-3. 用户已确认本次需要 amend 并执行 `git review`。
-4. 用户已提供 `git review -r <remote>` 的 remote, 或仓库配置可以无歧义确定 remote。
-5. 工作区不存在与本次任务无关且会被误提交的修改。
+1. 报告实际 CI 范围、代码版本、cover/pep8 结果和未验证项. 修改后必须使用对应新结果,
+   不沿用旧结果或把仓库 CI 通过当作资源功能验收.
+2. 用户明确要求交付后, EasyStack 公司项目先读取
+   [项目默认值与交付约定](../easystack-workflow/project-relationships.md),
+   再进入 [git-delivery](../git-delivery/SKILL.md). 独立分发时按当前环境实际发现能力定位,
+   不假设相邻目录或已安装状态; 不可获取时说明缺口, 不猜测默认身份或命令.
+3. 向交付能力传递本次目标、已有修改、授权动作和实际 CI 证据.
+   由它核对当前提交、新建 Change 或原 Change 更新、最终 Author/Committer、原 Change-Id、
+   真实 remote 和目标分支, 并仅执行用户实际授权的操作.
 
-任一条件不满足时停止, 不创建新 commit, 不猜测 remote。
-
-## Amend Current Change 更新当前 change
-
-先记录原 Gerrit `Change-Id`, 只暂存本次任务文件:
-
-```bash
-change_id_before=$(git show -s --format=%B HEAD | sed -n 's/^Change-Id: //p')
-test -n "$change_id_before"
-git status --short
-git add -- <task-files>
-git diff --cached --check
-git commit --amend --no-edit
-change_id_after=$(git show -s --format=%B HEAD | sed -n 's/^Change-Id: //p')
-test "$change_id_after" = "$change_id_before"
-```
-
-`git commit --amend` 会生成新的 Git commit SHA, 这是 Git 的正常行为。必须保留原
-`Change-Id`, Gerrit 才会把上传内容作为同一个 change 的新 patch set。禁止使用普通
-`git commit` 创建新的 Gerrit change。
-
-如果 amend 后 `Change-Id` 丢失或变化, 不要上传; 先恢复正确提交信息并重新验证。
-
-## Upload 上传
-
-使用用户确认的 Gerrit remote:
-
-```bash
-git review -r <remote>
-```
-
-`-r` 参数表示 remote 名称, 不是 Gerrit review ID。上传完成后报告 Gerrit 返回的
-change URL 或错误信息; 不把新的 Git SHA 误称为新的 Gerrit Change-Id。
+公司评审站点不代替 Git remote. 目标分支不能省略或仅由本地分支名猜测;
+目标不明确时由交付能力说明缺口, 不自行运行上传命令.
+最终分别报告实际 Git 操作和成功/失败状态, 仅使用真实取得的 Change 链接.
