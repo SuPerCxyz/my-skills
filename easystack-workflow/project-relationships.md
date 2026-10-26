@@ -9,7 +9,7 @@
 
 用户确认 EasyStack 公司项目的默认 [Gerrit 评审站点](https://review.easystack.cn/).
 该网页地址不代替实际 Git remote; 交付时仍核对仓库 remote、项目和目标分支,
-按 `git-delivery` 规则处理, 不自动改写 remote. 公司默认值不扩展到个人 `my-skills`
+按本目录 [delivery.md](delivery.md) 规则处理, 不自动改写 remote. 公司默认值不扩展到个人 `my-skills`
 的交付与身份; `rainbow-doc` 保留现有 GitLab 入口和实际交付方式.
 
 除 `rainbow-doc` 的 origin 是 `gitlab.easystack.io/es-cms/rainbow-doc` 外,
@@ -176,7 +176,7 @@ Proton 与 Neutron 的模块同名不证明两者相互调用. 文档站与 gove
 超出原授权时重新 Review. 保护已有修改, 两个 os-brick 副本先确认目标, 不合并或清理.
 完成前核对字段、状态、权限、错误语义、版本、部署与验证一致,
 不把一个仓库 CI 通过当成跨项目闭环. Git 交付分别按
-[git-delivery](../git-delivery/SKILL.md) 核对分支、Change、依赖 footer 和实际授权.
+[delivery.md](delivery.md) 核对分支、Change、依赖 footer 和实际授权.
 
 EasyStack Patch 除非存在明确、可证明的代码依赖, 均基于 `master` 分支独立提交,
 不叠加在之前未合入的 Patch 上. 同一需求、topic、修改顺序或相邻工作区不构成代码依赖.
@@ -195,4 +195,4 @@ EasyStack 新提交的 Author Email 和 Committer Email 均使用
 仅在用户要求多仓交付时, 逐仓汇总实际 remote、目标分支、真实 Change 链接、
 依赖和验证结果; 链接未取得或尚未上传时明确标记. 分别记录实际操作的
 未执行/成功/失败等状态及整体剩余项, 不将单仓上传成功表述为整项交付完成.
-单仓提交规范和操作授权继续使用 `git-delivery`, 不另建模板或复制 footer 规则.
+单仓提交规范和操作授权使用本目录 [delivery.md](delivery.md), 不另建平行模板.

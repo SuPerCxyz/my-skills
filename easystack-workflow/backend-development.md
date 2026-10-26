@@ -103,7 +103,7 @@ force detach 和资源清理的真实消费者. 涉及 fencing 时同时检查�
 复验受影响行为, 将实际结果与确认的需求及有效 artifact 逐项对账.
 
 交付说明区分已改、无需改、待查证的仓库及原因, 列明被测版本、未验证项和部署依赖.
-Git 操作转 [git-delivery](../git-delivery/SKILL.md), 仅执行当前明确授权的操作;
+Git 操作转 [delivery.md](delivery.md), 仅执行当前明确授权的操作;
 开发授权不推导 commit、amend、上传、发布或删除权限.
 
 ## Sources And Adaptation 来源与适配

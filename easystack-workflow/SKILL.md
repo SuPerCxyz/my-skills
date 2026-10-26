@@ -1,6 +1,6 @@
 ---
 name: easystack-workflow
-description: "Use when developing or reviewing EasyStack backend or frontend changes, mapping related repositories, checking coordinated updates, or planning version-aware coding and functional verification. Routes CI, resource tests, Web E2E, debugging, and authorized Git delivery to available skills."
+description: "Use when developing or reviewing EasyStack frontend or backend changes, documenting product behavior, assessing coordinated updates, or planning version-aware verification. Provides self-contained development, CI, resource testing, Web E2E, debugging, and authorized Git delivery guidance."
 ---
 
 # EasyStack Workflow
@@ -9,7 +9,8 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
 
 作为 EasyStack 开发的统一入口, 连接项目影响分析、代码修改、完整代码 Review、
 前后端开发规范和功能验收, 包括服务、API 网关、公共库、operator 与部署衔接.
-本 skill 组织工作, 专用 skill 执行各自任务.
+必需的开发、验证、调试和交付规则均在本目录内, 仅分发本目录即可使用.
+其他 skill 是可选增强, 不要求安装或读取其文件; 实际执行仍需目标源码、环境访问和相应工具.
 
 当前用户需求、有效授权、项目规则和 `AGENTS.md` 优先. 已确认范围内继续执行,
 不重复逐阶段确认. 中大型任务沿用有效 OpenSpec; 不另建同用途的 Plan 或 R2C 文档.
@@ -22,13 +23,15 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
 | 需要做什么 | 阅读 |
 |------------|------|
 | 了解用途、文件组成和最小用法 | [README.md](README.md) |
+| 生成或更新功能产品文档 | [product-documentation.md](product-documentation.md) |
 | 识别项目关系和必要的跨仓库修改 | [project-relationships.md](project-relationships.md) |
 | 开发后端服务、API、公共库或 operator | [backend-development.md](backend-development.md) |
 | 选择后端回归、CI 和真实资源验证 | [backend-testing.md](backend-testing.md) |
 | 按完整提示词进行 Review, 精简输出 P0-P3 发现 | [code-review.md](code-review.md) |
 | 修改前端页面、数据层和接线 | [frontend-design.md](frontend-design.md) |
 | 验证前端改动和真实业务效果 | [frontend-testing.md](frontend-testing.md) |
-| 后端整项目环境调试或明确要求的部署验证 | [code-debug.md](../easystack-env-debugging/code-debug.md), 通过环境调试能力进入 |
+| 在线调查、整项目环境调试、部署验证或离线日志分析 | [runtime-debugging.md](runtime-debugging.md) |
+| 检查交付范围、生成提交信息及授权的 Git / Gerrit 操作 | [delivery.md](delivery.md) |
 
 ## Entry Selection 入口选择
 
@@ -42,13 +45,14 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
 | 只读代码 Review | 主 Agent 读取 `code-review.md`, 新建独立审查会话并传递设计和功能边界; 审查 Agent 直接执行 |
 | 仅测试前端改动 | 直接读取 `frontend-testing.md`, 确认被测版本和环境 |
 | 仅测试后端改动 | 读取 `backend-testing.md`, 按目标栈和验证层次选择入口 |
-| 故障调查 | 选择环境或离线分析能力 |
+| 故障调查 | 读取 `runtime-debugging.md`, 按现场状态、时间窗和证据选择在线或离线路径 |
 | 前端修改后联调 | 按 `frontend-design.md` 本地启动并代理目标环境, 按 `frontend-testing.md` 验证代码来源和业务链路 |
-| 后端修改后环境调试 | 进入 `easystack-env-debugging` 的代码调试模式, 以完整项目运行代码或构建产物更新, 无需先构造故障 |
-| Git 交付或仅检查交付准备 | 先读 `project-relationships.md` 的公司默认站点、提交身份与交付约定, 再进入 `git-delivery` |
+| 为本次新增或修改编写产品文档 | 需求确认后形成初稿, 使用 [product-documentation.md](product-documentation.md) 并在验证前整理测试顺序 |
+| 后端修改后环境调试 | 读取 `runtime-debugging.md`, 以完整项目运行代码或构建产物更新, 无需先构造故障 |
+| Git 交付或仅检查交付准备 | 先读 `project-relationships.md` 的公司默认站点、提交身份与交付约定, 再按本目录 `delivery.md` 执行 |
 
 不要将只读 Review 或纯测试请求改成实施任务, 也不要为每个请求运行全部测试和调试流程.
-向专用能力传递当前目标、范围、已有授权和禁止动作; 纯测试不启动自动改码循环.
+使用任何执行工具时传递当前目标、范围、已有授权和禁止动作; 纯测试不启动自动改码循环.
 交付是首次请求时也必须读取已有公司约定, 不因实际 remote 或本地身份缺失就声称默认值未记录.
 
 ## Business Domains 业务域索引
@@ -71,6 +75,9 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
 1. **明确需求和验收.** 读取相关实现, 做功能完整性审查, 将用户要求与必要补全纳入
    Requirement Review. 建议补全经确认后纳入, 范围外能力不顺带实现. 是否需要确认按
    当前 `AGENTS.md` 和本会话有效授权判断; 范围实质变化时重新 Review.
+   确认后为本次新增功能或修改生成/更新产品文档初稿, 逐项记录可观察行为; 无可见行为
+   变化时说明修改影响, 不虚构用户功能. 文档格式、位置和测试步骤见
+   [product-documentation.md](product-documentation.md).
 2. **判断项目影响.** 按 `project-relationships.md` 确认目标仓库、分支和版本, 追踪
    API、共享状态、权限及必要配置路径. 输出各相关仓库的必改、需查证或不需改及证据,
    不因项目有关联就同步修改全部仓库. 无明确代码依赖的 Patch 基于 `master` 独立提交,
@@ -84,38 +91,43 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
    证据入口及只读权限. 检查实际调用链、跨仓库一致性和业务触发条件是否可达,
    保留完整分析过程. 发现统一使用 P0/P1/P2/P3, 面向用户的结果保持精简.
    审查 Agent 直接执行, 不递归创建审查会话. 主 Agent 核对证据, 修复后的新一轮 Review
-   也使用新会话; 工具不支持时报告独立
-   审查缺口, 不将自行复核声称为独立 Review.
-5. **按影响验证.** 使用确认的行为清单选择验证入口. 后端按 `backend-testing.md`
+   也使用新会话; 工具不支持时报告独立审查缺口, 不将自行复核声称为独立 Review.
+5. **按影响验证.** 验证前先整理并呈现完整测试顺序, 按功能依赖和业务生命周期安排,
+   集中准备共享前置条件并复用有效资源和结果; 被依赖功能先测, 不为减少重复而删掉
+   边界或异常覆盖. 使用确认的行为清单选择验证入口. 后端按 `backend-testing.md`
    区分回归、CI、契约和真实资源验证, Go/C 等项目用自身入口;
    前端默认本地 dev-server + 代理联调, 按 `frontend-testing.md` 核实浏览器加载本地修改、
    API 到达目标环境及真实交互. 后端需环境调试时, 按
-   [code-debug.md](../easystack-env-debugging/code-debug.md) 发现运行基线, 以完整项目运行代码
+   [runtime-debugging.md](runtime-debugging.md) 发现运行基线, 以完整项目运行代码
    或匹配构建产物更新、备份和回滚, 保留环境配置, 验证相关工作负载及副本.
    前端环境产物替换仅用于用户明确要求的部署验证. 环境写入和激活动作须有具体授权;
    失败或限制如实记录, 不将编译、渲染或 Mock 演示当作实际业务验收.
-6. **对账并交付.** 核对每个相关仓库的实现、Review、验证和有效 artifact, 说明剩余项.
-   交付先读取 `project-relationships.md` 的公司约定, 再进入 `git-delivery`,
+6. **对账并交付.** 核对每个相关仓库的实现、Review、验证、产品文档和有效 artifact,
+   将实际行为、测试结果、未验证项及文档链接同步到交付说明, 再说明剩余项.
+   交付先读取 `project-relationships.md` 的公司约定, 再按本目录 `delivery.md` 执行,
    仅执行实际授权的操作, 不从实现授权推导上传授权.
 
 ## Capability Routing 能力路由
 
-下列相对链接便于同仓库阅读. 独立分发时通过当前环境的 skill / 工具发现能力定位,
-不要假设相邻目录存在或将链接当成已安装证明.
+必需流程按下表读取本目录文档, 不依赖相邻 skill 目录或安装清单.
 
-| 任务 | 按需使用 |
-|------|----------|
-| 后端实现规范、版本兼容和生命周期 | 本目录 `backend-development.md`, 验证见 `backend-testing.md` |
-| Angular 子应用组件知识、页面生成和静态检查 | 实际提供的 `es-frontend`; 使用边界见 `frontend-design.md` |
-| EasyStack Cloud Web UI 功能和 E2E | [easystack-cloud-web-e2e](../easystack-cloud-web-e2e/SKILL.md), 通过 `agent-browser` |
-| OpenStack 资源后端功能测试 | [easystack-test-executor](../easystack-test-executor/SKILL.md); Backup 默认排除, 明确需要时再确认支持范围 |
-| OpenStack 仓库 tox、cover、pep8 | [easystack-ci-test](../easystack-ci-test/SKILL.md), 不代替前端构建或功能验收 |
-| 在线故障或授权 runtime 调试 | [easystack-env-debugging](../easystack-env-debugging/SKILL.md) |
-| 离线 `.eslog` 或 `ecs.*` 分析 | [easystack-log-analysis](../easystack-log-analysis/SKILL.md) |
-| 提交信息、commit、amend、Gerrit 或 push | 先读 [公司约定](project-relationships.md), 再用 [git-delivery](../git-delivery/SKILL.md); CI 不另行交付 |
+| 任务 | 本目录执行依据 |
+|------|----------------|
+| 后端实现规范、版本兼容和生命周期 | [backend-development.md](backend-development.md) |
+| 产品文档结构、内容和测试步骤 | [product-documentation.md](product-documentation.md) |
+| Angular 子应用组件、页面实现和静态检查 | [frontend-design.md](frontend-design.md) 与 [frontend-testing.md](frontend-testing.md) |
+| EasyStack Cloud Web UI 功能和 E2E | [frontend-testing.md](frontend-testing.md), 使用实际可用的浏览器工具或项目测试入口 |
+| OpenStack 资源后端功能测试 | [backend-testing.md](backend-testing.md); Backup 默认排除, 明确需要时核实支持路径 |
+| OpenStack 仓库 tox、cover、pep8 | [backend-testing.md](backend-testing.md), 不代替前端构建或功能验收 |
+| 在线故障、授权 runtime 调试与离线日志分析 | [runtime-debugging.md](runtime-debugging.md) |
+| 提交信息、commit、amend、Gerrit 或 push | [delivery.md](delivery.md), 公司默认值见 [project-relationships.md](project-relationships.md) |
 
-只调用实际可用且与目标相关的能力. 缺失时不自动安装、注册 MCP 或启动服务;
-先按目标项目真实入口做等价工作. 无法完成关键验证时报告缺口和影响, 不降低完成门禁.
+环境实际提供 `easystack-ci-test`、`easystack-cloud-web-e2e`、`easystack-test-executor`、
+`easystack-env-debugging`、`easystack-log-analysis` 或 `git-delivery` 时, 可在同一已授权范围
+复用其专用自动化; 它们均为可选增强, 缺失时直接按本目录规则使用实际工具执行,
+不要求复制、安装或读取外部 skill. `es-frontend`、`agent-browser` 等同样不是必装项.
+不自动安装、注册 MCP 或启动无关服务; 源码、运行环境、浏览器或 Git 工具确实不可用时,
+报告受影响步骤和未验证项, 不降低完成门禁或宣称业务验证通过.
 
 ## Completion Gate 完成门禁
 
@@ -127,6 +139,8 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
 - Review 已按完整流程完成, P0-P3 发现和修复状态真实, 不把简短报告等同于简化分析.
 - 行为验证与实际变更版本一致; 失败、未验证项和剩余资源有明确记录.
 - 有效 OpenSpec / Plan 与实现一致; 关键路径未验证时不声称完整交付.
+- 本次新增或修改均有对应产品文档, 覆盖功能列表、边界、异常场景和测试内容; 实际
+  测试顺序及结果、未验证项与文档链接已对账, 无可见行为变化时未虚构功能.
 - 最终只报告改动、关键证据、验证、剩余风险及实际 Git 操作, 不复述全过程.
 
 ## Execution Feedback 执行反馈

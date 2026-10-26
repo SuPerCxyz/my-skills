@@ -138,7 +138,7 @@ permission from development or read-only investigation requests.
 ### Requirement: Load company policy before unified delivery
 
 EasyStack delivery tasks SHALL load the confirmed company defaults before entering the shared
-Git delivery workflow, including the default review site and new Author/Committer email.
+Git delivery workflow bundled in this skill, including the default review site and new Author/Committer email.
 Defaults MUST NOT replace the actual repository remote or authorize configuration or history changes.
 CI SHALL hand off delivery instead of maintaining a separate amend/upload sequence.
 
@@ -148,12 +148,12 @@ CI SHALL hand off delivery instead of maintaining a separate amend/upload sequen
 
 #### Scenario: CI checks have passed
 - **WHEN** the user separately authorizes Git delivery after CI
-- **THEN** the workflow enters git-delivery and resolves both the real remote and target branch before an authorized upload
+- **THEN** the workflow follows its bundled delivery reference and resolves both the real remote and target branch before an authorized upload; an external git-delivery skill is optional
 
 ### Requirement: Generalize authorized runtime code debugging
 
-The workflow SHALL support authorized code debugging after development through the existing
-environment-debugging capability, without requiring a preexisting incident. It MUST discover
+The workflow SHALL support authorized code debugging after development through its bundled
+runtime-debugging reference, without requiring a preexisting incident or an external skill. It MUST discover
 the target environment, workload, runtime version, effective files, mounts, management source,
 scheduling coverage and rollback baseline before choosing an injection and activation method.
 The method MUST distinguish temporary runtime overlays from reproducible delivery and verify
@@ -207,3 +207,23 @@ validation request and its concrete action authorization.
 #### Scenario: No browser or local runtime is available
 - **WHEN** the local code and API chain cannot be exercised
 - **THEN** static checks are reported separately and local runtime validation remains unverified
+
+### Requirement: Distribute the workflow as a self-contained skill
+
+The complete easystack-workflow directory MUST contain the necessary development, review,
+CI, resource testing, frontend E2E, runtime debugging, offline analysis and delivery guidance.
+Required local references MUST resolve within that directory. Other skills and their scripts
+MUST NOT be installation prerequisites. Standard tools, target source, environment access and
+authorization remain execution prerequisites and MUST NOT be claimed to be bundled or verified.
+
+#### Scenario: Only the workflow directory is installed
+- **WHEN** the user copies only easystack-workflow to a client without the six previously referenced skills
+- **THEN** all required workflow references remain readable and execution follows the bundled guidance using available tools, without requesting those skills
+
+#### Scenario: A real execution prerequisite is unavailable
+- **WHEN** an authorized task lacks a browser, Git client, target source or live environment access
+- **THEN** the workflow reports the affected unexecuted steps and evidence gaps instead of inventing results or requiring an unrelated skill installation
+
+#### Scenario: Specialized skills are available
+- **WHEN** a relevant specialized skill is already available
+- **THEN** it may provide optional automation within the same confirmed scope and authorization, without becoming a prerequisite for the bundled workflow

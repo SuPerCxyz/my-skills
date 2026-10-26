@@ -2,10 +2,12 @@
 
 为 EasyStack 常用项目提供前后端开发工作流入口, 判断跨仓库联动,
 连接版本适配、代码 Review、开发规范和真实功能验收.
+必需规则均包含在本目录, 可单独复制到 Hermes 等支持 skill 的客户端, 无需同时安装其他 skill.
 
 ## Capabilities 功能
 
 - 根据用户确认的项目关系和实际调用链确定必要修改范围, 区分事实、推断和待查证项.
+- 为每次新增功能或修改生成/更新产品文档, 记录功能边界、异常场景及按依赖排序的测试步骤.
 - 覆盖核心服务、API 网关、公共库、operator、部署与镜像项目, 按实际版本和工具开发后端.
 - 每次新建独立 Review Agent, 传递设计和功能边界, 核实业务场景可达性, 使用 P0/P1/P2/P3 并精简输出.
 - 无明确代码依赖的 Patch 基于 `master` 独立提交, 不叠加之前未合入的 Patch.
@@ -18,13 +20,15 @@
 | 文件 | 用途 |
 |------|------|
 | [SKILL.md](SKILL.md) | 触发条件、意图路由、开发流程和完成门禁 |
+| [product-documentation.md](product-documentation.md) | 产品文档生成时点、内容结构与依赖排序的测试步骤 |
 | [project-relationships.md](project-relationships.md) | 项目矩阵、跨仓库修改判定和证据要求 |
 | [backend-development.md](backend-development.md) | 后端开发流程、规范来源、兼容性和生命周期 |
 | [backend-testing.md](backend-testing.md) | 后端回归、CI、契约和真实资源验证 |
 | [code-review.md](code-review.md) | 完整 Review 提示词及精简输出约定 |
 | [frontend-design.md](frontend-design.md) | 前端实现、设计规范、来源与可选工具边界 |
 | [frontend-testing.md](frontend-testing.md) | 前端静态检查、真实功能验收与结果记录 |
-| [code-debug.md](../easystack-env-debugging/code-debug.md) | 通用代码注入、生效检查、回滚与条件化 Cinder 案例 |
+| [runtime-debugging.md](runtime-debugging.md) | 在线调查、代码更新与回滚、离线日志和问题结论 |
+| [delivery.md](delivery.md) | 独立 Patch、交付范围、Git / Gerrit 授权和提交规则 |
 
 ## Quick Start 快速开始
 
@@ -32,10 +36,11 @@
 2. 修改任务先识别仓库和相关实现, 按当前会话规则完成需求确认和项目影响分析.
    已确认的任务直接继续; 只读 Review 或纯测试从对应入口开始.
 3. 按目标栈读取后端或前端规范, 完成实现和 Review, 再按行为清单验证,
-   分别记录 CI、资源测试、UI E2E 和部署检查的实际结果及缺口.
-4. 需要将修改带入环境时, 通过 `easystack-env-debugging` 进入通用代码调试方法;
+   验证前先按功能依赖整理并呈现测试顺序, 分别记录 CI、资源测试、UI E2E 和部署检查的
+   实际结果及缺口, 并将结果同步至产品文档.
+4. 需要将修改带入环境时, 按本目录 `runtime-debugging.md` 执行代码调试;
    先发现实际运行版本、有效文件与挂载, 按具体授权执行, 不要求先有线上故障.
-5. 需要提交时先读取项目关系文档中的公司默认值, 再按实际授权进入 `git-delivery`;
+5. 需要提交时先读取项目关系文档中的公司默认值, 再按实际授权执行本目录 `delivery.md`;
    加载本 skill 不代表授权 Git 或环境写操作.
 
 例如: 修改云硬盘列表字段时, 先核对 `ebs-dashboard` 到 `golem`、`cinder` 的实际数据路径,
@@ -46,12 +51,16 @@
 
 ## Dependencies And Distribution 依赖与分发
 
-本 skill 不附带 `es-frontend` MCP、页面生成器、组件库快照或 R2C 模板.
-后端以目标仓库的 HACKING、实际版本和工具为准; OpenStack 官方文档及社区 skill
-仅作为有范围的参考, 来源见 `backend-development.md`, 不新增安装依赖.
-前端规范参考用户提供的 `es-frontend` 0.6.0, 来源见 `frontend-design.md`.
-已提供的工具可按需使用; 缺失时读取目标项目已有实现、组件文档和验证入口,
-关键事实不能确认时明确说明缺口, 不猜接口或伪称测试通过.
+分发单位是整个 `easystack-workflow/` 目录, 包括 `SKILL.md` 和上表列出的参考文档,
+不只复制 `SKILL.md`. 本目录没有必须从相邻 skill 目录读取的文件, 不附带第三方工具、
+浏览器、OpenStack 客户端或目标项目的源码和凭据.
 
-指向其他 skill 的 `../` 链接用于本仓库浏览. 独立安装时按当前环境实际发现的 skill
-和工具定位, 不依赖用户机器上的固定路径, 也不自动安装依赖.
+其他 EasyStack 测试/调试 skill、`git-delivery`、`es-frontend` 和 `agent-browser` 均可选.
+没有它们时按本目录规则, 从目标项目的 README、HACKING、配置和实际命令选择执行入口;
+浏览器交互使用平台提供的浏览器能力或项目已有 E2E 工具, Git 操作直接遵循 `delivery.md`.
+不以缺少某个 skill 名称为理由要求复制其他目录, 也不自动安装工具、配置访问或启动服务.
+实际运行所需的源码、环境、权限或工具不可用时明确未执行项, 自包含文档不等于已具备运行环境.
+
+后端规则参考的官方文档和前端 `es-frontend` 0.6.0 来源只说明规则出处, 不要求安装来源 skill
+或取得归档. 实际 API、组件和命令以目标项目锁定版本、源码和配置为准,
+不猜接口或将静态检查、Mock 和工具返回成功冒充真实业务验收.
