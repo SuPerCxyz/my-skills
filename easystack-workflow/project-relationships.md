@@ -178,6 +178,14 @@ Proton 与 Neutron 的模块同名不证明两者相互调用. 文档站与 gove
 不把一个仓库 CI 通过当成跨项目闭环. Git 交付分别按
 [git-delivery](../git-delivery/SKILL.md) 核对分支、Change、依赖 footer 和实际授权.
 
+EasyStack Patch 除非存在明确、可证明的代码依赖, 均基于 `master` 分支独立提交,
+不叠加在之前未合入的 Patch 上. 同一需求、topic、修改顺序或相邻工作区不构成代码依赖.
+确需依赖时, 记录所依赖的具体 Patch、代码位置及无法独立提交的原因, 核对依赖是否
+已合入 `master`; 已合入后直接基于 `master`, 不再保留多余的提交链或依赖声明.
+交付前核对目标分支、父提交及相对 `master` 的提交范围和 Diff, 确认未携带无关 Patch.
+本地基线与远端是否一致无法确认时说明缺口; 整理分支或历史仍须符合实际 Git 授权,
+不得为满足基线约定覆盖已有修改或擅自执行 rebase、cherry-pick.
+
 EasyStack 新提交的 Author Email 和 Committer Email 均使用
 `guangchao.pan@easystack.cn`. 实际提交前核对最终生效身份, 姓名使用已核实信息,
 不虚构姓名. amend 时当前 Committer 使用此邮箱; 原 Author 邮箱不同时,

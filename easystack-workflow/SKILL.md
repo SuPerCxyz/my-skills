@@ -39,7 +39,7 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
 | 全栈需求或跨仓库修改 | 业务域索引 -> 关联仓库与证据 -> 开发流程, 按实际影响选择前后端规范 |
 | 后端新增或修改代码 | 开发流程 + `backend-development.md` + `backend-testing.md` |
 | 前端新增或修改代码 | 开发流程 + `frontend-design.md` + `frontend-testing.md` |
-| 只读代码 Review | 直接读取 `code-review.md`, 按需核查关联项目 |
+| 只读代码 Review | 主 Agent 读取 `code-review.md`, 新建独立审查会话并传递设计和功能边界; 审查 Agent 直接执行 |
 | 仅测试前端改动 | 直接读取 `frontend-testing.md`, 确认被测版本和环境 |
 | 仅测试后端改动 | 读取 `backend-testing.md`, 按目标栈和验证层次选择入口 |
 | 故障调查 | 选择环境或离线分析能力 |
@@ -73,13 +73,19 @@ description: "Use when developing or reviewing EasyStack backend or frontend cha
    当前 `AGENTS.md` 和本会话有效授权判断; 范围实质变化时重新 Review.
 2. **判断项目影响.** 按 `project-relationships.md` 确认目标仓库、分支和版本, 追踪
    API、共享状态、权限及必要配置路径. 输出各相关仓库的必改、需查证或不需改及证据,
-   不因项目有关联就同步修改全部仓库.
+   不因项目有关联就同步修改全部仓库. 无明确代码依赖的 Patch 基于 `master` 独立提交,
+   不叠加之前未合入的 Patch; 确有依赖时记录具体代码证据和原因, 不擅自改写 Git 历史.
 3. **按证据实现.** 保留已有修改, 在确认范围内完成业务闭环. 后端先读
    `backend-development.md`, 核对实际语言/依赖、API/RPC/object、持久化和生命周期;
    前端读 `frontend-design.md`, 接通入口、请求、状态和反馈. 工具或接口事实缺失时
    查真实代码和契约; 关键不确定性无法消除时澄清, 不靠猜测补接口或业务语义.
-4. **完成代码 Review.** 按 `code-review.md` 保留完整分析过程, 检查实际调用链和跨仓库
-   一致性. 发现统一使用 P0/P1/P2/P3, 面向用户的结果保持精简. 修复后复核受影响路径.
+4. **完成代码 Review.** 每次由主 Agent 按 `code-review.md` 新建独立审查会话, 不复用旧会话或
+   继承旧对话; 传递当前有效需求、设计边界、功能范围与排除项、目标 Patch 和基线、
+   证据入口及只读权限. 检查实际调用链、跨仓库一致性和业务触发条件是否可达,
+   保留完整分析过程. 发现统一使用 P0/P1/P2/P3, 面向用户的结果保持精简.
+   审查 Agent 直接执行, 不递归创建审查会话. 主 Agent 核对证据, 修复后的新一轮 Review
+   也使用新会话; 工具不支持时报告独立
+   审查缺口, 不将自行复核声称为独立 Review.
 5. **按影响验证.** 使用确认的行为清单选择验证入口. 后端按 `backend-testing.md`
    区分回归、CI、契约和真实资源验证, Go/C 等项目用自身入口;
    前端默认本地 dev-server + 代理联调, 按 `frontend-testing.md` 核实浏览器加载本地修改、
