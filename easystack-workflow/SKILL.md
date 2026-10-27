@@ -49,7 +49,7 @@ description: "Use when developing or reviewing EasyStack frontend or backend cha
 | 前端修改后联调 | 按 `frontend-design.md` 本地启动并代理目标环境, 按 `frontend-testing.md` 验证代码来源和业务链路 |
 | 为本次新增或修改编写产品文档 | 需求确认后形成初稿, 使用 [product-documentation.md](product-documentation.md) 并在验证前整理测试顺序 |
 | 后端修改后环境调试 | 读取 `runtime-debugging.md`, 以完整项目运行代码或构建产物更新, 无需先构造故障 |
-| Git 交付或仅检查交付准备 | 先读 `project-relationships.md` 的公司默认站点、提交身份与交付约定, 再按本目录 `delivery.md` 执行 |
+| Git 交付或仅检查交付准备 | EasyStack 项目必须使用 `easystack.cn` 公司账户; 先读 `project-relationships.md` 的公司默认站点、提交身份与交付约定, 再按本目录 `delivery.md` 执行 |
 
 不要将只读 Review 或纯测试请求改成实施任务, 也不要为每个请求运行全部测试和调试流程.
 使用任何执行工具时传递当前目标、范围、已有授权和禁止动作; 纯测试不启动自动改码循环.

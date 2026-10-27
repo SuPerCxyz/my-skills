@@ -186,9 +186,11 @@ EasyStack Patch 除非存在明确、可证明的代码依赖, 均基于 `master
 本地基线与远端是否一致无法确认时说明缺口; 整理分支或历史仍须符合实际 Git 授权,
 不得为满足基线约定覆盖已有修改或擅自执行 rebase、cherry-pick.
 
-EasyStack 新提交的 Author Email 和 Committer Email 均使用
-`guangchao.pan@easystack.cn`. 实际提交前核对最终生效身份, 姓名使用已核实信息,
-不虚构姓名. amend 时当前 Committer 使用此邮箱; 原 Author 邮箱不同时,
+EasyStack 项目提交代码必须使用 `easystack.cn` 公司账户. 新提交的 Author Email 和
+Committer Email 均使用 `guangchao.pan@easystack.cn`. 实际提交前核对最终生效身份,
+上传前核对实际待交付提交的 Author/Committer; 不符合上述约定或无法核实时,
+暂停相关交付并报告. 姓名使用已核实信息, 不虚构姓名.
+amend 时当前 Committer 使用此邮箱; 原 Author 邮箱不同时,
 先明确具体提交、作者归属和处理方式, 不自动改署历史作者、使用 `--reset-author`
 或批量改写历史. 保留正确的 Change-Id; 此约定不授权修改 Git 配置或执行提交.
 

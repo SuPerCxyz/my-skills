@@ -129,10 +129,16 @@ Change-Id: I<由 hook 生成或原 Change 保留的标识>
 生成合法新 Change-Id, 不手写随机标识. hook 缺失或失败时停止相关操作并报告,
 不自动安装、修改环境或追加未经授权的 amend.
 
-公司最终生效的 Author/Committer 身份按 project-relationships 核实, 姓名不猜测.
-可只读检查 `git var GIT_AUTHOR_IDENT` 和 `git var GIT_COMMITTER_IDENT`.
-amend 保留作者归属; 原 Author 邮箱不符时先明确具体提交和处理方式,
-不自动 --reset-author 或批量改署历史. 身份约定本身不授权修改配置或提交.
+EasyStack 项目提交代码必须使用 `easystack.cn` 公司账户. 新提交的 Author/Committer
+及 amend 的当前 Committer 按 [project-relationships.md](project-relationships.md)
+的邮箱约定核实, 姓名不猜测. 新建提交前只读检查 `git var GIT_AUTHOR_IDENT` 和
+`git var GIT_COMMITTER_IDENT`; amend 前另核对原提交保留的 Author 与最终生效的
+Committer, 不只检查 `user.email`.
+上传前逐一核对实际待交付提交的 Author/Committer, 不只检查当前配置或 HEAD.
+身份不符合公司账户及上述邮箱约定, 或无法核实时, 暂停相关交付并报告差异,
+明确处理方式后再继续已授权动作. amend 保留作者归属; 原 Author 邮箱不符时,
+先明确具体提交、作者归属和处理方式, 不自动 `--reset-author` 或批量改署历史.
+身份约定本身不授权修改配置或提交.
 
 ## Verification And Staging 验证与暂存
 
