@@ -75,6 +75,8 @@ description: "Use when developing or reviewing EasyStack frontend or backend cha
 1. **明确需求和验收.** 读取相关实现, 做功能完整性审查, 将用户要求与必要补全纳入
    Requirement Review. 建议补全经确认后纳入, 范围外能力不顺带实现. 是否需要确认按
    当前 `AGENTS.md` 和本会话有效授权判断; 范围实质变化时重新 Review.
+   同时核实对应的真实 Jira 号和问题范围; 缺号时告知用户, 按本目录
+   [delivery.md](delivery.md) 处理, 仅经用户明确授权创建 Jira.
    确认后为本次新增功能或修改生成/更新产品文档初稿, 逐项记录可观察行为; 无可见行为
    变化时说明修改影响, 不虚构用户功能. 文档格式、位置和测试步骤见
    [product-documentation.md](product-documentation.md).
@@ -105,6 +107,8 @@ description: "Use when developing or reviewing EasyStack frontend or backend cha
 6. **对账并交付.** 核对每个相关仓库的实现、Review、验证、产品文档和有效 artifact,
    将实际行为、测试结果、未验证项及文档链接同步到交付说明, 再说明剩余项.
    交付先读取 `project-relationships.md` 的公司约定, 再按本目录 `delivery.md` 执行,
+   新建/更新 EasyStack Patch 及完整待上传范围逐项核对 Jira 关联, Gerrit Topic 与对应
+   Jira key 一致; 缺号时暂停相关交付,
    仅执行实际授权的操作, 不从实现授权推导上传授权.
 
 ## Capability Routing 能力路由
@@ -141,6 +145,9 @@ description: "Use when developing or reviewing EasyStack frontend or backend cha
 - 有效 OpenSpec / Plan 与实现一致; 关键路径未验证时不声称完整交付.
 - 本次新增或修改均有对应产品文档, 覆盖功能列表、边界、异常场景和测试内容; 实际
   测试顺序及结果、未验证项与文档链接已对账, 无可见行为变化时未虚构功能.
+- 每个 EasyStack Patch 均关联与修改内容对应的真实 Jira 号; 已上传 Gerrit Change 的
+  实际 Topic 与对应 Jira key 一致. 新建 Jira 的实际编号和默认指派当前 Jira 登录用户
+  本人的结果已核实, 未完成项如实报告, 不虚报建单或交付成功.
 - 最终只报告改动、关键证据、验证、剩余风险及实际 Git 操作, 不复述全过程.
 
 ## Execution Feedback 执行反馈
