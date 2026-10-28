@@ -1,10 +1,12 @@
-# 实例 More 菜单操作
+# More Actions
 
-> 来源:`easystack-cloud-web-e2e/instance/instance.md`，按原文标题边界拆分。
+UI 引用中的 `\uFF0C` 表示原文全角逗号, 使用原文定位时须还原; 不将转义文本当作按钮或提示原值.
+
+> 来源:`easystack-cloud-web-e2e/instance/instance.md`,按原文标题边界拆分。
 
 ## More 菜单操作(Active 状态下 31 项)
 
-### 顶部按钮状态
+### Toolbar States 顶部按钮状态
 
 | 按钮 | 定位方式 | Active 状态 | 弹窗类型 |
 |------|--------|-------------|----------|
@@ -136,7 +138,7 @@
 
 #### Manage Virtual IP 对话框
 
-- 说明: "可为实例绑定的虚拟网卡配置 VIP，支持高可用服务"
+- 说明: "可为实例绑定的虚拟网卡配置 VIP\uFF0C支持高可用服务"
 - **VNIC Name**, **IP Address**, **Virtual IP** 表格
 - **Add a virtual IP** 按钮
 
@@ -153,8 +155,8 @@
 
 #### Live Migrate 对话框
 
-- 说明: "不停机迁移实例到其他节点，数据盘保持不变"
-- 提示: "内存变化过快可能导致超时，可启用压缩或 vCPU 限流"
+- 说明: "不停机迁移实例到其他节点\uFF0C数据盘保持不变"
+- 提示: "内存变化过快可能导致超时\uFF0C可启用压缩或 vCPU 限流"
 - **Block Migration** 复选框
 - **Current Node** 信息
 - **Select target host**: Auto-Schedule / 手动选择
@@ -167,8 +169,8 @@
 
 #### Rebuild 对话框
 
-- 警告: "将删除所有系统分区数据，务必先备份"
-- 警告: "重建过程中实例将关机，完成后恢复原始状态"
+- 警告: "将删除所有系统分区数据\uFF0C务必先备份"
+- 警告: "重建过程中实例将关机\uFF0C完成后恢复原始状态"
 - 警告: "数据盘不受影响"
 - 警告: "重建后需要重新配置自定义设置"
 - **Image** (必填, 下拉选择)
@@ -183,7 +185,7 @@
 #### Delete Instance 对话框
 
 - 两种删除策略:
-  - **Remove to Recycle Bin** (默认): 保留 24 小时，可恢复
-  - **Force Delete**: 完全删除，不可恢复
+  - **Remove to Recycle Bin** (默认): 保留 24 小时,可恢复
+  - **Force Delete**: 完全删除,不可恢复
 - 显示 Root Disk 和 Data Disk 数量信息
 - 注意事项关于根磁盘和数据盘的删除行为

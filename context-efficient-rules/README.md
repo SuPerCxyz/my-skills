@@ -1,6 +1,6 @@
 # context-efficient-rules
 
-适用于 Claude Code / Claude Code Router / ccswitch 场景的上下文精简 Agent 规则集。它只约束工具调用、读取范围、输出规模、MCP、子 Agent 和恢复摘要, 不替代具体业务 skill。
+主要用于 OpenCode 和 Codex 等客户端的上下文精简规则。它控制工具输出、读取范围和恢复摘要, 补充相关业务 skill, 并服从当前平台、用户和有效 `AGENTS.md` 的要求。
 
 ## 核心目标
 
@@ -8,19 +8,20 @@
 - 条件检索日志时先过滤再截断, 避免先 `tail` 后 `grep` 漏掉历史证据
 - 先定位再读取, 避免重复读取和完整文件读取
 - 搜索过宽时自动缩小范围, 不立即打断用户
-- 约束 MCP、Bash、Git diff、测试命令和子 Agent 使用
-- Autocompact 前用 `mktemp` 生成脱敏、权限为 `0600` 的会话唯一恢复摘要, 恢复后
+- 限制 MCP、命令和 Git diff 的查询与返回规模, 避免无边界输出
+- 需要上下文恢复时, 在当前环境临时目录生成脱敏、权限受限的会话唯一摘要, 恢复后
   删除临时文件
 
 ## 文件结构
 
 ```
 context-efficient-rules/
-├── SKILL.md      # 主入口:上下文预算、输出预防、搜索/读取/MCP/子 Agent/恢复规则
+├── SKILL.md      # 主入口:上下文预算、输出预防、搜索/读取/MCP/恢复规则
 └── README.md     # 本文件
 ```
 
 ## 使用方式
 
-- 作为 Skill 使用:由 `AGENTS.md` 在对话开始时显式加载, 按 `SKILL.md` 中的核心硬规则执行
-- 也可将 `SKILL.md` 内容复制进 `CLAUDE.md` / 项目 `AGENTS.md` 作为常驻规则
+- 会话开始时, 或准备上下文密集工作、出现大输出、宽泛检索和上下文压力时, 读取 [SKILL.md](SKILL.md)。
+- 同时按真实任务选择业务 skill; 本 skill 不替代业务流程。
+- 安装或被列为可用不等于已经加载。可检查实际工具记录确认是否读取入口; 本 skill 不修改客户端配置或项目规则, 不保证自动调用。

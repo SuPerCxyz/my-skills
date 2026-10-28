@@ -1,6 +1,6 @@
 ---
 name: easystack-workflow
-description: "Use when developing or reviewing EasyStack frontend or backend changes, documenting product behavior, assessing coordinated updates, or planning version-aware verification. Provides self-contained development, CI, resource testing, Web E2E, debugging, and authorized Git delivery guidance."
+description: "Use when developing or reviewing EasyStack code, documenting changed behavior, assessing cross-project contracts, or planning version-aware verification. Routes implementation, tests, debugging, and delivery. For standalone CI, resource tests, Web E2E, or incident analysis, select the matching specialist."
 ---
 
 # EasyStack Workflow
@@ -45,6 +45,7 @@ description: "Use when developing or reviewing EasyStack frontend or backend cha
 | 只读代码 Review | 主 Agent 读取 `code-review.md`, 新建独立审查会话并传递设计和功能边界; 审查 Agent 直接执行 |
 | 仅测试前端改动 | 直接读取 `frontend-testing.md`, 确认被测版本和环境 |
 | 仅测试后端改动 | 读取 `backend-testing.md`, 按目标栈和验证层次选择入口 |
+| 远端 CI 异常与 recheck | 先按 `backend-testing.md` 读取失败日志和核对版本, 仅满足证据、授权、去重及一次上限时按 `delivery.md` 发布顶层 Reply, 再查新 run 结果 |
 | 故障调查 | 读取 `runtime-debugging.md`, 按现场状态、时间窗和证据选择在线或离线路径 |
 | 前端修改后联调 | 按 `frontend-design.md` 本地启动并代理目标环境, 按 `frontend-testing.md` 验证代码来源和业务链路 |
 | 为本次新增或修改编写产品文档 | 需求确认后形成初稿, 使用 [product-documentation.md](product-documentation.md) 并在验证前整理测试顺序 |
@@ -98,6 +99,8 @@ description: "Use when developing or reviewing EasyStack frontend or backend cha
    集中准备共享前置条件并复用有效资源和结果; 被依赖功能先测, 不为减少重复而删掉
    边界或异常覆盖. 使用确认的行为清单选择验证入口. 后端按 `backend-testing.md`
    区分回归、CI、契约和真实资源验证, Go/C 等项目用自身入口;
+   远端 CI 仅在日志证实非代码的 CI 自身异常、当前版本和有效授权匹配时, 按测试文档
+   的去重与一次上限执行 recheck, 分开记录回复、排队/运行与新 run 最终结果;
    前端默认本地 dev-server + 代理联调, 按 `frontend-testing.md` 核实浏览器加载本地修改、
    API 到达目标环境及真实交互. 后端需环境调试时, 按
    [runtime-debugging.md](runtime-debugging.md) 发现运行基线, 以完整项目运行代码
@@ -128,7 +131,9 @@ description: "Use when developing or reviewing EasyStack frontend or backend cha
 
 环境实际提供 `easystack-ci-test`、`easystack-cloud-web-e2e`、`easystack-test-executor`、
 `easystack-env-debugging`、`easystack-log-analysis` 或 `git-delivery` 时, 可在同一已授权范围
-复用其专用自动化; 它们均为可选增强, 缺失时直接按本目录规则使用实际工具执行,
+复用其专用自动化; 实际阶段匹配且能力可用时先加载对应 Skill, 不因已熟悉任务跳过.
+已加载且未变化的内容不重复读取, 切换任务或阶段时重新核对边界, 不无差别加载.
+它们均为可选增强, 缺失时直接按本目录规则使用实际工具执行,
 不要求复制、安装或读取外部 skill. `es-frontend`、`agent-browser` 等同样不是必装项.
 不自动安装、注册 MCP 或启动无关服务; 源码、运行环境、浏览器或 Git 工具确实不可用时,
 报告受影响步骤和未验证项, 不降低完成门禁或宣称业务验证通过.

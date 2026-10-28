@@ -4,7 +4,7 @@ Use this file before acting on the desktop, when coordinates, UI element IDs, wi
 
 ## Snapshot
 
-桌面截屏 + UI 元素树检查，提供光标位置、窗口列表和交互元素坐标。
+桌面截屏 + UI 元素树检查, 提供光标位置、窗口列表和交互元素坐标。
 
 ### Snapshot 参数
 
@@ -13,7 +13,7 @@ Use this file before acting on the desktop, when coordinates, UI element IDs, wi
 | `use_vision` | bool | 返回截图图片 |
 | `use_ui_tree` | bool | 返回交互元素元数据(含坐标和 action) |
 | `use_annotation` | bool | 在截图上绘制元素边框 |
-| `display` | int[] | 指定显示器索引，如 `[0]` |
+| `display` | int[] | 指定显示器索引, 如 `[0]` |
 | `width_reference_line` | int | 添加垂直网格线 |
 | `height_reference_line` | int | 添加水平网格线 |
 | `use_dom` | bool | 浏览器 DOM 提取(非桌面 UI) |
@@ -31,13 +31,13 @@ Use this file before acting on the desktop, when coordinates, UI element IDs, wi
 
 ### 注意事项
 
-- **截图后端**:需安装 `mss`(`uv tool install windows-mcp --with mss --force`)，`pillow` 在远程桌面中可能不稳定
-- 远程桌面会话中窗口枚举可能返回空列表，但 UI 树通常可用
+- **截图后端**:需安装 `mss`(`uv tool install windows-mcp --with mss --force`), `pillow` 在远程桌面中可能不稳定
+- 远程桌面会话中窗口枚举可能返回空列表, 但 UI 树通常可用
 - `use_ui_tree: true` + `use_vision: false` 可仅获取 UI 树(更快)
 
 ## Screenshot
 
-快速截图，跳过 UI 树构建。比 `Snapshot` 快，适合只需截图的场景。
+快速截图, 跳过 UI 树构建。比 `Snapshot` 快, 适合只需截图的场景。
 
 ### 与 Snapshot 的区别
 

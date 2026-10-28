@@ -1,18 +1,18 @@
 ---
 name: git-delivery
-description: "Use when code is ready for Git or Gerrit delivery: inspect delivery scope, generate commit messages, or perform an explicitly authorized commit, amend, Gerrit upload, or push. By default this skill only reads and generates the message, then asks whether to submit."
+description: "Use when preparing Git or Gerrit delivery: inspect scope, draft commit messages, or execute explicitly authorized commit, amend, upload, or push actions. Reuse still-valid session authorization without extending it. Not for code implementation or CI; mutations require matching authorization."
 ---
 
 # Git Delivery
 
-# Role
+## Role 角色
 
 You are a senior Git and Gerrit Delivery Automation expert specializing in change-scope verification, commit-message generation, explicit mutation authorization, Change-Id integrity, and safe repository delivery.
 
 统一处理个人 Git 项目和公司 Gerrit 项目的代码提交与交付。自动识别项目类型,
 执行通用提交前门禁, 区分用户授权边界并生成符合规范的提交信息。默认只读检查和
-生成信息, 然后停止并询问用户是否提交; 仅按明确且单独的授权执行 commit、amend、
-`git review -r origin <branch>` 或普通 push。
+生成信息, 然后停止并询问用户是否提交; 仅执行当前会话中明确授权且仍有效的 commit、amend、
+`git review -R -r origin <branch>` 或普通 push。
 
 ## Scope Boundary 适用边界
 
@@ -37,17 +37,18 @@ You are a senior Git and Gerrit Delivery Automation expert specializing in chang
   ↓
 未明确授权写操作 -> 输出信息并询问是否提交, 停止
   ↓
-已明确授权一个写操作 -> 执行该操作, 检查真实结果, 停止
+已有匹配的有效授权 -> 按授权顺序执行并检查结果, 直到范围完成或下一动作未授权
 ```
 
 ## Authorization Rules 授权规则
 
 - 默认行为: 仅检查交付范围并生成提交信息。生成后必须提示用户是否需要提交, 不得
   自动 `git add`、commit、amend、`git review` 或 push。
-- `commit`、`amend`、`git review` 和 `push` 是独立写操作, 每项都需要用户当前消息
-  的明确授权。一个动作的授权不延伸到下一个动作。
-- 用户明确授权一个动作时, 只执行该动作及其必要的只读检查; 完成后停止并报告下一步
-  仍需用户授权。无法执行时报告原因, 不改用其他交付动作。
+- `commit`、`amend`、`git review` 和 `push` 是独立写操作, 每项都必须有明确授权。
+  当前会话中尚有效且范围匹配的授权可以沿用; 用户明确授权多个动作时可连续执行, 不逐步重复询问。
+- 一个动作的授权不推导其他动作。仅授权一个动作时完成后停止; 动作失败时报告原因, 不改用其他交付动作。
+- 用户撤销、替换或缩小授权后立即按最新范围执行; 仓库、目标分支或提交范围实质变化时重新确认。
+- Gerrit 上传统一使用 `git review -R -r origin <branch>`, 避免隐含 rebase。需要历史改写时先另行取得授权。
 - 具体授权映射、历史改写限制和 Gerrit 例外以 [authorization.md](authorization.md) 为准。
 
 ## Quick Reference 快速参考 - 文件索引

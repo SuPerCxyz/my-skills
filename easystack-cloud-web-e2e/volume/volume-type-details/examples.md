@@ -1,8 +1,8 @@
-# 已有 Volume Type 与 QoS Spec 示例
+# Examples
 
-> 来源:`easystack-cloud-web-e2e/volume/volume-type.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/volume/volume-type.md`,按原文标题边界拆分。
 
-## 已有 Volume Type 示例
+## Observed Volume Types 已有 Volume Type 示例
 
 当前环境中的 Volume Type:
 
@@ -17,7 +17,7 @@
 - multiattach: `<is> True`
 - volume_backend_name: `hdd`
 
-## 已有 QoS Spec 示例
+## Observed QoS Specs 已有 QoS Spec 示例
 
 | Name | Consume |
 |------|---------|

@@ -1,8 +1,8 @@
-# 网络管理页面与创建页
+# Page And Create
 
-> 来源:`easystack-cloud-web-e2e/network/network.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/network/network.md`,按原文标题边界拆分。
 
-## 页面信息
+## Page Information 页面信息
 
 | 项目 | 值 |
 |------|-----|
@@ -11,21 +11,21 @@
 | 导航路径 | Network → Network |
 | 页面标题 | Network |
 
-## 页面说明
+## Page Description 页面说明
 
-网络为用户创建了二层隔离的私有网络环境，可在其中定义三层子网。这些三层子网用于管理云主机、裸金属、容器等网络平面，提供 CIDR 管理、网关、DHCP 等服务。
+网络为用户创建了二层隔离的私有网络环境,可在其中定义三层子网。这些三层子网用于管理云主机、裸金属、容器等网络平面,提供 CIDR 管理、网关、DHCP 等服务。
 
-## 工具栏按钮
+## Toolbar Buttons 工具栏按钮
 
 | 按钮 | 定位方式 | 状态 |
 |------|--------|------|
 | Create Network | `buttonByText("Create Network")` | 始终可用(蓝色主按钮) |
 | Refresh | 工具栏 icon 按钮 | 始终可用 |
-| Delete Network | `buttonByText("Delete Network")` | 默认禁用，选中 1+ 行后可用 |
+| Delete Network | `buttonByText("Delete Network")` | 默认禁用,选中 1+ 行后可用 |
 | Export | 工具栏 Export icon | 有数据时可用 |
 | Setup | 工具栏 Setup icon | 始终可用 |
 
-## 过滤器字段
+## Filter Fields 过滤器字段
 
 定位方式:`input[placeholder="Click here for filters."]`
 
@@ -45,14 +45,14 @@
 | ID |
 | Creation Time |
 
-## 表格列(10 列)
+## Table Columns 表格列(10 列)
 
 | 列名 | 可排序 | 说明 |
 |------|--------|------|
 | (选择框) | ❌ | 全选 checkbox |
-| Name | ✅ | 网络名称，点击进入详情 |
+| Name | ✅ | 网络名称,点击进入详情 |
 | Tags | ❌ | 标签信息 |
-| Availability Zone | ✅ | 可用区，如 default-az |
+| Availability Zone | ✅ | 可用区,如 default-az |
 | IP Address | ❌ | IPv4 CIDR 和 IPv6 地址 |
 | Network Mode / ID | ❌ | 网络模式(Geneve / VLAN / Flat)和 ID |
 | Layer 2 Bridging | ✅ | 二层桥接信息 |
@@ -68,11 +68,11 @@
 
 ## Create Network 页面
 
-URL:当前主路径 `/ens/networks/creator`(独立页面，非弹窗)
+URL:当前主路径 `/ens/networks/creator`(独立页面,非弹窗)
 
-历史/别名路径:`/neutron/networks/create`(仅作旧路径对照，不作为默认执行入口)
+历史/别名路径:`/neutron/networks/create`(仅作旧路径对照,不作为默认执行入口)
 
-### 基础字段
+### Basic Fields 基础字段
 
 | 字段 | 必填 | 类型 | 说明 |
 |------|------|------|------|
@@ -86,7 +86,7 @@ URL:当前主路径 `/ens/networks/creator`(独立页面，非弹窗)
 | Multicast | ❌ | 开关 | 启用/禁用组播 |
 | Tag | ❌ | 标签输入 | 最多 20 个 |
 
-### 子网配置(Subnet)
+### Subnet Configuration 子网配置(Subnet)
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
@@ -100,16 +100,15 @@ URL:当前主路径 `/ens/networks/creator`(独立页面，非弹窗)
 
 支持 Add IPv4 Subnet / Add IPv6 Subnet 添加多个子网。
 
-### 操作按钮
+### Action Buttons 操作按钮
 
-Cancel、Create Network(初始禁用，填写必填项后启用)
+Cancel、Create Network(初始禁用,填写必填项后启用)
 
-## 分页
+## Pagination 分页
 
 | 项目 | 值 |
 |------|-----|
 | 默认每页 | 10 条 |
-| 每页定位方式 | 下拉，"10 / page" |
+| 每页定位方式 | 下拉,"10 / page" |
 | 总数显示 | "Total N items, last updated [timestamp]" |
 | 翻页 | 上一页/下一页、页码按钮 |
-

@@ -6,7 +6,7 @@ Use this file when querying TMDB, scoring candidates, or building image URLs. Ke
 
 - 优先读取环境变量 `TMDB_API_KEY`
 - 其次读取 Skill 配置中的 `tmdb_api_key`
-- 如果没有 API Key，则禁止直接调用 TMDB API
+- 如果没有 API Key, 则禁止直接调用 TMDB API
 - API Key 不得写入日志、预览、NFO、映射文件或回滚脚本
 
 ## API URL(使用 append_to_response 减少请求次数)
@@ -36,6 +36,8 @@ Use this file when querying TMDB, scoring candidates, or building image URLs. Ke
 或用户明确要求网页字段时。不得因为未配置 API Key 就直接跳转网页; 先在预览中记录
 API 不可用。网页结果必须标记 `source=web` 和匹配 `confidence`。API 与网页候选冲突
 时停止自动选择并交给用户; 两者均失败时保留 `guessed` / `unknown`, 只生成 dry-run。
+网页 fallback 需要真实页面交互时, 先读取当前可用的浏览器自动化 skill; 仅 API 查询不额外加载浏览器流程。
+能力不可用时说明所缺证据, 不假定工具已安装或自动安装。
 
 ```
 #   剧集: https://www.themoviedb.org/tv/{tmdb_id}?language=zh-CN

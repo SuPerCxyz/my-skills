@@ -30,10 +30,15 @@
 
 EasyStack OpenStack CI 先读取实际 `tox.ini` 的 envlist、basepython、commands、
 constraints 与测试配置, 确认解释器、tox/stestr 版本和现有隔离环境. 若项目使用共享
-Miniconda 环境, 发现真实安装位置并激活匹配环境后执行; 不猜测 Python 版本或环境名称.
+Miniconda 环境, 发现真实安装位置. 按本次 cover/pep8 及继承配置的明确 Python major
+选择 CI 环境: 2 -> Python 2.7, 3 -> Python 3.9; 激活后固定实际解释器的绝对路径为
+`CI_PYTHON`, 核实其版本, 不符合则停止. 后续始终用同一解释器运行 tox, 不另取 PATH 中的 tox.
+未知、动态或多 major 冲突时报告缺口, 不默认 3.9; 原 tox 显式目标约束保留并核验,
+不擅改 tox.ini. 不依赖其他 Skill 或脚本才能执行本规则, 不猜测环境名称.
 缺少工具、系统库或环境时报告缺项, 不自动安装或更改全局环境、tox、依赖来制造通过.
 
-确认存在对应入口后, 先执行 `tox -e cover`, 再执行 `tox -e pep8`.
+确认存在对应入口后, 先执行 `"$CI_PYTHON" -m tox -e cover`, 再执行
+`"$CI_PYTHON" -m tox -e pep8`. 工具调用不共享 shell 时显式复用已核实的绝对路径.
 从实际 coverage 输出定位报告, 核对本次 diff 中新增/修改的可执行行是否有 missing
 或 partial 分支; 无关历史缺口单列基线. 定向诊断可在已确认的测试环境中使用
 `stestr run <实际测试过滤器>` 或 `flake8 <目标文件>`, 不替代最终两个 tox 门禁.
@@ -53,6 +58,38 @@ privsep 测试按项目真实 fixture、helper 和权限运行, 不绕过安全�
 | Go operator | 当前 Makefile、Go 测试、生成和 CRD/RBAC 检查; reconcile/status/finalizer 及必要的 envtest/integration |
 | C/Go 服务 | 当前构建、单测与协议测试入口, 资源释放和异常恢复; 不硬编未知命令或访问生产设备 |
 | Helm/Kolla | 当前模板/配置及构建检查, 安装升级和运行态另记; 不以模板渲染代替部署验证 |
+
+## Remote CI Recheck 远端 CI 重跑
+
+失败先读取对应 job 的实际日志, 记录 Change、Patch Set/revision、run/job 标识、时间与
+失败证据. 只有明确证据确认来自 CI 自身的基础设施、执行器或环境异常, 且非代码导致,
+才进入 recheck 判断. 单凭失败名称、超时、旧经验或疑似偶发不足以定性; 代码失败或
+原因未知时报告诊断与缺口, 不靠重跑掩盖, 不用重跑代替修复或本地回归.
+只有本地 tox 失败且没有对应远端 job/Change 证据时, 不发送 recheck.
+
+1. 先核对失败 run 对应目标 Change 和当前 Patch Set 的准确 revision. 已有新 Patch Set、
+   job 归属不明或证据过期时重新调查, 不重跑旧版本来证明当前版本.
+2. 核对本任务有效授权是否允许该 Change 的 CI 触发/远程回复. 已确认允许按本规则
+   自动 recheck 的授权在原范围内有效; 开发、只读调查或本地测试授权本身不包含远程
+   写入. 只读或明确禁止远程写入时仅给出证据和建议, 不发送.
+3. 读取当前 revision 的 Gerrit messages 和可用 CI run/队列信息, 对照本轮任务记录,
+   确认没有相同 Patch Set 的重跑排队或运行, 且本轮尚未自动重跑. 有效授权内,
+   同一 Patch Set 本轮自动重跑最多一次. 已有重跑、回复提交结果不明或队列不可查时
+   先查证, 不重复发送; 无法查清则报告不确定状态. 新 Patch Set 仍须从步骤 1 核对,
+   不因换版本绕过授权或自动循环. 本节远端一次上限独立于上文的本地 3 轮修复重跑,
+   不得以本地轮次放宽远端触发次数.
+4. 发送前再核对当前 revision 未变化, 通过 [delivery.md](delivery.md#ci-recheck-reply-ci-重跑回复)
+   发布一次顶层 `recheck` Reply. 站点必须已有已确认的对应 pipeline/触发能力;
+   不假设任何 Gerrit 评论都能启动 CI, 不顺带配置 pipeline 或改写代码.
+5. 分开记录回复已提交、对应新 CI run 已排队/运行、最终成功/失败三个状态. 通过消息
+   时间、Change、revision 和新 run/job 标识关联本次触发, 再读取新 run 的实际结果和
+   日志复查. 发送后若出现新 Patch Set, 仍按发送时的准确 revision 追踪本次 run,
+   新版本 run 不算本次重跑结果, 旧版本结果也不证明新版本通过. 旧 Verified、旧 job 成功或回复接口成功均不能证明本次 CI 通过.
+   有界等待后超时、没有新 run、工具/权限不足或结果仍失败时如实报告状态、证据和
+   未验证项, 不再次自动发送, 不声称通过.
+
+此流程使用实际可用的 Gerrit/CI 只读能力及已认证等价入口, 不依赖指定 MCP 或其他
+Skill. 文档任务和离线场景只验证规则, 不真实发送回复或触发 CI.
 
 ## Runtime Preconditions 运行时前提
 

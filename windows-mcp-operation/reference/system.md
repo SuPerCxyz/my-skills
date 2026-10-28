@@ -17,7 +17,7 @@ Use this file for PowerShell, process, filesystem, and registry operations. Pref
 - **Status Code 始终为 0**(反映 shell 调用本身, 非内部命令结果)。执行外部命令时
   同时输出 `$LASTEXITCODE`; PowerShell cmdlet 使用 `-ErrorAction Stop` + `try/catch`
   输出明确成功/失败标记, 不只根据工具 Status Code 判断
-- 超时默认 30s，可调
+- 超时默认 30s, 可调
 - 可用于 Snapshot 失败时获取窗口列表作为降级方案:
 
 ```powershell
@@ -41,11 +41,11 @@ Get-Process | Where-Object {$_.MainWindowTitle -ne ""} | Select-Object Id, Proce
 ### Process 安全规则
 
 - kill 非用户启动的进程时需确认
-- kill 用 `name` 可能匹配失败，用 `pid` 更可靠
+- kill 用 `name` 可能匹配失败, 用 `pid` 更可靠
 
 ## FileSystem
 
-文件和目录操作。路径相对于用户 Desktop 目录，`"."` 表示 Desktop 本身。
+文件和目录操作。路径相对于用户 Desktop 目录, `"."` 表示 Desktop 本身。
 
 | mode | 用途 | 关键参数 |
 |------|------|----------|

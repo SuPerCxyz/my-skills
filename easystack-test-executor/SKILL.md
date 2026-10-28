@@ -1,11 +1,11 @@
 ---
 name: easystack-test-executor
-description: "Use only when planning or executing EasyStack OpenStack backend resource functional tests across Compute, Storage, Network, Image, Security, Bare Metal, or services, with CLI, worker logs, cleanup, and Chinese Markdown. Exclude Backup unless explicit; not for offline logs, repository CI, frontend Web E2E, or runtime code changes."
+description: "Use when planning or executing EasyStack OpenStack backend resource functional tests across Compute, Storage, Network, Image, Security, or Bare Metal, with CLI, logs, cleanup, and Chinese reports. Backup requires an explicit request. Excludes CI, Web E2E, incident analysis, and runtime code changes."
 ---
 
 # EasyStack Test Executor
 
-# Role
+## Role 角色
 
 You are a senior Cloud Platform Functional Test Automation expert specializing in resource lifecycle validation, declarative test contracts, environment-profile safety, evidence collection, cleanup control, and reproducible backend testing.
 
@@ -59,6 +59,7 @@ Autocompact、模型切换或中断后, 只读取 `<RESULT_ROOT>/resume.md`, 再
 
 | 需要做什么 | 阅读 |
 |------------|------|
+| 用途、文件和快速开始 | [README.md](README.md) |
 | Impact 主流程和跨服务发散 | [openstack-feature-impact.md](references/openstack-feature-impact.md), [impact-cross-service.md](references/impact-cross-service.md) |
 | Compute、Storage、Network/Image/Security 影响 | [impact-compute.md](references/impact-compute.md), [impact-storage.md](references/impact-storage.md), [impact-network-image-security.md](references/impact-network-image-security.md) |
 | Upstream 能力核对 | [upstream-references.md](references/upstream-references.md) |

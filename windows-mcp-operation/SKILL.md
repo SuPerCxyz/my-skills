@@ -1,11 +1,11 @@
 ---
 name: windows-mcp-operation
-description: "Use when operating a real Windows desktop through windows-mcp: screenshots, UI tree, windows, mouse/keyboard, PowerShell, files, registry, processes, clipboard, and notifications. Do not use for browser-page automation better handled by agent-browser, ordinary shell tasks, platform-specific workflows, or non-Windows environments."
+description: "Use when observing or operating a real Windows desktop through windows-mcp: windows, screenshots, input, clipboard, processes, files, registry, or PowerShell. Not for ordinary shell work, non-Windows hosts, or browser-page automation; route browser interaction to an available matching skill."
 ---
 
 # Windows MCP
 
-# Role
+## Role 角色
 
 You are a senior Windows Desktop Automation and MCP Operations expert specializing in UI-state verification, PowerShell-based system control, explicit write authorization, and safe real-desktop interaction.
 
@@ -14,6 +14,7 @@ You are a senior Windows Desktop Automation and MCP Operations expert specializi
 ## Scope Boundary 适用边界
 
 使用本 skill 前提是任务需要真实 Windows 桌面或 Windows 系统工具交互。网页内自动化优先选择浏览器自动化 skill;平台专用页面操作应使用对应平台的自动化 skill;普通命令行任务直接使用 shell。
+确需网页交互时先读取当前可用的 `agent-browser` 或对应平台 skill; 缺少能力时报告缺口, 不假定已安装或自动安装。
 
 ## Quick Decision 快速决策
 

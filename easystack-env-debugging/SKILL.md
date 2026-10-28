@@ -1,11 +1,11 @@
 ---
 name: easystack-env-debugging
-description: "Use for live EasyStack OpenStack/Kubernetes resource investigations, such as instances, volumes, networks, pods, or deployments, and their failures. Also use for authorized runtime debugging or Alcubierre volume unmap. Do not use for generic SSH node checks such as Docker, GPU, or OS status inspection, offline logs, CI, resource tests, or Web E2E."
+description: "Use when investigating live EasyStack OpenStack/Kubernetes resources, performing authorized runtime debugging, or unmapping Alcubierre volumes. Excludes generic SSH/OS/GPU checks, offline-only logs, CI, resource functional tests, and Web E2E."
 ---
 
 # EasyStack Environment Debugging
 
-# Role
+## Role 角色
 
 You are a senior Cloud Native Operations and Linux Systems Debugging expert specializing in live incident investigation, authorized runtime changes, evidence-based root-cause analysis, and version-aligned source analysis.
 
@@ -105,7 +105,7 @@ JumpServer 连接信息由脚本优先从用户 SSH 配置读取。调用者不�
 为准, 报告字段和证据规则以 [report-format.md](report-format.md) 为准; 本入口不覆盖
 这两个文件的更具体规则。
 
-用户询问 “为什么失败”、“异常原因”、“创建失败”、“挂载失败”, 或仅提供 traceback、
+用户询问 "为什么失败"、"异常原因"、"创建失败"、"挂载失败", 或仅提供 traceback、
 错误栈、server UUID、volume UUID 时, 将任务视为根因排查, 而不是资源清单查询。
 用户明确要求批量解挂高性能盘或 Alcubierre 盘时例外, 直接使用专项解挂流程。
 
@@ -163,7 +163,7 @@ request ID、资源标识、调用组件或依赖关系继续追查: 哪个组�
 故障时间超出当前 pod 或 fluentd 的可用日志时间窗, 且用户提供本地 `.eslog` 文件
 或已解压的 `ecs.*` 目录时, 使用本节的离线位置选择和证据合并规则, 不要只依赖运行中
 环境的当前状态推断历史根因。用户明确要求结合本地离线日志时也直接触发, 不再用主观的
-“时间较久”作为唯一判断条件。离线包解压和检索可由独立的离线日志分析工作流补充, 但
+"时间较久"作为唯一判断条件。离线包解压和检索可由独立的离线日志分析工作流补充, 但
 不可用时必须如实记录离线证据未取得, 不阻塞在线分析。
 
 按以下顺序解析离线日志位置:
@@ -205,6 +205,7 @@ request ID、资源标识、调用组件或依赖关系继续追查: 哪个组�
 
 | 需要做什么 | 阅读 |
 |------------------|------|
+| 用途、文件和快速开始 | [README.md](README.md) |
 | 环境后台访问入口、172.18 跳板、BJ-xx SSH config 跳板直达、JumpServer 菜单 fallback | [access.md](access.md) |
 | 批量预检并解除 iSCSI / NVMe-oF Alcubierre volume mapping | [alcubierre-unmap.md](alcubierre-unmap.md) |
 | 远端执行 Alcubierre preflight / execute / verify 的固定逻辑 | [scripts/alcubierre-unmap.sh](scripts/alcubierre-unmap.sh) |

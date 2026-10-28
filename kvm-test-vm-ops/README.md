@@ -19,6 +19,7 @@
 | [references/verification.md](references/verification.md) | 标准 QGA、IPv4/IPv6、SSH 和验收命令 |
 | [environment.example.yaml](environment.example.yaml) | 项目环境配置模板, 不含真实敏感值 |
 | [environment-discovery.md](environment-discovery.md) | 环境记录结构、刷新规则和变量映射 |
+| [tests/test_command_gates.py](tests/test_command_gates.py) | 本地 mock 检查无差异不关机、预检先于变更 |
 | `project-root/environment.local.yaml` | 当前项目的测试环境事实和凭据来源, 不提交 |
 | `project-root/vm-inventory.local.yaml` | 当前项目创建的 VM、地址和就绪状态清单, 不提交 |
 
@@ -27,6 +28,8 @@
 1. 确认当前项目根目录和操作模式.
 2. 从 `environment.example.yaml` 准备项目根目录的 `environment.local.yaml`, 确认本地状态文件已被 Git 忽略, 并按 `environment-discovery.md` 的变量映射加载环境变量.
 3. 按 `SKILL.md` 路由到需要的参考文档; 变更前确认 VM 计划和授权.
-4. 将实际结果写回项目根目录的 `vm-inventory.local.yaml`.
+4. 创建或调整任务按授权写回 `vm-inventory.local.yaml`; 纯只读检查默认仅报告, 不自动创建或更新本地文件.
 
 不要把项目根目录的 `environment.local.yaml`、`vm-inventory.local.yaml`、密码、私钥或 token 值提交到 Git.
+
+本地回归: `python3 -B -m unittest discover -s <skill-directory>/tests -p 'test_*.py'`。测试不连接真实宿主机或客户机。

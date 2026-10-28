@@ -11,7 +11,7 @@ Use this file for click, hover, movement, drag, scroll, and multi-select actions
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | `loc` | [int, int] | 目标坐标 `[x, y]` |
-| `label` | int | UI 元素 ID(SnapShot 返回的整数，非字符串) |
+| `label` | int | UI 元素 ID(SnapShot 返回的整数, 非字符串) |
 | `button` | string | `left` / `right` / `middle` |
 | `clicks` | int | 0=悬停, 1=单击, 2=双击 |
 

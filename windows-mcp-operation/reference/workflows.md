@@ -9,7 +9,7 @@ Use this file for common multi-tool sequences. For parameter details, switch to 
 
 1. 调用 `Snapshot` `{"use_vision": true}`
 2. 总结可见窗口和应用状态
-3. 若需 UI 元素坐标，改用 `Snapshot` `{"use_ui_tree": true}`
+3. 若需 UI 元素坐标, 改用 `Snapshot` `{"use_ui_tree": true}`
 4. 降级(截屏偶发失败时):
    - `Snapshot` `{"use_ui_tree": true, "use_vision": false}` — 仅 UI 树
    - `PowerShell` 获取窗口列表作为最终降级
@@ -36,7 +36,7 @@ Use this file for common multi-tool sequences. For parameter details, switch to 
 
 ## 关闭应用
 
-`App` 无 close 模式，使用:
+`App` 无 close 模式, 使用:
 - `PowerShell`:`Stop-Process -Name <process_name> -Force`
 - 或 `Shortcut` `alt+F4`
 

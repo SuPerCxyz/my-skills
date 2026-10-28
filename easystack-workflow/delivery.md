@@ -225,6 +225,28 @@ git push <已核实的remote> HEAD:refs/heads/<已核实的目标分支>
 不默认 force push. 拒绝、冲突、权限、hook 或分支错误均根据真实输出处理,
 不切换目标、不绕过 hook、不自动 amend/rebase/push 替代失败动作.
 
+## CI Recheck Reply CI 重跑回复
+
+CI 重跑属于独立远程写入, 只在 [backend-testing.md](backend-testing.md#remote-ci-recheck-远端-ci-重跑)
+规定的证据、当前 revision、有效授权、去重及一次上限全部满足后执行. 不从上传、
+开发或本地测试授权推导 recheck 授权; 已明确允许本条件规则的授权按原范围执行.
+
+使用实际可用的 Gerrit 能力或已认证等价入口, 在已核实 Change 的当前准确 revision
+上发布顶层 Reply/review message, 消息仅为 `recheck`. API 入口为
+`POST /changes/{change-id}/revisions/{revision-id}/review`, 请求体仅含
+`{"message": "recheck"}`; 路径值来自核实结果并按入口正确编码, 不原样执行占位符.
+使用封装工具时显式传入已核实 change_id、revision_id 和 message, 不依赖默认 current.
+不要调用行内评论接口, 不传 labels、ready 或 work_in_progress, 不投票、不切换
+WIP/ready、不上传 Patch Set、不合并. 发送前若 revision 已变化则停止并重新核对.
+
+回复成功只说明消息已提交. 按测试文档查询新 run 的排队、运行及最终结果; 网络中断
+或提交结果不明时先回读消息并查证, 不盲目重试. 无工具或权限时报告未发送与剩余项,
+不安装 MCP 或切换到未经授权的入口.
+
+协议参考: [Gerrit Set Review](https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#set-review)
+与 [Zuul Gerrit trigger](https://zuul-ci.org/docs/zuul/latest/drivers/gerrit.html).
+具体触发取决于目标站点已确认的 pipeline 配置, 协议支持顶层消息不等于站点支持 recheck.
+
 ## Results And Feedback 结果与反馈
 
 报告路径、范围、实际验证与未验证项、真实执行的 Git 动作及成功/失败/未执行状态.

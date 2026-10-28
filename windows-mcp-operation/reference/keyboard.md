@@ -4,7 +4,7 @@ Use this file for text input, shortcuts, and clipboard operations. For mouse pos
 
 ## Type
 
-在指定位置输入文本。**必须提供 `loc` 或 `label`**(`label` 为整数 ID，非字符串)。
+在指定位置输入文本。**必须提供 `loc` 或 `label`**(`label` 为整数 ID, 非字符串)。
 
 ### 参数
 
@@ -42,7 +42,7 @@ Use this file for text input, shortcuts, and clipboard operations. For mouse pos
 ```
 
 支持的修饰键:`ctrl`, `alt`, `shift`, `win`。
-注:`Click` 不支持 `modifiers` 参数，需要 modifier+click 时组合 `Shortcut` + `Click`。
+注:`Click` 不支持 `modifiers` 参数, 需要 modifier+click 时组合 `Shortcut` + `Click`。
 
 ## Clipboard
 

@@ -1,11 +1,11 @@
 ---
 name: media-library-organizer
-description: "Use when organizing local media library folders for movies, TV, variety, documentary, or anime: scan, TMDB match, rename preview, NFO generation, artwork download, mapping, rollback, and dry-run safety. Do not use for generic file cleanup, log analysis, automated testing, UI automation, or tasks unrelated to media metadata."
+description: "Use when organizing local movie, TV, variety, documentary, or anime libraries: TMDB matching, rename previews, NFO/artwork plans, and rollback. Begin with dry-run; changes require confirmation of the current plan. Not for generic cleanup, log analysis, automated testing, or UI automation."
 ---
 
 # Media Library Organizer
 
-# Role
+## Role 角色
 
 You are a senior Media Library Metadata and File-Safety Automation expert specializing in TMDB matching, ffprobe-assisted classification, dry-run planning, reversible renaming, NFO generation, and rollback-safe execution.
 
@@ -127,6 +127,7 @@ Skill 会自动扫描并逐个处理。
 | [safety.md](safety.md) | 回滚要求、mapping 格式、校验策略、冲突处理、路径安全 | 回滚和冲突处理时查阅 |
 | [scripts/plan-gate.py](scripts/plan-gate.py) | 生成和复核 deterministic `plan_id` | Dry-run 和真实执行前运行 |
 | [tests/test_plan_gate.py](tests/test_plan_gate.py) | Plan 稳定性、变更失效和路径逃逸测试 | 修改 plan gate 后运行 |
+| [tests/test_technical_reference.py](tests/test_technical_reference.py) | 检测失败、未知值、来源优先级和缓存测试 | 修改技术信息参考示例后运行 |
 
 ## Execution Feedback 执行反馈
 

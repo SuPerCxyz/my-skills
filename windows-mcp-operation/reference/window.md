@@ -15,10 +15,10 @@ Use this file for launching, switching, resizing, or closing Windows application
 ### 规则
 
 - 操作前先 `Snapshot` 确认目标窗口
-- 无 close 模式，关闭窗口用 `PowerShell` 的 `Stop-Process` 或 `Shortcut` `alt+F4`
-- launch 失败返回 `X not found in start menu.`，需使用完整名称(如 "Microsoft Edge" 而非 "edge")
+- 无 close 模式, 关闭窗口用 `PowerShell` 的 `Stop-Process` 或 `Shortcut` `alt+F4`
+- launch 失败返回 `X not found in start menu.`, 需使用完整名称(如 "Microsoft Edge" 而非 "edge")
 
 ### 注意事项
 
-- 远程桌面中 `SetForegroundWindow` 可能被系统拒绝，日志警告不影响工具返回值
-- 若窗口未实际获得焦点，可用 `PowerShell` 或 `Shortcut` `alt+tab` 替代
+- 远程桌面中 `SetForegroundWindow` 可能被系统拒绝, 日志警告不影响工具返回值
+- 若窗口未实际获得焦点, 可用 `PowerShell` 或 `Shortcut` `alt+tab` 替代

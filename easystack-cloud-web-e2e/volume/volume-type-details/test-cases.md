@@ -1,73 +1,75 @@
-# 云硬盘类型测试用例
+# Test Cases
 
-## agent-browser 迁移说明
+## Scenario Status 场景状态
 
-本文件保留页面字段、步骤和断言知识;执行入口统一迁移到 agent-browser。
-文中的历史代码块已替换为 agent-browser 迁移说明，新增用例必须使用 `agent-browser eval --stdin` 或 `agent-browser batch` 示例。
+以下是基于现有页面知识的场景规范, 不是已运行的自动化结果. 使用 agent-browser,
+先核实项目与精确资源身份, 复用对应 patterns 操作及 interactions helper.
+`planned` 表示缺少已确认的可调用操作或字段, 先现场只读发现, 不编造入口/参数.
+场景执行不要求先修改 skill; 缺少必要控件或权限时报告未验证及恢复点.
+清理只针对本用例记录的实际资源, 按已有准确授权执行; 未授权时只列清单和依赖顺序.
+任何提交未确认都先回读, 不因超时重复提交或自动删除.
 
-> 来源:`easystack-cloud-web-e2e/volume/volume-type.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/volume/volume-type.md`,按原文标题边界拆分。
 
-## 测试用例
+## Test Cases 测试用例
 
 ### TC-T001: 创建 Volume Type
 
 **代码:**
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 管理员范围、唯一类型名和后端选择明确 |
+| 操作 | Create Volume Type 填名称/描述并回读后提交 |
+| 可观察断言与恢复 | 类型名/描述准确且唯一; 不默认关联业务卷, 清理确认无本次引用 |
+
 
 ### TC-T002: 创建 Volume Type 并添加 Extra Specs
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例类型名与准确 extra specs键值已确认 |
+| 操作 | 创建类型时按当前 Pre Define/Self Define 输入, 回读后提交 |
+| 可观察断言与恢复 | 详情键值逐项一致, 布尔字符串语义不变; 不推断未支持的后端能力 |
+
 
 ### TC-T003: 编辑 Volume Type
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 仅本用例类型 UUID与允许变更字段明确 |
+| 操作 | Edit 仅修改已授权字段并提交, 回读详情 |
+| 可观察断言与恢复 | 同一UUID的新字段生效且其他字段保留; 保存失败保留原值与错误证据 |
+
 
 ### TC-T004: 删除 Volume Type
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例类型 UUID明确且无卷/配额引用 |
+| 操作 | 精确选中类型, Delete确认目标后提交 |
+| 可观察断言与恢复 | 完整刷新后该UUID消失, 其他类型保留; 被引用拒删时报告依赖而非强删 |
+
 
 ### TC-T005: 创建 QoS Spec
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 唯一QoS名称与所需规则/单位明确 |
+| 操作 | Create QoS Spec, 按当前UI配置并提交 |
+| 可观察断言与恢复 | 名称、消费端和规则值可回读; UI不支持规则时标待发现, 不声称QoS已生效 |
+
 
 ### TC-T006: 关联 QoS Spec 到 Volume Type
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
-
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例类型/QoS身份明确, 关联影响已授权 |
+| 操作 | Manage QoS Spec Association选择本次QoS, 回读并提交 |
+| 可观察断言与恢复 | 类型详情关联同一QoS; 属性关联不等于已挂载卷立即限速, 用例要求时新建或授权重挂测试卷验证实际I/O后清理 |

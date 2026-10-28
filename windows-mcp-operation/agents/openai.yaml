@@ -1,4 +1,4 @@
 interface:
   display_name: "Windows MCP"
   short_description: "Operate and inspect Windows desktop safely"
-  default_prompt: "Use $windows-mcp to inspect the Windows desktop and choose the correct Windows MCP tool."
+  default_prompt: "Use $windows-mcp-operation to inspect the Windows desktop and choose the correct Windows MCP tool."

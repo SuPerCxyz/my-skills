@@ -2,11 +2,11 @@
 
 ## Trigger And Scope 触发与边界
 
-用户给出明确环境、一个或多个 Cinder volume UUID, 并要求“解挂高性能盘”、
-“解挂 Alcubierre 盘”或“解除 mapping”时使用本流程。UUID 数量不设固定上限,
+用户给出明确环境、一个或多个 Cinder volume UUID, 并要求"解挂高性能盘"、
+"解挂 Alcubierre 盘"或"解除 mapping"时使用本流程。UUID 数量不设固定上限,
 但必须先去重并完整预检。
 
-仅要求查看、分析状态或表示“可能需要解挂”时只执行预检。用户已表达执行意图时,
+仅要求查看、分析状态或表示"可能需要解挂"时只执行预检。用户已表达执行意图时,
 预检后仍要展示对象、协议、客户端标识、影响和回滚限制, 获得一次批量确认后才能
 调用 disconnection API。确认仅覆盖当次展示的 UUID 集合。
 
@@ -123,7 +123,7 @@ kubectl exec -n alcubierre "$MANUL_POD" -c manul -- \
 5. 操作没有简单原地回滚; 恢复连接需要重新挂载云硬盘。
 6. 执行后只验证存储侧, 不自动删除 Cinder 云硬盘。
 
-用户回复明确的“确认”、“执行”或等价指令后才能执行。新增、删除或替换 UUID 后,
+用户回复明确的"确认"、"执行"或等价指令后才能执行。新增、删除或替换 UUID 后,
 原确认失效, 必须重新预检和确认。
 
 ## Phase 2: Execute 执行
@@ -218,7 +218,7 @@ STATE=<unlinked|other>
 TASK_STATE=<value>
 ```
 
-明确说明是否执行了 Cinder 删除。本流程正常结果应为“未执行, 由用户手动删除”。
+明确说明是否执行了 Cinder 删除。本流程正常结果应为"未执行, 由用户手动删除"。
 同时报告 `INITIAL_VOLUME`、`INITIAL_MAPPING`、`API_TOTAL`、`FINAL_MAPPING`、
 `FINAL_VOLUME`、`TOTAL` 和每盘 `API` 的秒级耗时。
 

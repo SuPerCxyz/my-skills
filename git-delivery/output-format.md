@@ -18,7 +18,7 @@ Commit: <SHA 前 12 位或未执行>
 - 判断为公司项目的主要依据
 - Gerrit 目标分支
 - 是新 Change 还是原 Change 的新 Patch Set
-- 是否实际执行 `git review -r origin <branch>`
+- 是否实际执行 `git review -R -r origin <branch>`
 
 ## 个人项目补充
 

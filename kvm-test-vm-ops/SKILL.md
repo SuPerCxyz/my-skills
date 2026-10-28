@@ -1,6 +1,6 @@
 ---
 name: kvm-test-vm-ops
-description: "Provision or validate project-scoped test VMs on an authorized KVM/libvirt host using prepared QGA/DHCP templates. Use for cloning, resource or disk changes, guest expansion, address discovery, SSH readiness, and project VM inventory. Not for production VM administration, generic libvirt diagnosis, or OpenStack-managed instances."
+description: "Use when provisioning or validating project-scoped test VMs on an authorized KVM/libvirt host using prepared QGA/DHCP templates. Use for cloning, resource or disk changes, guest expansion, address discovery, SSH readiness, and project VM inventory. Not for production VM administration, generic libvirt diagnosis, or OpenStack-managed instances."
 ---
 
 # KVM Test VM Operations
@@ -41,13 +41,14 @@ description: "Provision or validate project-scoped test VMs on an authorized KVM
 | QGA、IPv4/IPv6、SSH、内存证据和验收 | [references/verification.md](references/verification.md) |
 | 通用环境记录结构和刷新规则 | [environment-discovery.md](environment-discovery.md) |
 | 项目根目录 `environment.local.yaml` 模板 | [environment.example.yaml](environment.example.yaml) |
+| 本地 mock 验证命令门禁和顺序 | [tests/test_command_gates.py](tests/test_command_gates.py) |
 
 ## Workflow 工作流
 
 1. 解析项目根目录和模式, 读取实际存在的项目入口文件, 生成或验证 VM 计划.
 2. 读取项目根目录的本地状态, 仅在项目标识和架构指纹兼容时复用稳定字段.
 3. 按模式读取参考文档. 变更前重新确认授权并执行全部预检门禁.
-4. 执行后读取实际状态, 将项目标识、VM 计划、资源、地址族、SSH 和结果写回项目 VM 清单.
+4. 执行后读取实际状态并对账。纯 `inspect/reuse/verify` 默认只报告, 不写项目文件; 创建或调整任务在已确认范围内更新项目 VM 清单。另有记录授权时可写回只读检查结果, 不将远端只读等同于本地可写.
 
 ## Completion Gate 完成门禁
 

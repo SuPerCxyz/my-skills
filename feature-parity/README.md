@@ -27,6 +27,7 @@
 | 子代理编排规则 | [references/07-subagent-orchestration.md](references/07-subagent-orchestration.md) |
 | 产物模板 | [templates/](templates/) |
 | 矩阵结构审计脚本 | [scripts/parity_audit.py](scripts/parity_audit.py) |
+| 矩阵校验回归测试 | [tests/test_parity_audit.py](tests/test_parity_audit.py) |
 
 ## 快速开始
 
@@ -39,7 +40,10 @@
 每次更新 `PARITY_MATRIX.md` 后运行:
 
 ```bash
-python3 scripts/parity_audit.py <matrix-path>
+python3 <skill-directory>/scripts/parity_audit.py <matrix-path>
 ```
 
 仅在退出码为 0 时继续下一阶段; 非 0 先修复矩阵再重跑。
+结构通过不证明证据真实或行为通过, 仍需执行主入口的人工证据和行为门禁。
+
+修改校验脚本后运行 `python3 -B -m unittest discover -s <skill-directory>/tests -p 'test_*.py'`。

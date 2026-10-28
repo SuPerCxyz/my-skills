@@ -32,7 +32,7 @@ overlay 和 patch 路径验证, 不要求先完成根因排查。完整资源功
 6. 解挂高性能盘时提供环境和一个或多个 volume UUID; Agent 预检后一次确认,
    再逐盘解挂和验证。
 
-## 文件说明
+## Files 文件说明
 
 完整文件索引以 [SKILL.md](SKILL.md) 的 Quick Reference 为准。常用入口:
 

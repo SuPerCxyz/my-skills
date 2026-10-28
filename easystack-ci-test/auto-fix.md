@@ -2,15 +2,16 @@
 
 Use this file after either `tox -e cover` or `tox -e pep8` fails. It defines the repair loop and points to the specialized files for coverage, pep8, and privsep failures.
 
-**Prerequisite:** The shared Miniconda environment `easystack-<project>-py<version>` must be active. See [setup.md](setup.md) for the standard entry path:
+**Prerequisite:** 按 [setup.md](setup.md) 从所选 tox 环境映射 2.7/3.9,
+固定独立 AUX_PYTHON 并通过实际 CI_PYTHON 门禁; 原 tox 目标另行核验:
 
 ```bash
-MINICONDA_BASE="$HOME/miniconda3"
-source "${MINICONDA_BASE}/etc/profile.d/conda.sh"
-conda activate easystack-<project>-py<version>
+source <CONFIRMED_MINICONDA_BASE>/etc/profile.d/conda.sh
+conda activate <CONFIRMED_CI_ENV>
 ```
 
-Both `tox -e cover` and `tox -e pep8` run in this same environment. **Never run `tox` directly without activating conda first.**
+cover 和 pep8 仅在本次所选配置没有未解决冲突时执行, 使用已核实的
+`"$CI_PYTHON" -m tox -e cover` / `-e pep8`。未知或多 major 冲突时停止, 不默认 3.9。
 
 When fixing pep8 or coverage for a change, follow this loop for at most 3 repair-and-rerun rounds,
 or stop earlier when a stop condition below is reached:
@@ -41,7 +42,7 @@ or stop earlier when a stop condition below is reached:
 
 **Run cover first, pep8 last.** pep8 runs in ~40s while cover takes ~5 minutes. Deferring pep8 until the end avoids repeated waits when the cover fix loop is the longer path.
 
-## Key Points
+## Key Points 关键约束
 
 - New tests may introduce test failures - fix those before moving on
 - Stop and report instead of continuing when the same failure remains after three repair rounds,
@@ -70,12 +71,12 @@ or stop earlier when a stop condition below is reached:
 - After all checks pass, use [gerrit-delivery.md](gerrit-delivery.md) only when the user explicitly
   asks to amend and upload the current change.
 
-## Useful Commands During the Loop
+## Loop Commands 循环命令
 
 | Need | Command |
 |------|---------|
-| Run coverage | `tox -e cover` |
-| Run pep8 | `tox -e pep8` |
+| Run coverage | `"$CI_PYTHON" -m tox -e cover` |
+| Run pep8 | `"$CI_PYTHON" -m tox -e pep8` |
 | Isolate lint | `. .tox/pep8/bin/activate && flake8 path/to/file.py` (diagnostic only) |
 | Run one test | `stestr run <pattern>` (Miniconda env already has stestr via tox) |
 | List modified files | `git diff HEAD^ --name-only` + `git diff --name-only` + `git diff --cached --name-only` |

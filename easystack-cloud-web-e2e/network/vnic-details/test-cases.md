@@ -1,50 +1,53 @@
-# 虚拟网卡测试用例
+# Test Cases
 
-## agent-browser 迁移说明
+## Scenario Status 场景状态
 
-本文件保留页面字段、步骤和断言知识;执行入口统一迁移到 agent-browser。
-文中的历史代码块已替换为 agent-browser 迁移说明，新增用例必须使用 `agent-browser eval --stdin` 或 `agent-browser batch` 示例。
+以下是基于现有页面知识的场景规范, 不是已运行的自动化结果. 使用 agent-browser,
+先核实项目与精确资源身份, 复用对应 patterns 操作及 interactions helper.
+`planned` 表示缺少已确认的可调用操作或字段, 先现场只读发现, 不编造入口/参数.
+场景执行不要求先修改 skill; 缺少必要控件或权限时报告未验证及恢复点.
+清理只针对本用例记录的实际资源, 按已有准确授权执行; 未授权时只列清单和依赖顺序.
+任何提交未确认都先回读, 不因超时重复提交或自动删除.
 
-> 来源:`easystack-cloud-web-e2e/network/vnic.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/network/vnic.md`,按原文标题边界拆分。
 
-## 测试用例
+## Test Cases 测试用例
 
 ### TC-VNIC001: 验证 vNIC 页面加载
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 目标项目明确 |
+| 操作 | 打开 /ens/nics, 等待表格/空态加载 |
+| 可观察断言与恢复 | 路径/项目与Name/Status/IP字段一致; 双栈地址不强制归成单一IPv4 |
+
 
 ### TC-VNIC002: 状态过滤验证
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例vNIC身份已知 |
+| 操作 | 按当前All Status/Active/Down切换筛选并回读, 最后清除 |
+| 可观察断言与恢复 | 各行真实状态与筛选一致, 不用Down推断资源不存在 |
+
 
 ### TC-VNIC003: 按名称过滤 vNIC
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例vNIC名称/MAC/UUID及项目明确 |
+| 操作 | 使用真实Name筛选, 精确核实MAC/UUID后清除 |
+| 可观察断言与恢复 | 同名前缀或同名不同项目被排除; 没有唯一身份时停止 |
+
 
 ### TC-VNIC004: 选中行后操作按钮可用
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例vNIC处于已知绑定状态, 只观察按钮 |
+| 操作 | 精确选中唯一目标, 回读Attach/Detach/Delete/More可用性, 再取消选择 |
+| 可观察断言与恢复 | 按钮状态符合当前绑定条件与权限; 选择成功不等于挂载/解绑成功, 不做真实提交 |

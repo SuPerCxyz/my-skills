@@ -1,12 +1,12 @@
-# 创建实例向导
+# Create Wizard
 
-> 来源:`easystack-cloud-web-e2e/instance/instance.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/instance/instance.md`,按原文标题边界拆分。
 
-## 创建实例向导(4 步)
+## Create Instance Wizard 创建实例向导(4 步)
 
-> ⚠️ **重要:** Name 字段在 **Step 3 (System Configuration)** 中，不在 Step 1！
+> ⚠️ **重要:** Name 字段在 **Step 3 (System Configuration)** 中,不在 Step 1!
 
-### 向导导航按钮
+### Wizard Navigation 向导导航按钮
 
 | 步骤 | Next 按钮 | Previous 按钮 |
 |------|-----------|---------------|
@@ -15,7 +15,7 @@
 | Step 3 | `byText(".steps-action button.ant-btn-primary", "Confirm")` | `buttonByText("Prev: Network Configuration")` |
 | Step 4 | 最终 `byText("button.ant-btn-primary", "Confirm")` | - |
 
-### 底部栏(始终显示)
+### Wizard Footer 底部栏(始终显示)
 
 - **Quantity**: `nz-input-number.instance-number` — 批量创建数量
 - **Quota**: 显示当前配额使用情况
@@ -38,7 +38,7 @@
 
 | 选项 | 定位方式 | 说明 |
 |------|--------|------|
-| **Image** | `byText("label.ant-radio-button-wrapper", "Image")` | 默认，从镜像启动 |
+| **Image** | `byText("label.ant-radio-button-wrapper", "Image")` | 默认,从镜像启动 |
 | **Instance Snapshot** | `byText("label.ant-radio-button-wrapper", "Instance Snapshot")` | 从实例快照启动 |
 | **Bootable Volume** | `byText("label.ant-radio-button-wrapper", "Bootable Volume")` | 从可启动卷启动 |
 
@@ -62,7 +62,7 @@
 | Tag | tag input | 最多 20 个标签 |
 | Description | text input | 描述(可选) |
 
-> ⚠️ Name 字段在 Step 3 (System Configuration) 中，详见 3.1
+> ⚠️ Name 字段在 Step 3 (System Configuration) 中,详见 3.1
 
 #### 1.6 Image 表格(Boot Source=Image 时)
 
@@ -99,7 +99,7 @@
 
 **表格列:** Flavor Name, vCPU, Memory, Access Control, vCPU Model
 
-**General Computing 分类下的 Flavor(前 10 个，共约 30-40 个):**
+**General Computing 分类下的 Flavor(前 10 个,共约 30-40 个):**
 
 | Flavor Name | vCPU | Memory |
 |-------------|------|--------|
@@ -118,7 +118,7 @@
 | 字段 | 组件 | 说明 |
 |------|------|------|
 | Volume Type | nz-select 下拉 | 默认 `hdd` |
-| Size | nz-input-number.storage-size | 容量(GiB)，默认 1 |
+| Size | nz-input-number.storage-size | 容量(GiB),默认 1 |
 | Delete with Instance | checkbox | 是否随实例删除 |
 
 #### 1.9 Data Disk 配置
@@ -127,7 +127,7 @@
 - **添加按钮:** `.add-datadisk-container`(点击文本链接)
 - 最多可添加 24 块数据盘
 - 每块可配置: Volume Type, Size, Delete with Instance
-- ⚠️ **注意:** 创建云主机时添加的数据盘无法自定义名称，名称由系统自动生成
+- ⚠️ **注意:** 创建云主机时添加的数据盘无法自定义名称,名称由系统自动生成
 
 ### Step 2: Network Configuration(网络配置)
 
@@ -137,12 +137,12 @@
 
 | 字段 | 组件 | 说明 |
 |------|------|------|
-| Network | `.network-select`(ant-select，可搜索) | 选择网络 |
+| Network | `.network-select`(ant-select,可搜索) | 选择网络 |
 | Subnet | `.subnet-select`(自动填充) | 选择子网 |
 | IP 分配 | Radio | `Automatically assign IPv4 address`(默认) |
 | 剩余 IP | 显示文本 | `Remainning IP Available: 65527` |
 
-**添加 vNIC:** 点击文本链接添加，最多 12 块
+**添加 vNIC:** 点击文本链接添加,最多 12 块
 **删除 vNIC:** `.network-delete`(悬停显示)
 
 **可用网络(示例):**
@@ -159,8 +159,8 @@
 | 字段 | 组件 | 说明 |
 |------|------|------|
 | Type | Radio | `Stateful`(默认)/ `Stateless` |
-| Security Group | `.security-group-select`(ant-select，可搜索，支持多选) | 安全组 |
-| View Rules | 链接 | 打开详情面板，显示 Ingress/Egress Rules |
+| Security Group | `.security-group-select`(ant-select,可搜索,支持多选) | 安全组 |
+| View Rules | 链接 | 打开详情面板,显示 Ingress/Egress Rules |
 
 **安全组规则表列:** Type, Protocol, Port Range, Source
 
@@ -195,9 +195,9 @@
 
 #### 3.3 Tags
 
-- Tag 输入区域，最多 20 个标签
+- Tag 输入区域,最多 20 个标签
 
-#### 3.4 Advanced Options(高级选项，默认折叠)
+#### 3.4 Advanced Options(高级选项,默认折叠)
 
 **展开/折叠:** 点击 `agent-browser find text "Show" click` /
 `agent-browser find text "Hide" click`
@@ -216,7 +216,7 @@
 
 ### Step 4: Confirm(确认)
 
-显示 **Configuration Overview** 摘要，分 3 个区域:
+显示 **Configuration Overview** 摘要,分 3 个区域:
 
 #### Basic Configuration 区域
 - Resource Pool, Availability Zone, Project
@@ -237,6 +237,6 @@
 - ISO/USB Mounted, Compute Node
 - Instance Monitor
 
-**每个区域有 "edit" 链接**，点击可跳转回对应步骤修改。
+**每个区域有 "edit" 链接**,点击可跳转回对应步骤修改。
 
 **最终操作按钮:** `byText("button.ant-btn-primary", "Confirm")` — 点击创建实例。

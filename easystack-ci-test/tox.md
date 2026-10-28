@@ -4,7 +4,7 @@ Use this file for the exact tox entry points after the Miniconda environment is 
 
 > ⚠ **Must activate the Miniconda environment first.** Do not run `tox` directly - it
 > may use the wrong Python or miss dependencies. Follow [setup.md](setup.md) to
-> activate the `easystack-<project>-py<version>` environment first.
+> activate the confirmed project host environment first; verify each tox target separately.
 >
 > Miniconda is the distribution; `conda` is its CLI tool - so `conda activate` is the correct command:
 > ```bash
@@ -12,27 +12,31 @@ Use this file for the exact tox entry points after the Miniconda environment is 
 > conda activate easystack-<project>-py<version>
 > ```
 
-## pep8 Check
+完整 tox 门禁先按 [setup.md](setup.md) 从所选 tox 环境映射 CI Python 2.7/3.9,
+用独立 AUX_PYTHON 核对实际 CI_PYTHON。诊断时激活过目标 venv 后, 必须重新激活
+已选 CI 环境、更新 CI_PYTHON 并重过门禁; 不沿用 PATH 里的另一解释器。
+
+## pep8 Check 风格检查
 
 ```bash
 # Activate Miniconda env first, then run tox
-MINICONDA_BASE="$HOME/miniconda3"
-source "${MINICONDA_BASE}/etc/profile.d/conda.sh"
-conda activate easystack-<project>-py<version>
-tox -e pep8
+source <CONFIRMED_MINICONDA_BASE>/etc/profile.d/conda.sh
+conda activate <CONFIRMED_CI_ENV>
+# 重新取得 CI_PYTHON 并通过 setup.md 门禁后
+"$CI_PYTHON" -m tox -e pep8
 ```
 
-## Coverage Testing
+## Coverage Testing 覆盖率测试
 
 ```bash
 # Activate Miniconda env first, then run tox
-MINICONDA_BASE="$HOME/miniconda3"
-source "${MINICONDA_BASE}/etc/profile.d/conda.sh"
-conda activate easystack-<project>-py<version>
-tox -e cover
+source <CONFIRMED_MINICONDA_BASE>/etc/profile.d/conda.sh
+conda activate <CONFIRMED_CI_ENV>
+# 重新取得 CI_PYTHON 并通过 setup.md 门禁后
+"$CI_PYTHON" -m tox -e cover
 ```
 
-## Running Individual Tests
+## Running Individual Tests 单项测试
 
 Useful for debugging during the fix loop:
 
@@ -48,13 +52,13 @@ stestr run privsep.test_cgroup
 stestr run test_volume_utils.CopyVolumeTestCase.test_copy_volume_with_on_execute
 ```
 
-## Isolate flake8 Errors
+## Isolate flake8 Errors 定位风格错误
 
 ```bash
 . .tox/pep8/bin/activate && flake8 path/to/file.py
 ```
 
-## Note on allowlist_externals
+## External Commands 外部命令约束
 
 If `tox -e pep8` fails with `is not allowed, use allowlist_externals`, treat it as a
 tox configuration blocker. `flake8 .` may be used only to diagnose source lint errors;

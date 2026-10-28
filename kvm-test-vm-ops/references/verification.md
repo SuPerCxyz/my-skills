@@ -40,7 +40,7 @@ KVM_NODE_SSH=(ssh -o BatchMode=yes -o ConnectTimeout=5 "$KVM_SSH_TARGET")
 
 ## Domain And QGA 域和 QGA
 
-`provision` 在克隆和配置完成后启动; `resize` 在离线调整完成后启动属于已确认范围的一部分. `inspect`, `reuse` 和 `verify` 不启动已关机的 VM:
+`provision` 在克隆和配置完成后启动; `resize` 只有本次发生离线调整 (`KVM_OFFLINE_CHANGED=true`) 才按确认范围启动。无调整且原本关机时保留电源状态, 报告配置结果并跳过需开机的 QGA/SSH 检查. `inspect`, `reuse` 和 `verify` 不启动已关机的 VM:
 
 ```bash
 KVM_DOMAIN_STATE="$(
@@ -56,7 +56,12 @@ elif test "$KVM_MODE" = resize; then
   case "$KVM_DOMAIN_STATE" in
     running) ;;
     'shut off')
-      "${KVM_NODE_SSH[@]}" "virsh --connect '$LIBVIRT_URI' start '$KVM_DOMAIN'"
+      if test "${KVM_OFFLINE_CHANGED:-false}" = true; then
+        "${KVM_NODE_SSH[@]}" "virsh --connect '$LIBVIRT_URI' start '$KVM_DOMAIN'"
+      else
+        printf 'already_satisfied; domain remains shut off; skip guest checks\n'
+        exit 0
+      fi
       ;;
     *)
       printf 'mode=resize unexpected state=%s\n' "$KVM_DOMAIN_STATE" >&2

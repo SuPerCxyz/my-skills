@@ -5,9 +5,9 @@ EasyStack 云平台 Web UI 端到端自动化测试 Skill。基于 `agent-browse
 操作自动化。UI 失败需要 backend 根因证据时, 可将独立获取的 backend 证据作为补充;
 离线 eslog 分析和代码仓库 CI 也属于可选的独立工作流, 不影响本 skill 的前端测试执行。
 
-## 概述
+## Overview 概述
 
-本项目是一个 Claude Code Skill,用于通过 `agent-browser` 对 EasyStack Cloud Web 页面执行 UI 自动化操作和端到端测试。核心设计原则:
+本 skill 可供支持 Agent Skills 的客户端使用, 用于通过 `agent-browser` 对 EasyStack Cloud Web 页面执行 UI 自动化操作和端到端测试。核心设计原则:
 
 - **统一入口**:所有 UI 操作统一通过 `agent-browser` CLI 执行,不混合其他浏览器自动化框架。
 - **原子操作库**:页面交互封装为可复用的原子操作(`patterns/`),返回结构化结果。
@@ -15,7 +15,7 @@ EasyStack 云平台 Web UI 端到端自动化测试 Skill。基于 `agent-browse
 - **测试编排**:定义测试用例结构、编排流程和结果约定(`patterns.md`、`execution.md`)。
 - **减少 token 消耗**:多步骤页面动作合并为批量调用,不逐步依赖 snapshot。
 
-## 文档结构
+## Documentation Structure 文档结构
 
 | 区域 | 内容 |
 |------|------|
@@ -24,20 +24,22 @@ EasyStack 云平台 Web UI 端到端自动化测试 Skill。基于 `agent-browse
 | [patterns.md](patterns.md), `patterns/` | 测试编排规范与原子操作库 |
 | [relationships.md](relationships.md) | 资源关联关系与跨资源测试关注点 |
 | [scripts/validate-patterns.py](scripts/validate-patterns.py) | 校验 operation 的 terminal 和 submitted 语义 |
+| [tests/README.md](tests/README.md) | 真实文档 helper 的离线行为回归及未验证边界 |
+| [patterns/image-ops.md](patterns/image-ops.md) | VM 镜像和容器镜像的独立入口与上传契约 |
 | `instance/`, `volume/`, `network/`, `image/` | 页面知识库, 各目录内的 `*-details/` 存放详情页字段、弹窗和测试场景 |
 
 完整文件入口以 [SKILL.md](SKILL.md) 的 Quick Reference 为准, README 不维护逐文件目录树,
 避免子目录拆分后索引过期。
 
-## 快速开始
+## Quick Start 快速开始
 
-### 前置条件
+### Prerequisites 前置条件
 
 - `agent-browser` CLI(如未安装, 报告建议命令并等待用户确认后安装)
 - EasyStack 云平台访问地址和凭据
 - 环境配置文件 `/tmp/easystack-env.json`
 
-### 最小环境配置
+### Minimal Configuration 最小环境配置
 
 ```json
 {
@@ -49,39 +51,48 @@ EasyStack 云平台 Web UI 端到端自动化测试 Skill。基于 `agent-browse
 }
 ```
 
-### 典型使用流程
+### Typical Workflow 典型使用流程
 
-1. **加载 Skill**:在 Claude Code 中调用 `easystack-cloud-web-e2e` skill。
+1. **加载 Skill**:在当前客户端中调用 `easystack-cloud-web-e2e` skill。
 2. **准备环境**:确保 `agent-browser` 可用,加载版本匹配说明。
 3. **配置登录**:读取 `/tmp/easystack-env.json`,执行登录或复用会话。
 4. **选择操作**:根据任务从 `patterns/quick-reference.md` 选择原子操作。
 5. **执行用例**:按 `execution.md` 和 `patterns.md` 编排测试流程。
 6. **报告结果**:记录资源映射、执行结果和截图路径。
 
-### 示例
+### Example 示例
 
 ```bash
 # 1. 确保 agent-browser 可用
 agent-browser skills get core
 
 # 2. 读取环境配置
-cat /tmp/easystack-env.json
+PLATFORM_URL=$(python3 - <<'PYCONFIG'
+import json
+from pathlib import Path
+config = json.loads(Path('/tmp/easystack-env.json').read_text())
+missing = [key for key in ('url', 'username', 'password') if not config.get('platform', {}).get(key)]
+if missing:
+    raise SystemExit('missing platform fields: ' + ', '.join(missing))
+print(config['platform']['url'])
+PYCONFIG
+)
 
 # 3. 打开登录页面
 agent-browser --args '--no-sandbox' --ignore-https-errors open "$PLATFORM_URL/auth_login/"
 ```
 
-## 能力状态
+## Capability Status 能力状态
 
 原子操作按验证成熟度分为三级:
 
 | 状态 | 含义 |
 |------|------|
-| `ready-validated` | 已通过真实 EasyStack Web UI 用例验证,可直接使用 |
+| `ready-validated` | 当前修订有平台版本、日期、用例和脱敏结果证据; 仍须核实现场兼容性 |
 | `ready-template` | 已补齐操作模板但尚未完成真实用例闭环验证,执行时需现场确认页面状态 |
 | `planned` | 仅保留操作名称清单,不作为当前可执行入口 |
 
-### 已验证可用的核心操作 (`ready-validated`)
+### Current Templates 当前可用模板 (真实 UI 未验证)
 
 - 创建云主机 (`create_instance`)
 - 挂载云硬盘 (`attach_volume`)
@@ -93,28 +104,30 @@ agent-browser --args '--no-sandbox' --ignore-https-errors open "$PLATFORM_URL/au
 - 分配浮动 IP (`allocate_floating_ip`)
 - 绑定浮动 IP (`associate_floating_ip`)
 
-完整列表见 `patterns/quick-reference.md`。
+这些操作在当前修订中均为 `ready-template`, 历史运行记录不证明修订后的示例已通过.
+完整列表见 `patterns/quick-reference.md`. `ready-validated` 只授予附有版本、日期、用例
+与脱敏结果引用的当前修订; 本地 fixture 不替代真实 UI 证据.
 
-## 关键规范
+## Core Conventions 关键规范
 
-### 执行硬规则
+### Hard Rules 执行硬规则
 
 - 所有 UI 操作统一通过 `agent-browser` 执行,不混合其他框架。
-- 多步骤页面动作合并到单次 `agent-browser eval --stdin` 或 `agent-browser batch`。
+- 多步骤页面动作优先批量执行; 按实际页面和异步边界短段执行并逐段回读, 不逐步向用户确认.
 - 不逐步依赖 snapshot 驱动操作;snapshot 只用于必要诊断。
 - 每个测试用例必须创建新的测试资源,不复用历史资源。
 - 资源创建提交后先回读页面和后台状态; 仍未确认时最多使用新 run id 重试 1 次, 第二次
   仍未确认则记为 `creation_unconfirmed` 并停止创建, 不自动清理。
 - 清理资源前必须先向用户说明待清理清单,得到确认后才执行。
 
-### 资源命名
+### Resource Naming 资源命名
 
 用例中 `vm1`、`volume1` 等逻辑名映射为唯一资源名:
 `<case-id>-<resource-type>-<runid>`
 
 报告中同时记录逻辑名和实际资源名。
 
-### 返回值约定
+### Result Contract 返回值约定
 
 所有原子操作返回统一结构化对象:
 
@@ -132,15 +145,15 @@ agent-browser --args '--no-sandbox' --ignore-https-errors open "$PLATFORM_URL/au
 }
 ```
 
-## 维护指南
+## Maintenance 维护指南
 
-### 新增原子操作
+### New Operations 新增原子操作
 
 1. 按 `patterns/operation-template.md` 补齐操作文档。
 2. 沉淀到对应资源域的 `patterns/*-ops.md`。
 3. 同步更新 `patterns/quick-reference.md` 索引。
 
-### 操作沉淀触发条件
+### Operation Extraction 操作沉淀触发条件
 
 执行过程中发现以下情况时, 先在报告中记录 `skill_improvements`; 当前任务明确包含
 skill 维护或用户确认更新后, 再修改 skill 文档:
@@ -149,7 +162,7 @@ skill 维护或用户确认更新后, 再修改 skill 文档:
 - 操作包含 3 步以上稳定页面交互
 - 操作会创建、修改、删除或绑定平台资源
 
-### 后台任务
+### Background Tasks 后台任务
 
 长耗时用例后台任务策略:
 - skill 不固定模型名称或推理等级; 后台任务按当前会话 `AGENTS.md`、用户要求和

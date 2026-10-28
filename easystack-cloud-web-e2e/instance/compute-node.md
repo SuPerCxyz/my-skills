@@ -1,6 +1,6 @@
-# 计算节点(Compute Node)
+# Compute Node
 
-## 页面信息
+## Page Information 页面信息
 
 | 项目 | 值 |
 |------|-----|
@@ -8,16 +8,16 @@
 | 导航路径 | Computing → Compute Node |
 | 侧边栏定位方式 | `#nova__subsvc_left__phy_host` |
 
-## 页面说明
+## Page Description 页面说明
 
-计算节点是用于管理实例、GPU、USB 等设备的物理服务器。不可创建，只能查看和管理。
+计算节点是用于管理实例、GPU、USB 等设备的物理服务器。不可创建,只能查看和管理。
 
-## 列表页
+## List Page 列表页
 
-当前控制台中的计算节点页是典型的“行内动作型页面”:没有顶部批量操作按钮，
+当前控制台中的计算节点页是典型的“行内动作型页面”:没有顶部批量操作按钮,
 主要动作位于每一行的 `Action` 列。
 
-### 工具栏按钮
+### Toolbar Buttons 工具栏按钮
 
 | 按钮 | 定位方式 | 状态 |
 |------|--------|------|
@@ -25,21 +25,21 @@
 | Export | `buttonByText("Export")` | 始终可用 |
 | Setup | `buttonByText("Setup")` | 始终可用 |
 
-> 无创建按钮——计算节点是物理服务器，不可由用户创建。
+> 无创建按钮——计算节点是物理服务器,不可由用户创建。
 
-### 过滤器选项(13 项)
+### Filter Options 过滤器选项(13 项)
 
 Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Memory (Used/Total)、Root Disk (Used/Total)、Number of Instances、Number of Devices:USB、Number of Devices:GPU、Enabled、Status、DPDK
 
-### 表格列(11 列)
+### Table Columns 表格列(11 列)
 
 | 列名 | 可排序 | 说明 |
 |------|--------|------|
-| Name | ✅ | 节点名称，点击进入详情 |
+| Name | ✅ | 节点名称,点击进入详情 |
 | Availability Zone | ✅ | 可用域 |
 | CPU Architecture/Model | ✅ | 如 Arm / HiSilicon Kunpeng-920 |
 | Status | ✅ | Up / Down |
-| vCPU (Used/Total) | ✅ | 如 44 / 156，带 info 图标 |
+| vCPU (Used/Total) | ✅ | 如 44 / 156,带 info 图标 |
 | Memory (Used/Total) | ✅ | 如 56.00GiB / 191.90GiB |
 | Root Disk (Used/Total) | ✅ | 如 18.99GiB / 262.69GiB |
 | Number of Instances | ✅ | 运行中实例数 |
@@ -47,7 +47,7 @@ Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Me
 | Enabled | ✅ | Yes / No |
 | Action | ❌ | 操作列 |
 
-### 行操作
+### Row Actions 行操作
 
 | 操作 | 定位方式 | 状态 |
 |------|--------|------|
@@ -56,13 +56,13 @@ Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Me
 | Enable | `agent-browser find text "Enable"` | 节点已启用时禁用 |
 | More → Disable | 下拉菜单 | 节点已启用时可用 |
 
-### 表格底部
+### Table Footer 表格底部
 
 格式:`Total X items, last updated DD Mon YYYY at HH:mm:ss`
 
-## 节点详情页
+## Node Details 节点详情页
 
-### 头部信息
+### Header Information 头部信息
 
 | 元素 | 定位方式 |
 |------|--------|
@@ -70,7 +70,7 @@ Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Me
 | 面包屑 | `button "Compute Node"` → `button "Detail"` |
 | More Actions | `buttonByText("More Actions")` |
 
-### Basic Information
+### Basic Information 基本信息
 
 | 字段 | 示例值 |
 |------|--------|
@@ -84,13 +84,13 @@ Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Me
 | Number of NUMA Nodes | 4 |
 | Last Update | 2026-06-16 23:03:55 |
 
-### Virtual Resources
+### Virtual Resources 虚拟资源
 
 | 指标 | 子分类 |
 |------|--------|
 | Number of instances | Active: N, Shutoff: N, Other: N |
 
-### Physical Devices
+### Physical Devices 物理设备
 
 | 设备类型 | 子分类 |
 |----------|--------|
@@ -100,7 +100,7 @@ Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Me
 | Number of NIC | Virtualized / Not virtualized |
 | Number of VF | Attached / Detached |
 
-### Resource Usage Overview
+### Resource Usage Overview 资源使用概览
 
 | 资源 | 百分比 | Used | Total |
 |------|--------|------|-------|
@@ -108,11 +108,11 @@ Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Me
 | Memory | 百分比 | 大小 | 总量 |
 | Root Disk | 百分比 | 大小 | 总量 |
 
-### 详情页 Tab 页(7 个)
+### Details Tabs 详情页 Tab 页(7 个)
 
 | Tab | 定位方式 | 说明 |
 |-----|--------|------|
-| Instance | `tab "Instance"` | 默认，该节点上的实例列表 |
+| Instance | `tab "Instance"` | 默认,该节点上的实例列表 |
 | GPU | `tab "GPU"` | GPU 设备列表 |
 | vGPU | `tab "vGPU"` | vGPU 设备列表 |
 | USB Device | `tab "USB Device"` | USB 设备列表 |
@@ -124,17 +124,17 @@ Name、Availability Zone、CPU Architecture、CPU Model、vCPU (Used/Total)、Me
 
 Name、IP Address、UUID、Virtual Host Name(带 info 图标)、Status
 
-### GPU Tab
+### GPU Tab GPU 标签页
 
 工具栏:Refresh、Split to vGPU、Clear vGPU、Enable、Disable、Filter、Export、Setup
 
 表格列:Manufacturer、Product Model、GPU Memory Size、Status、Virtualization Status、All vGPU Count、Available vGPU Count、Attach Resource
 
-### USB Device Tab
+### USB Device Tab USB 设备标签页
 
 表格列:Manufacturer、Product Series、Serial Number、Interface Type、Capacity、Number of Partitions、Mount Status、Attach Resource
 
-### NUMA Tab
+### NUMA Tab NUMA 标签页
 
 信息提示:"Shows the resource usage of compute-optimized, network-optimized, and compute-network-optimized instances as mapped to the NUMA topology of their host compute nodes."
 

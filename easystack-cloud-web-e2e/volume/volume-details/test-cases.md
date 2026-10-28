@@ -1,16 +1,20 @@
-# 云硬盘测试用例
+# Test Cases
 
-## agent-browser 迁移说明
+## Scenario Status 场景状态
 
-本文件保留页面字段、步骤和断言知识;执行入口统一迁移到 agent-browser。
-文中的历史代码块已替换为 agent-browser 迁移说明，新增用例必须使用 `agent-browser eval --stdin` 或 `agent-browser batch` 示例。
+以下是基于现有页面知识的场景规范, 不是已运行的自动化结果. 使用 agent-browser,
+先核实项目与精确资源身份, 复用对应 patterns 操作及 interactions helper.
+`planned` 表示缺少已确认的可调用操作或字段, 先现场只读发现, 不编造入口/参数.
+场景执行不要求先修改 skill; 缺少必要控件或权限时报告未验证及恢复点.
+清理只针对本用例记录的实际资源, 按已有准确授权执行; 未授权时只列清单和依赖顺序.
+任何提交未确认都先回读, 不因超时重复提交或自动删除.
 
-> 来源:`easystack-cloud-web-e2e/volume/volume.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/volume/volume.md`,按原文标题边界拆分。
 
 > 说明:本文件保留页面步骤和断言知识作为页面知识库。
 > 新的可复用原子操作请优先参考 `../../patterns/volume-ops.md`。
 
-## 测试用例
+## Test Cases 测试用例
 
 ### TC-001: 创建空白云硬盘
 
@@ -28,13 +32,13 @@
 
 **代码:**
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 目标项目、卷类型/容量、唯一卷名明确 |
+| 操作 | 调用 create_volume, 回读 Empty Volume/Type/Size 后提交一次 |
+| 可观察断言与恢复 | 同项目/UUID 卷 Available且容量/类型/来源正确; 未确认时遵守有限重试并记录可能已创建对象 |
+
 
 ### TC-002: 创建从镜像来源的云硬盘
 
@@ -49,30 +53,29 @@ agent-browser 执行说明:
 
 **代码:**
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例可信可用 VM 镜像 UUID、目标卷大小/类型明确 |
+| 操作 | 核实当前 Create Volume 支持 Image 来源, 选择准确镜像后提交 |
+| 可观察断言与恢复 | 目标卷 Available, 来源为该镜像 UUID且容量不小于镜像要求; 不进入容器仓库选择镜像 |
+
 
 ### TC-003: 创建从快照来源的云硬盘
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例 Available 快照 UUID和唯一新卷名明确 |
+| 操作 | 调用 create_volume_from_snapshot, 回读继承大小/类型和 Copy Full Data 选项 |
+| 可观察断言与恢复 | 新卷 Available且快照来源/属性正确; 用例要求时挂载验证基线数据, 清理不删除源快照 |
+
 
 ### TC-004: 创建云硬盘 - 验证表单校验
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 仅验证表单, 无有效提交授权 |
+| 操作 | 打开创建表单, 分别检查缺名称/缺类型及当前页面标明的容量边界, 每次恢复输入 |
+| 可观察断言与恢复 | 必填/边界错误有明确提示且 Create不可提交, 恢复合法值后校验消失; 结束Cancel并确认未生成资源 |

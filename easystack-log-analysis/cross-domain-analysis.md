@@ -9,7 +9,7 @@ EasyStack OpenStack 故障经常跨越多个服务层。下表提供"问题域 -
 > 证据缺口。表中的`必看·主日志`是初始入口; 其它`必看·<层>`仅表示该层已经进入因果链
 > 后必须核对, 不代表所有场景默认全扫。
 
-## 1. 云主机生命周期问题(创建 / 启动 / 重启 / 删除 / 迁移)
+## Compute Lifecycle 云主机生命周期
 
 可能涉及 **compute + 块存储 + 网络 + 镜像 + 虚拟化层 + 系统层**。先从 Nova 主日志
 确认失败阶段, 再按实际涉及的存储、网络、镜像、虚拟化或系统分支扩展。
@@ -31,15 +31,15 @@ EasyStack OpenStack 故障经常跨越多个服务层。下表提供"问题域 -
 | **兜底·基础设施** | `openstack/mariadb/mariadb.*.log`、`openstack/rabbitmq/rabbitmq.*.log` | Galera 不可用 / AMQP 断连导致 RPC 失败 |
 | **兜底·K8s** | `kubernetes/kube-apiserver.*.log` | pod 状态变化(nova-compute pod 是否被驱逐) |
 
-### 云主机生命周期典型陷阱
+### Lifecycle Pitfalls 生命周期陷阱
 
-- 只看 `nova-compute.*.log` 会漏掉**云主机网卡 vnet 没成功创建** —— 必须看 `ovs-vswitchd` 是否 add port 成功。
-- 只看 OpenStack 日志会漏掉**节点 OOM 杀死 qemu 进程** —— 必须看 `os/messages.*.log` 的 oom-kill 段。
-- 云主机迁移失败可能源于**两端 libvirt 版本/能力不一致**或**TLS 失败**，必须看两个节点的 `libvirt.*.log`。
+- 只看 `nova-compute.*.log` 会漏掉**云主机网卡 vnet 没成功创建** -- 必须看 `ovs-vswitchd` 是否 add port 成功。
+- 只看 OpenStack 日志会漏掉**节点 OOM 杀死 qemu 进程** -- 必须看 `os/messages.*.log` 的 oom-kill 段。
+- 云主机迁移失败可能源于**两端 libvirt 版本/能力不一致**或**TLS 失败**,必须看两个节点的 `libvirt.*.log`。
 
 ---
 
-## 2. 云硬盘挂载 / 卸载问题
+## Volume Attachment 云硬盘挂卸载
 
 涉及 **nova + cinder + 后端驱动(iSCSI/RBD/SAN)+ 内核 SCSI/multipath**。
 
@@ -55,14 +55,14 @@ EasyStack OpenStack 故障经常跨越多个服务层。下表提供"问题域 -
 | **强相关·etcd 锁** | `libvirt/etcdlock-manager.*.log`、`libvirt/etcd-client.*.log` | 共享云硬盘 PR-key 锁冲突 |
 | **兜底·DB** | `openstack/mariadb/mariadb.*.log` | BDM 表读写失败 |
 
-### 云硬盘挂载/卸载典型陷阱
+### Attachment Pitfalls 挂卸载陷阱
 
-- 云硬盘卸载后"幽灵设备":cinder 已 detach 成功，但内核多路径还残留 `dm-X` —— 必须看
+- 云硬盘卸载后"幽灵设备":cinder 已 detach 成功,但内核多路径还残留 `dm-X` -- 必须看
   `os/messages.*.log` 中的 `multipath` 行和 `iscsi: session.*recovery`。
-- 云硬盘挂载到错的 LUN:看 `nova-compute` 的 `Connecting to multipath volume`，对比
+- 云硬盘挂载到错的 LUN:看 `nova-compute` 的 `Connecting to multipath volume`,对比
   `target_iqns` 和 `target_portals` 是否指向了已下线的节点。
 - 共享云硬盘(多挂载点)异常:`etcdlock-manager.*.log` 会显示锁竞争失败。
-- BDM 与 cinder attachment 不一致:经典 `VolumeDeviceNotFound`，见
+- BDM 与 cinder attachment 不一致:经典 `VolumeDeviceNotFound`,见
   [troubleshooting.md](troubleshooting.md) Scenario 1。
 
 ---
@@ -84,17 +84,17 @@ EasyStack OpenStack 故障经常跨越多个服务层。下表提供"问题域 -
 | **强相关·DNS** | `kubernetes/coredns.*.log` | 服务发现 / 云主机内部 DNS |
 | **兜底·VIP** | `openstack/keepalived/keepalived.*.log` | 控制面 VIP 漂移导致 API 间歇不通 |
 
-### 网络问题典型陷阱
+### Network Pitfalls 网络问题陷阱
 
-- 云主机 ping 不通但 `proton-server` 显示 port `ACTIVE`:必看 `ovs-vswitchd` 是否实际 add 了 vnet，
+- 云主机 ping 不通但 `proton-server` 显示 port `ACTIVE`:必看 `ovs-vswitchd` 是否实际 add 了 vnet,
   以及 `ovn-controller` 是否下发了流表。
-- 浮动 IP 挂上但访问不通:先看 `ovn-northd` 和 `nb` DB 是否有对应 NAT 规则，再看
+- 浮动 IP 挂上但访问不通:先看 `ovn-northd` 和 `nb` DB 是否有对应 NAT 规则,再看
   网关节点的 `ovn-controller`。
-- 云主机内 cloud-init 失败:往往是 `metadata-agent` 不可达，或 metadata 169.254.169.254 路由问题。
+- 云主机内 cloud-init 失败:往往是 `metadata-agent` 不可达,或 metadata 169.254.169.254 路由问题。
 
 ---
 
-## 4. 镜像问题(创建/上传/下载/启动失败)
+## Image Lifecycle 镜像生命周期
 
 | 优先级 | 日志路径 | 看什么 |
 |--------|---------|--------|
@@ -126,9 +126,9 @@ EasyStack OpenStack 故障经常跨越多个服务层。下表提供"问题域 -
 
 ### 裸金属/Ironic 典型陷阱
 
-- 节点 `provisioning → wait call-back` 卡住:通常是 PXE 网络问题，必须看
+- 节点 `provisioning → wait call-back` 卡住:通常是 PXE 网络问题,必须看
   `ovs-vswitchd` / `ovn-controller` 是否把端口切到了 provisioning 网。
-- `power_on` 失败:先看 ironic-conductor 的 IPMI 错误，再到 `os/messages.*.log` 看
+- `power_on` 失败:先看 ironic-conductor 的 IPMI 错误,再到 `os/messages.*.log` 看
   BMC 网卡链路或 IPMI 超时。
 
 ---
@@ -160,7 +160,7 @@ grep -iE "WSREP|primary component|non-primary|netsplit|partition|HEALTH_(WARN|ER
   ecs.*/openstack/mariadb/*.log \
   ecs.*/openstack/rabbitmq/*.log \
   ecs.*/os/chrony.*.log \
-  ecs.*/ceph/host.ceph.*.log 2>/dev/null | sort -k1,2 | head -30
+  ecs.*/ceph/host.ceph.*.log  | sort -k1,2 | head -30
 
 # 仅在存在人工变更线索时, 在事件时间窗内检查操作历史并对引用内容脱敏
 grep -E "systemctl|kubectl|reboot|shutdown|drain|reset|delete|stop" \

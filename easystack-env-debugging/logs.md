@@ -11,8 +11,8 @@
 fluentd pod 查历史日志, 因为当前 pod 的 stdout/stderr 往往还保留最近错误,
 定位更快且能直接对应当前副本。
 
-用户说 “看异常原因”、“为什么失败”、“创建失败”、“挂载失败”, 或提供 traceback、
-error message、server UUID、volume UUID 时, 即使没有明确说 “直接看日志”,
+用户说 "看异常原因"、"为什么失败"、"创建失败"、"挂载失败", 或提供 traceback、
+error message、server UUID、volume UUID 时, 即使没有明确说 "直接看日志",
 也按日志优先处理。不要先进入 busybox 执行 `openstack server show`、
 `openstack volume show` 或 list 类资源状态查询。`kubectl get pods` / label
 查询只用于发现要读取日志的 pod, 不属于资源状态优先。

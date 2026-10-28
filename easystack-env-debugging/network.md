@@ -3,9 +3,9 @@
 访问环境确认后, 如需检查网络问题, 阅读本文件。内容聚焦节点连通性、ARP、
 VLAN 子接口以及相关只读诊断。
 
-节点间网络连通性排查的方法论，适用于 EasyStack 环境中的多网平面场景。
+节点间网络连通性排查的方法论,适用于 EasyStack 环境中的多网平面场景。
 
-## 网络平面速查
+## Network Planes 网络平面速查
 
 EasyStack 环境中常见的网桥及其用途:
 
@@ -20,7 +20,7 @@ EasyStack 环境中常见的网桥及其用途:
 | `br-ipmi` | IPMI/带外网 | BMC 管理 |
 | `br-ex` | 外部网络 | Provider 网络出口 |
 
-## 节点间网络排查流程
+## Network Diagnosis 节点间排查流程
 
 ### Step 1: 确认本机网络身份
 
@@ -42,9 +42,9 @@ done
 ### Step 2: 确认对端可达性
 
 > ⚠️ **重要: 确认对端节点可达性时使用节点名称, 不直接使用 IP。**
-> 原因: 节点有多个 IP 分布在不同的网平面(管理网、存储网、VXLAN 等)，
-> `/etc/hosts` 由部署工具维护，解析到**当前可用的正确网络**。
-> 如果直接使用 IP，可能无意间指定了当前有问题的网络，导致误判。
+> 原因: 节点有多个 IP 分布在不同的网平面(管理网、存储网、VXLAN 等),
+> `/etc/hosts` 由部署工具维护,解析到**当前可用的正确网络**。
+> 如果直接使用 IP,可能无意间指定了当前有问题的网络,导致误判。
 > 只有在不知道节点名称与 IP 的对应关系、或正在排查某个明确 IP/网段时, 才使用 IP。
 
 ```bash
@@ -55,7 +55,7 @@ ping -c 2 -W 2 node-<xxx>
 ping -c 2 -W 2 <目标IP>
 ```
 
-如果主机名能 ping 通，说明:
+如果主机名能 ping 通,说明:
 - DNS/hosts 解析正常
 - 至少有一条网络路径可达
 - 对端节点在线
@@ -83,7 +83,7 @@ ip route show | grep <目标网段>
 
 确认路由指向正确的设备。
 
-### Step 5: 🔑 ARP 诊断（最关键）
+### Step 5: 🔑 ARP 诊断(最关键)
 
 ```bash
 # 查看特定 IP 的 ARP 状态
@@ -98,15 +98,14 @@ ip neigh show | grep <网段前缀>
 | ARP 状态 | 含义 | 诊断结论 |
 |----------|------|---------|
 | `REACHABLE` | 最近通信成功 | ✅ L2 正常 |
-| `STALE` | 曾成功但缓存过期 | ✅ 大概率 L2 正常 |
+| `STALE` | 缓存需重新确认 | 不能单凭缓存判断当前连通性 |
 | `INCOMPLETE` | 发送了 ARP 请求但未收到响应 | ⚠️ L2 可能有问题 |
-| `FAILED` | ARP 解析失败 | ❌ **L2 不通** |
+| `FAILED` | 邻居发现尝试未成功 | 检查目标、接口、二层路径和过滤, 不直接归因 |
 
-**`FAILED` 意味着:**
-- 物理层(L1)可能正常(接口 UP)
-- 二层(L2)帧无法到达对端
-- 与三层(L3)路由无关
-- 与防火墙/iptables 无关(ARP 不过 IP 层)
+**`FAILED` 只能说明本轮邻居发现未成功:**
+- 先核对目标是否在预期链路、接口和路由是否选择正确。
+- 对端离线、VLAN、链路、桥接/ARP 过滤或短时状态都可能相关, 需交叉取证。
+- 传统 IP 层规则不直接处理 ARP, 但不能据此排除所有过滤机制或断言 VLAN 根因。
 
 ### Step 6: Ping 验证
 
@@ -118,8 +117,8 @@ ping -c 3 -W 2 node-<xxx>
 ping -c 3 -W 2 <目标IP>
 ```
 
-注意: ARP FAILED 时 ping 必然 100% loss。
-如果 ARP 成功但 ping 失败，那才是三层(防火墙/iptables)的问题。
+邻居缓存状态可能在下一次探测时改变。结合本轮 ping 的目标、路由和实时邻居状态判断。
+ARP 成功但 ICMP 失败还需核对对端 ICMP 策略、路径、过滤和丢包, 不直接限定为某一层根因。
 
 ### Step 7: 对端交叉验证
 
@@ -131,23 +130,23 @@ ssh node-<xxx> 'ip -d link show ipsan-0'
 ssh node-<xxx> 'ping -c 2 -W 2 <本机IP>'
 ```
 
-确保两边现象对称（单通还是双不通）。
+确保两边现象对称(单通还是双不通)。
 
-### Step 8: 查看 VLAN 配置（只读）
+### Step 8: 查看 VLAN 配置(只读)
 
 ```bash
 # 查看 VLAN 子接口的 VID
 ip -d link show <vlan-interface>
 
-# 查看 ifcfg 配置（只读）
+# 查看 ifcfg 配置(只读)
 cat /etc/sysconfig/network-scripts/ifcfg-<interface-name>
 ```
 
-cat 命令如果被安全模块拦截禁止，说明环境有命令审计/过滤机制。
+cat 命令如果被安全模块拦截禁止,说明环境有命令审计/过滤机制。
 
 ## VLAN 子接口排查
 
-VLAN 子接口在输出中显示为 `@物理接口`，例如 `ipsan-0@enp130s0f0np0`。
+VLAN 子接口在输出中显示为 `@物理接口`,例如 `ipsan-0@enp130s0f0np0`。
 
 检查要点:
 ```bash
@@ -166,19 +165,19 @@ cat /etc/sysconfig/network-scripts/ifcfg-ipsan-0
 - 网络类型(802.1Q)
 - 网段/Prefix
 
-## 常见根因速查
+## Cause Candidates 原因候选
 
 | 现象 | 可能原因 |
 |------|---------|
 | 物理接口 `NO-CARRIER` | 网线/光模块/交换机端口故障 |
-| 物理接口 `UP`，ARP `FAILED` | **交换机 VLAN 配置问题** |
-| ARP `REACHABLE`，ping 100% loss | 防火墙/iptables/路由 ACL |
-| 本端 ARP `FAILED`，对端 ARP `REACHABLE` | 单通(对端可见本端但反之不然) |
+| 物理接口 `UP`, ARP `FAILED` | 目标离线、VLAN/链路、接口选择或过滤等候选, 需两端核对 |
+| ARP `REACHABLE`,ping 100% loss | 防火墙/iptables/路由 ACL |
+| 本端 ARP `FAILED`, 对端 ARP `REACHABLE` | 核对缓存时间和实时双向探测, 不直接判定单通 |
 | 接口 `UP` 但 `ip addr` 无 IP | 接口未配 IP 或 DHCP 失败 |
 | `cat ifcfg-*` 被拦截 | 环境有命令审计/安全模块 |
 | VLAN 接口 `DOWN` | 父接口未 UP 或 VLAN 模块未加载 |
 
-## 诊断命令保存
+## Diagnostic Output 诊断输出
 
 建议将诊断输出保存到文件以备后续分析:
 

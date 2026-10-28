@@ -34,4 +34,4 @@
 | [reference/system.md](reference/system.md) | PowerShell / Process / FileSystem / Registry 系统工具 |
 | [reference/workflows.md](reference/workflows.md) | 推荐工作流(启动应用、填表、键盘操作等) |
 | [reference/safety.md](reference/safety.md) | 安全规则与接口注意事项 |
-| [agents/openai.yaml](agents/openai.yaml) | 配套 opencode agent 配置(display name、默认 prompt) |
+| [agents/openai.yaml](agents/openai.yaml) | Codex UI 元数据(display name、默认 prompt), 不配置 OpenCode 的加载策略 |

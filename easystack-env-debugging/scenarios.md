@@ -1,8 +1,8 @@
 # Common Debugging Scenarios
 
-## 命令执行位置(常见错误)
+## Execution Location 命令位置
 
-**不要**在业务 pod(如 cinder-golem、cinder-api、nova-api 等)中执行 openstack 命令，这些 pod 没有 CLI 工具和认证环境。
+**不要**在业务 pod(如 cinder-golem、cinder-api、nova-api 等)中执行 openstack 命令,这些 pod 没有 CLI 工具和认证环境。
 
 | 操作类型 | 执行位置 | 说明 |
 |---------|---------|------|
@@ -14,20 +14,20 @@
 ## SSH 访问与节点跳转
 
 环境后台访问、`172.18.*` 跳板、JumpServer、连接验证和节点间跳转统一参考
-[access.md](access.md)。场景排查文件不重复维护 SSH 命令，避免与实际入口方式冲突。
+[access.md](access.md)。场景排查文件不重复维护 SSH 命令,避免与实际入口方式冲突。
 
 ## Common Resource Issues 常见资源问题
 
-云主机异常和云硬盘异常属于常见问题。用户说 “看某个虚拟机异常原因”、
-“查 server/instance 状态异常”、“云硬盘挂载失败”、“volume 创建失败” 或
-“磁盘状态异常” 时, 先按 [access.md](access.md) 进入环境并完成只读验证,
+云主机异常和云硬盘异常属于常见问题。用户说 "看某个虚拟机异常原因"、
+"查 server/instance 状态异常"、"云硬盘挂载失败"、"volume 创建失败" 或
+"磁盘状态异常" 时, 先按 [access.md](access.md) 进入环境并完成只读验证,
 再按本节选择日志优先的根因排查入口。
 
 OpenStack 资源状态查询统一在 busybox 中执行, 认证方式见 [auth.md](auth.md)。
 不要在 `nova-api`、`cinder-api`、`cinder-golem` 等业务 pod 中直接执行
 `openstack` 命令。
 
-如果用户问的是 “原因”、“为什么失败”、“创建失败”、“挂载失败”, 或已经提供
+如果用户问的是 "原因"、"为什么失败"、"创建失败"、"挂载失败", 或已经提供
 traceback / error message / UUID, 先查相关服务日志。资源状态查询不是第一步,
 除非用户明确要求状态, 或日志线索已经指向需要补充 server/volume 上下文。
 允许先用 `kubectl get pods` 或 label 查询发现要读取日志的 pod。

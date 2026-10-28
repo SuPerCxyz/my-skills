@@ -1,27 +1,24 @@
 ---
 name: context-efficient-rules
-description: "Load at the start of an agent session or when a task risks context bloat, excessive tool output, repeated reads, broad searches, MCP overuse, long logs, large diffs, or Autocompact/Input-too-long failures. Provides context-budget rules only; do not use as a domain workflow."
+description: "Use when starting an agent session, preparing context-heavy work, or handling broad searches, repeated reads, large tool output, or compaction failures. Provides platform-neutral context-budget rules alongside the relevant domain skill."
 ---
 
 # Context-Efficient Agent Rules
 
-# Role
-
-You are a senior AI Agent Context Management and Tool-Orchestration expert specializing in minimal-sufficient retrieval, bounded tool output, MCP selection, and recoverable execution state.
-
-适用于 Claude Code / Claude Code Router / ccswitch 场景的上下文精简规则集。
+主要用于 OpenCode 和 Codex 等提供文件读取与工具调用能力的客户端, 采用平台无关的上下文预算规则。
+由当前会话规则或任务需要加载; description 只提供匹配线索, skill 不能保证客户端自动调用自己。
 核心目标是用最小充分上下文完成当前任务, 避免无效工具调用、重复读取、大输出和
-Autocompact thrashing。
+上下文溢出及反复压缩造成的进度丢失。
 
 ## Scope Boundary 适用边界
 
-本 skill 只约束工具调用规模、读取范围、搜索策略、输出规模、MCP、子 Agent 和
-恢复摘要。它不提供具体业务排查、代码实现、浏览器自动化、日志分析或媒体整理流程。
+本 skill 只约束工具调用规模、读取范围、搜索策略、输出规模、MCP 查询和恢复摘要。它不提供具体业务排查、代码实现、浏览器自动化、日志分析或媒体整理流程。
+任务需要这些业务流程时, 读取当前实际可用且匹配的业务 skill; 不因本 skill 已加载就读取全部 skill。
 
 ## Rule Priority 规则优先级
 
-优先级依次为:安全和用户指令、正确完成任务、避免上下文不可恢复地膨胀、减少工具
-调用和输出、减少回复长度。
+当前平台指令、用户要求和有效的 `AGENTS.md` 优先于本 skill。以下预算仅在缺少更具体约束时
+作为默认值。正确完整地完成任务优先于减少工具调用和输出。
 
 上下文控制不得成为拒绝正常完成任务的理由。当可以自动缩小范围继续执行时,
 不得直接要求用户重新描述任务。
@@ -116,35 +113,31 @@ Autocompact thrashing。
 
 ## MCP Usage MCP 使用条件
 
-默认优先本地方式。本地信息足以完成当前决策时不得调用 MCP。仅当用户指定、信息仅在
+在没有更高优先级工具或记忆工作流要求时, 优先使用足够的本地信息。仅当用户指定、信息仅在
 远端、需要实时权威状态, 或 MCP 能以带字段/数量限制的结构化结果替代更大的本地读取时
 使用。调用必须限制查询和返回数量, 不获取完整页面、仓库、会话或日志, 也不为重复验证
 同一事实而再次调用。
-
-## Subagent Limits 子 Agent 限制
-
-- 默认不创建子 Agent; 单文件、单错误或单一定位任务不得使用
-- 仅用于边界清晰且相互独立的子任务, 同时最多 2 个
-- 每个子 Agent 只接收最小上下文, 返回不超过 30 行
-- 禁止多个子 Agent 重复搜索同一目录或文件
 
 ## Large Output Handling 大输出处理
 
 若结果仍超过 200 行或 20 KiB, 不重复粘贴。只提取状态、错误、时间、对象和关键
 指标, 摘要不超过 30 行; 下一次自动增加过滤条件。目标仍有歧义时再询问用户。
 
-## Autocompact Emergency Autocompact 应急流程
+## Context Recovery 上下文恢复
 
-出现 Autocompact、Input too long、token limit、工具结果截断或任务开始重复探索时触发。
+普通工具结果截断时先自动缩小查询或分段读取, 保留尚未取得的关键证据。只有上下文已经
+难以可靠继续、平台提示容量耗尽或反复探索无法恢复进度时, 才进入以下恢复流程。
 
 应急步骤:
 
-1. 停止新的探索性 Read、Search、MCP 和子 Agent 调用
+1. 暂停新增的探索性检索和可能产生大输出的操作
 2. 生成最多 12 行的脱敏恢复摘要:目标、事实、修改、测试、错误、待办和下一命令
-3. 需要落盘时先执行 `umask 077`, 再用
-   `mktemp /tmp/codex-context-handoff.XXXXXX.md` 创建本次会话唯一文件; 不使用固定
-   文件名, 不默认写入项目目录
-4. 告知用户完整路径; `/clear` 后仅加载该文件和未完成步骤
+3. 需要落盘时使用当前环境的临时目录和随机唯一文件名, 权限仅允许当前用户访问。
+   POSIX shell 示例: 先执行 `umask 077`, 再用
+   `mktemp "${TMPDIR:-/tmp}/agent-context-handoff.XXXXXX.md"` 创建本次会话唯一文件;
+   不使用固定文件名, 不默认写入项目目录
+4. 告知用户完整路径; 按当前客户端实际提供的上下文压缩或恢复能力加载摘要和未完成步骤。
+   不自行清空上下文; 恢复时重新应用仍有效的平台、用户和项目规则
 5. 恢复后删除临时摘要; 无法删除时告知路径
 6. 禁止重新读取已总结的全部文件
 

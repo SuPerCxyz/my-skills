@@ -1,8 +1,8 @@
-# 云主机页面结构
+# Overview
 
-> 来源:`easystack-cloud-web-e2e/instance/instance.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/instance/instance.md`,按原文标题边界拆分。
 
-## 计算大类文档索引
+## Compute Documents 计算大类文档索引
 
 | 功能 | 文件 |
 |------|------|
@@ -15,7 +15,7 @@
 | 可用域与主机聚合(AZ & Host Aggregates) | [az.md](../az.md) |
 | 计算节点(Compute Node) | [compute-node.md](../compute-node.md) |
 
-## 页面信息
+## Page Information 页面信息
 
 | 项目 | 值 |
 |------|-----|
@@ -24,11 +24,11 @@
 | 导航路径 | Service Catalog → Computing → Instance |
 | 页面标题 | EasyStack Cloud |
 
-## 页面说明
+## Page Description 页面说明
 
-云主机是在安全隔离环境中运行的虚拟服务器，是基础计算单元，由 vCPU、内存、操作系统、网络和云硬盘组成。创建后可以根据需要修改规格，确保高效、可靠、安全的计算环境。
+云主机是在安全隔离环境中运行的虚拟服务器,是基础计算单元,由 vCPU、内存、操作系统、网络和云硬盘组成。创建后可以根据需要修改规格,确保高效、可靠、安全的计算环境。
 
-## 页面按钮
+## Page Buttons 页面按钮
 
 | 按钮 | 定位方式 | 状态 | 说明 |
 |------|--------|------|------|
@@ -38,7 +38,7 @@
 | Reboot | `buttonByText("Reboot")` | 需选择运行中实例 | 重启实例 |
 | More | `buttonByText("More")` | 需选择实例 | 更多操作 |
 
-## 表格列信息
+## Table Columns 表格列信息
 
 | 列名 | 说明 |
 |------|------|
@@ -51,7 +51,7 @@
 | Created Time | 创建时间 |
 | VNC | VNC 远程连接 |
 
-## 实例状态
+## Instance States 实例状态
 
 | 状态 | 说明 |
 |------|------|

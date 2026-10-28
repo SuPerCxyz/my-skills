@@ -5,16 +5,16 @@
 公司项目使用:
 
 ```bash
-git review -r origin <branch>
+git review -R -r origin <branch>
 ```
 
-不得默认执行不带 remote 和目标分支的 `git review`。不得把 `<branch>` 字面量
+默认必须同时携带 `-R`、remote 和真实目标分支。`-R` 禁止上传前隐含 rebase, 不修改全局配置。不得把 `<branch>` 字面量
 直接传给命令。执行前必须解析出真实目标分支, 例如:
 
 ```bash
-git review -r origin master
-git review -r origin stable/2026.1
-git review -r origin feature/example
+git review -R -r origin master
+git review -R -r origin stable/2026.1
+git review -R -r origin feature/example
 ```
 
 目标分支识别优先级:
@@ -54,7 +54,7 @@ Git commit SHA 会变化, Gerrit 中生成新的 Patch Set。
 
 用户所说"继续提交到之前的提交"、"commit id 不变", 应正确理解为: 保持原 Gerrit
 `Change-Id` 不变, 通过 amend 生成新的 Git commit, 再用
-`git review -r origin <branch>` 上传到原 Change。不得声称 amend 后 Git commit
+`git review -R -r origin <branch>` 上传到原 Change。不得声称 amend 后 Git commit
 SHA 保持不变。
 
 ## 更新原 Change 与创建新 Change
@@ -64,7 +64,7 @@ SHA 保持不变。
 分支未变化、当前修改不需要独立评审、当前修改不需要独立回滚、用户没有明确要求
 拆分为新 Change。
 
-标准流程:
+以下为可能需要的完整流程, 每项写操作仍须有当前会话有效授权, 未授权动作不得补做:
 
 1. 检查当前 `HEAD`
 2. 读取当前提交信息
@@ -79,7 +79,7 @@ SHA 保持不变。
 11. 保留原 `Change-Id`
 12. 必要时更新 summary 和正文
 13. 再次检查提交信息
-14. 使用真实目标分支执行 `git review -r origin <branch>`
+14. 使用真实目标分支执行 `git review -R -r origin <branch>`
 15. 根据真实命令输出判断是否成功
 16. 报告上传的是原 Change 的新 Patch Set
 
@@ -124,7 +124,7 @@ Change-Id: Ixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 只添加实际适用的 footer。不得虚构 EAS 编号、Bug 或 Task、`Depends-On` 或手写
-伪造 `Change-Id`。无依据地把 `Partial-Bug` 改为 `Closes-Bug`。
+伪造 `Change-Id`。不得无依据地把 `Partial-Bug` 改为 `Closes-Bug`。
 
 - 当前修改只完成 EAS 的一部分: 优先 `Partial-Bug: #EAS-123456`
 - 确认该 Bug 对应范围已完整解决: 使用 `Closes-Bug: #EAS-123456`
@@ -139,7 +139,7 @@ diff、问题根因、修改方式、行为变化、测试结果、兼容性影�
 
 ## git review 门禁
 
-执行 `git review -r origin <branch>` 之前必须确认:
+执行 `git review -R -r origin <branch>` 之前必须确认:
 
 1. 已识别为公司 Gerrit 项目
 2. 当前仓库正确
@@ -152,7 +152,7 @@ diff、问题根因、修改方式、行为变化、测试结果、兼容性影�
 9. `Change-Id` 正确
 10. 已判断是新 Change 还是新 Patch Set
 11. 相关验证已经真实执行
-12. 用户已经授权执行 `git review`
+12. 用户已经授权执行 `git review`, 并显式携带 `-R` 避免隐含 rebase
 
 上传后必须根据真实输出判断: 命令是否成功、上传的是新 Change 还是新 Patch Set、
 是否出现 branch 错误、Change-Id 错误、权限错误、提交冲突或 hook 问题。无法从

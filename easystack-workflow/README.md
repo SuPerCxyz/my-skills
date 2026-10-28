@@ -12,6 +12,7 @@
 - 每次新建独立 Review Agent, 传递设计和功能边界, 核实业务场景可达性, 使用 P0/P1/P2/P3 并精简输出.
 - 无明确代码依赖的 Patch 基于 `master` 独立提交, 不叠加之前未合入的 Patch.
 - 将 Angular 前端的组件、数据层、路由、权限、i18n 和交互规范接入实现流程.
+- 远端 CI 日志证实非代码的 CI 自身异常时, 在有效授权内核对当前版本、去重并最多自动 recheck 一次, 复查新 run 结果.
 - 区分静态检查、构建与真实功能验收, 按影响调用现有测试、调试和交付能力.
 - 代码修改后按需进入授权环境调试, 现场选择注入和生效方式, 保留版本证据与回滚基线.
 
@@ -23,12 +24,12 @@
 | [product-documentation.md](product-documentation.md) | 产品文档生成时点、内容结构与依赖排序的测试步骤 |
 | [project-relationships.md](project-relationships.md) | 项目矩阵、跨仓库修改判定和证据要求 |
 | [backend-development.md](backend-development.md) | 后端开发流程、规范来源、兼容性和生命周期 |
-| [backend-testing.md](backend-testing.md) | 后端回归、CI、契约和真实资源验证 |
+| [backend-testing.md](backend-testing.md) | 后端回归、CI、契约、真实资源验证及 recheck 判断/复查 |
 | [code-review.md](code-review.md) | 完整 Review 提示词及精简输出约定 |
 | [frontend-design.md](frontend-design.md) | 前端实现、设计规范、来源与可选工具边界 |
 | [frontend-testing.md](frontend-testing.md) | 前端静态检查、真实功能验收与结果记录 |
 | [runtime-debugging.md](runtime-debugging.md) | 在线调查、代码更新与回滚、离线日志和问题结论 |
-| [delivery.md](delivery.md) | 独立 Patch、交付范围、Git / Gerrit 授权和提交规则 |
+| [delivery.md](delivery.md) | 独立 Patch、交付范围、Git / Gerrit 授权、提交及顶层 recheck Reply |
 
 ## Quick Start 快速开始
 

@@ -1,13 +1,14 @@
 ---
 name: easystack-cloud-web-e2e
-description: "Use only for EasyStack Cloud Web frontend UI and E2E testing with agent-browser: resource create/delete/attach/associate flows, buttons, tables, forms, validation, and page probing. Backend diagnosis and repository CI are optional separate tasks, not prerequisites."
+description: "Use when testing or operating EasyStack Cloud Web UI with agent-browser: resource lifecycle flows, buttons, tables, forms, validation, and page probes. Not for generic websites, backend resource tests, repository CI, live debugging, or offline logs; those are optional separate workflows."
 ---
 
 # EasyStack Cloud Web E2E
 
-# Role
+## Role 角色
 
-You are a senior Cloud Web E2E and Browser Automation expert specializing in agent-browser workflows, UI state verification, resource lifecycle testing, bounded retries, and safe test-resource handling.
+负责 EasyStack Cloud Web UI 和 E2E 验证, 关注资源身份、实际业务效果、异步状态、
+有限重试及授权范围.
 
 ## Scope Boundary 适用边界
 
@@ -15,6 +16,12 @@ You are a senior Cloud Web E2E and Browser Automation expert specializing in age
 按钮/表格/表单状态验证和可复用页面操作沉淀。它只负责前端测试路径; backend 根因、
 离线日志和仓库 CI 不属于本 skill 的必需步骤。非 EasyStack Cloud 的普通网页自动化
 不属于本 skill 范围。
+
+先读取当前可用的 agent-browser 操作说明, 再按用户目标选一个资源域. 仅当任务
+确需后端调查时读取 `easystack-env-debugging`, 离线日志读取 `easystack-log-analysis`,
+仓库 CI 读取 `easystack-ci-test`, Git 交付读取 `git-delivery`. 以本会话实际可用能力
+为准, 不将这些工作流作为 UI 前置条件, 不批量加载无关 skill. 能力缺失时说明限制并
+使用已有工具的等价只读检查, 不自行安装或扩大变更授权.
 
 ## Hard Rules 执行硬规则
 
@@ -58,7 +65,8 @@ You are a senior Cloud Web E2E and Browser Automation expert specializing in age
 |--------|------|
 | 登录前置 | [patterns/login.md](patterns/login.md) |
 | 实例 | [patterns/instance-ops.md](patterns/instance-ops.md) |
-| 云硬盘与镜像 | [patterns/volume-ops.md](patterns/volume-ops.md) |
+| 云硬盘 | [patterns/volume-ops.md](patterns/volume-ops.md) |
+| VM 镜像与容器镜像的不同契约 | [patterns/image-ops.md](patterns/image-ops.md) |
 | 网络 | [patterns/network-ops.md](patterns/network-ops.md) |
 | 页面只读探测 | [patterns/page-probes.md](patterns/page-probes.md) |
 | 清理资源编排 | [patterns/cleanup-resources.md](patterns/cleanup-resources.md) |
@@ -66,6 +74,7 @@ You are a senior Cloud Web E2E and Browser Automation expert specializing in age
 | 操作模板 | [patterns/operation-template.md](patterns/operation-template.md) |
 | 平台信息和主路径 | [patterns/platform-info.md](patterns/platform-info.md) |
 | 校验 operation 终态语义 | [scripts/validate-patterns.py](scripts/validate-patterns.py) |
+| 离线回归与覆盖边界 | [tests/README.md](tests/README.md) |
 
 调用本地 Python 脚本时统一使用 `python3 <path> ...`, 不依赖脚本文件的执行位。
 
@@ -84,7 +93,7 @@ You are a senior Cloud Web E2E and Browser Automation expert specializing in age
 | 云硬盘 | [volume/volume.md](volume/volume.md) |
 | 云硬盘快照 | [volume/snapshot.md](volume/snapshot.md) |
 | 云硬盘类型 | [volume/volume-type.md](volume/volume-type.md) |
-| 镜像 | [image/image.md](image/image.md) |
+| 容器镜像页面及 VM 镜像路由边界 | [image/image.md](image/image.md) |
 | 网络 | [network/network.md](network/network.md) |
 | 虚拟网卡 | [network/vnic.md](network/vnic.md) |
 | 路由器 | [network/router.md](network/router.md) |

@@ -48,7 +48,7 @@ field | previous value | current value | checked_at | source | status
 
 ## Variable Mapping 变量映射
 
-执行前把兼容的记录字段加载为环境变量; 缺少必需变量时按 discovery 契约停止, 不猜测节点或凭据:
+执行前把兼容的记录字段加载为环境变量; 缺少必需变量时按 discovery 契约停止, 不猜测节点或凭据。`defaults.*` 只提供 `provision` 的创建默认值; `resize` 的 `PLAN_*` 仅注入本次明确确认的字段, 未指定项留空并保留当前持久配置, 不自动导入创建默认值:
 
 | 记录字段 | 环境变量 |
 |----------|----------|

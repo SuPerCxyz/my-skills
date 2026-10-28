@@ -1,8 +1,8 @@
-# 资源关联关系(Resource Relationships)
+# Relationships
 
 Use this file when a UI test spans multiple resource types, such as instance plus volume, instance plus floating IP, or network plus router. For the actual browser action, switch to the corresponding `patterns/*-ops.md` file.
 
-## 核心关系图
+## Resource Relationships 核心关系图
 
 ```
                          ┌──────────────────────────────────────┐
@@ -35,19 +35,19 @@ Use this file when a UI test spans multiple resource types, such as instance plu
                          └──────────────────────────────────────┘
 ```
 
-## 1. 云主机 ↔ 网络 (Instance → Network)
+## Instance Networks 1. 云主机 ↔ 网络 (Instance → Network)
 
 **关联方式:vNIC(虚拟网卡)**
 
-### 网络绑定 / 解绑操作
+### Network Attachment 网络绑定 / 解绑操作
 
 | 场景 | 操作入口 | 说明 |
 |------|----------|------|
-| 创建时绑定 | 创建向导 Step 2: Network Configuration | 选择 Network + Subnet，自动创建 vNIC |
+| 创建时绑定 | 创建向导 Step 2: Network Configuration | 选择 Network + Subnet,自动创建 vNIC |
 | 创建后绑定额外网络 | More → Associate Network | 新增一个 vNIC |
 | 创建后解绑网络 | More → Disassociate Network | 移除指定 vNIC |
 
-### 网络关键规则
+### Network Rules 网络关键规则
 
 - 一个实例可绑定**最多 12 个 vNIC**
 - 每个 vNIC 连接**一个网络 + 一个子网**
@@ -55,7 +55,7 @@ Use this file when a UI test spans multiple resource types, such as instance plu
 - vNIC 创建后出现在 vNIC 页面(`/ens/nics`)
 - vNIC 可通过 vNIC 页面的 **Attach to resource / Detach from resource** 迁移到其他实例
 
-### 创建向导 Step 2 字段
+### Network Wizard Fields 创建向导 Step 2 字段
 
 | 字段 | 组件 | 说明 |
 |------|------|------|
@@ -64,7 +64,7 @@ Use this file when a UI test spans multiple resource types, such as instance plu
 | IP 分配 | Radio | `Automatically assign IPv4 address`(默认) |
 | 剩余 IP | 显示文本 | `Remaining IP Available: N` |
 
-### 可用网络示例
+### Network Examples 可用网络示例
 
 - `<PRIVATE_NETWORK>` (Project Exclusive, AZ: `<AZ>`)
 - `<EXTERNAL_NETWORK>` (Project Exclusive, AZ: `<AZ>`)
@@ -72,11 +72,11 @@ Use this file when a UI test spans multiple resource types, such as instance plu
 
 ---
 
-## 2. 云主机 ↔ 公网 IP (Instance → Floating IP)
+## Instance Floating IPs 2. 云主机 ↔ 公网 IP (Instance → Floating IP)
 
 **关联方式:Floating IP 绑定到 vNIC**
 
-### 公网 IP 绑定 / 解绑操作
+### Floating IP Association 公网 IP 绑定 / 解绑操作
 
 | 场景 | 操作入口 | 前置条件 |
 |------|----------|----------|
@@ -87,20 +87,20 @@ Use this file when a UI test spans multiple resource types, such as instance plu
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
-| Instance Name | ❌ | 只读，预填当前实例名 |
+| Instance Name | ❌ | 只读,预填当前实例名 |
 | Instance Nic | ✅ | 下拉选择实例的 vNIC(显示 `网卡名: IP`) |
 | Floating IP | ✅ | 下拉选择可用的 Floating IP(状态为 Unbound) |
 
-### 公网 IP 关键规则
+### Floating IP Rules 公网 IP 关键规则
 
-- Floating IP 绑定到**特定 vNIC**，不是绑定到实例整体
+- Floating IP 绑定到**特定 vNIC**,不是绑定到实例整体
 - 一个 vNIC 只能绑定**一个** Floating IP
 - 多 vNIC 场景下可为**不同 vNIC 绑定不同** Floating IP
 - 绑定 Floating IP **需要路由器已设置网关**
 - Floating IP 本身在 Floating IP 页面(`/ens/floatingIPs`)独立管理
 - 删除实例时 Floating IP **自动解绑**(不删除)
 
-### 数据流
+### Data Flow 数据流
 
 ```
 用户 → Floating IP (公网) → 路由器网关 → 外部网络
@@ -110,27 +110,27 @@ Use this file when a UI test spans multiple resource types, such as instance plu
 
 ---
 
-## 3. 云主机 ↔ 云硬盘 (Instance → Volume)
+## Instance Volumes 3. 云主机 ↔ 云硬盘 (Instance → Volume)
 
 **关联方式:Root Disk / Data Disk + Attach / Detach**
 
-### 挂载 / 卸载操作
+### Volume Attachment 挂载 / 卸载操作
 
 | 场景 | 操作入口 | 说明 |
 |------|----------|------|
 | 创建时挂载系统盘 | 创建向导 Step 1: Root Disk | 配置 Type + Size |
 | 创建时挂载数据盘 | 创建向导 Step 1: Data Disk | 最多添加 24 块 |
 | 创建后挂载数据盘 | More → Attach Volume | 选择 Available 状态的卷 |
-| 创建后卸载数据盘 | More → Detach Volume | 热卸载，数据不丢失 |
+| 创建后卸载数据盘 | More → Detach Volume | 热卸载,数据不丢失 |
 
 ### Attach Volume 弹窗字段
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
-| Instance Name | ❌ | 只读，预填当前实例名 |
+| Instance Name | ❌ | 只读,预填当前实例名 |
 | Volume | ✅ | 下拉选择可用卷(状态为 Available) |
 
-### Root Disk vs Data Disk
+### Root Disk vs Data Disk 系统盘与数据盘
 
 | 属性 | Root Disk(系统盘) | Data Disk(数据盘) |
 |------|---------------------|---------------------|
@@ -140,15 +140,15 @@ Use this file when a UI test spans multiple resource types, such as instance plu
 | 删除行为 | 受 `Delete with Instance` 控制 | 受 `Delete with Instance` 控制 |
 | 来源 | Image / Instance Snapshot / Volume Snapshot | Empty Volume / Image / Snapshot |
 
-### 云硬盘关键规则
+### Volume Rules 云硬盘关键规则
 
-- 云硬盘创建后状态为 **Available**，才能被挂载
+- 云硬盘创建后状态为 **Available**,才能被挂载
 - 挂载后状态变为 **In use**
 - 卸载后状态恢复为 **Available**
-- `Delete with Instance` 勾选后，删除实例时云硬盘**一并删除**
+- `Delete with Instance` 勾选后,删除实例时云硬盘**一并删除**
 - 云硬盘在云硬盘页面(`/ebs/volumes`)独立管理
 
-### 创建云硬盘来源
+### Volume Sources 创建云硬盘来源
 
 | 来源 | 说明 | 额外字段 |
 |------|------|----------|
@@ -159,9 +159,9 @@ Use this file when a UI test spans multiple resource types, such as instance plu
 
 ---
 
-## 4. 完整生命周期中的关联变化
+## Lifecycle Changes 4. 完整生命周期中的关联变化
 
-### 创建实例
+### Create Instance 创建实例
 
 ```
 创建实例
@@ -170,7 +170,7 @@ Use this file when a UI test spans multiple resource types, such as instance plu
   └─ vNIC #1:      创建 vNIC → 绑定 Network + Subnet
 ```
 
-### 运行中操作
+### Running Instance Actions 运行中操作
 
 ```
 运行中 (Active)
@@ -183,12 +183,12 @@ Use this file when a UI test spans multiple resource types, such as instance plu
   └─ More → Edit Security Group   → 修改安全组规则
 ```
 
-### 删除实例
+### Delete Instance 删除实例
 
 ```
 删除实例(默认:移入回收站)
   ├─ Floating IP:  自动解绑
-  ├─ Data Disk:    自动解绑(保留，不删除)
+  ├─ Data Disk:    自动解绑(保留,不删除)
   ├─ vNIC:         删除
   └─ Root Disk:    根据 Delete with Instance 决定
 
@@ -199,7 +199,7 @@ Force Delete(强制删除)
   └─ Root Disk:    根据 Delete with Instance 决定
 ```
 
-### 回收站恢复
+### Restore Instance 回收站恢复
 
 ```
 恢复实例
@@ -210,7 +210,7 @@ Force Delete(强制删除)
 
 ---
 
-## 5. 资源页面入口对照
+## Resource Pages 5. 资源页面入口对照
 
 | 资源 | 页面 URL | 管理操作 |
 |------|----------|----------|
@@ -224,9 +224,9 @@ Force Delete(强制删除)
 
 ---
 
-## 6. 测试关注点
+## Test Focus 6. 测试关注点
 
-### 跨模块联动测试
+### Cross Resource Cases 跨模块联动测试
 
 | 测试场景 | 涉及模块 | 关键验证点 |
 |----------|----------|------------|
@@ -239,7 +239,7 @@ Force Delete(强制删除)
 | 删除实例后资源清理 | Instance + Volume + Floating IP | 验证解绑/保留行为 |
 | 从可启动卷创建实例 | Instance + Volume | Bootable Volume 作为启动源 |
 
-### 前置条件检查
+### Prerequisite Checks 前置条件检查
 
 | 联动测试 | 前置条件 |
 |----------|----------|

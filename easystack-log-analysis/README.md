@@ -4,7 +4,7 @@ EasyStack OpenStack 集群日志(`.eslog`)安全解压、目录映射、跨服�
 可独立完成离线证据链和无表格、行首安全问题调查报告。用户已提供运行中环境检查结果时,
 可按时间窗作为补充证据合并, 但不依赖在线调查。
 
-## 功能
+## Features 功能
 
 - 加密 `.eslog` 压缩包解压
 - 容器化日志目录结构与组件映射
@@ -12,7 +12,7 @@ EasyStack OpenStack 集群日志(`.eslog`)安全解压、目录映射、跨服�
 - 按异常信号关联 OS 系统层与控制面基础设施, 避免无条件全量扫描
 - 行首安全、无表格的离线分析报告模板与实战 case
 
-## 快速开始
+## Quick Start 快速开始
 
 ```bash
 # Explicit input; without --output, results are placed beside the bundle
@@ -30,7 +30,7 @@ bash scripts/decompress-eslog.sh
 同名文件按源文件大小保留较大者。指定外部 bundle 且未传 `--output` 时, 输出目录就是
 该 bundle 的父目录。
 
-## 文件说明
+## Files 文件说明
 
 | 文件 | 内容 |
 |------|------|
@@ -41,6 +41,8 @@ bash scripts/decompress-eslog.sh
 | [cross-domain-analysis.md](cross-domain-analysis.md) | 跨域关联分析矩阵(各场景必看哪些日志) |
 | [decompress.md](decompress.md) | eslog 解压方法 |
 | [scripts/decompress-eslog.sh](scripts/decompress-eslog.sh) | 安全解压与跨平台组件视图脚本 |
+| [scripts/search-logs.py](scripts/search-logs.py) | 按明确解压根与文件模式流式检索, 区分输入错误、无命中和限流 |
+| [tests/test-search-examples.py](tests/test-search-examples.py) | 执行真实检索脚本与文档片段的离线 fixture |
 | [tests/test-decompress-eslog.sh](tests/test-decompress-eslog.sh) | `.log`、merge 和组件视图回归测试, 使用 `bash` 执行 |
 | [log-format.md](log-format.md) | 日志行格式、字段、awk 配方 |
 | [directory-map.md](directory-map.md) | 日志目录结构映射 |

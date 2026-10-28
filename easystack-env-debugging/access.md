@@ -4,9 +4,21 @@
 访问成功后, 再切换到 [pods.md](pods.md)、[logs.md](logs.md)、
 [auth.md](auth.md) 或 [network.md](network.md) 等对应领域文档。
 
-## 访问环境后台
+## Table of Contents 目录
 
-默认只做查看操作。连接成功后，优先执行 `whoami`、`id -u`、`hostname`、`pwd`、
+| 需要做什么 | 跳转 |
+|------------|------|
+| 首次进入与统一脚本 | [访问环境后台](#访问环境后台), [推荐入口](#推荐入口-统一访问脚本) |
+| 普通 SSH 跳板组合 | [Ordinary SSH Jump Host](#ordinary-ssh-jump-host-普通-ssh-跳板机) |
+| BJ 环境及 direct/jump18 | [BJ 跳板](#bj-xx-ssh-config-跳板直达模式), [jump18](#跳板机模式ip-以-17218-开头), [直连](#直连模式非-17218-开头) |
+| JumpServer 配置、认证及超时 | [JumpServer](#jumpserver-堡垒机模式), [临时 Profile](#temporary-authentication-profile-临时认证-profile), [超时](#查询超时选择) |
+| 登录后验证与节点跳转 | [进入后台后](#进入后台后) |
+
+<a id="访问环境后台"></a>
+
+## Environment Access 访问环境后台
+
+默认只做查看操作。连接成功后,优先执行 `whoami`、`id -u`、`hostname`、`pwd`、
 `kubectl get`、`kubectl describe`、`kubectl logs --tail=<N>` 等无影响命令。
 不要在未获得明确授权时执行 `edit/delete/apply/patch/rollout restart/helm rollback` 等变更命令。
 
@@ -23,7 +35,9 @@
 `ssh -G` 自行解析配置并选择连接路径。只有脚本明确报告配置或连接问题时, 才进入
 本文件后续配置排查。
 
-## 推荐入口: 统一访问脚本
+<a id="推荐入口-统一访问脚本"></a>
+
+## Recommended Entry 推荐统一访问脚本
 
 所有外部环境登录链路统一放在脚本里。调用时只追加业务命令, 避免手写多层
 SSH、expect 和 shell 引号导致命令执行失败。
@@ -48,7 +62,7 @@ bash easystack-env-debugging/scripts/env-access.sh \
 # JumpServer 菜单 fallback
 bash easystack-env-debugging/scripts/env-access.sh --asset <ASSET_NAME> --mode jumpserver -- whoami
 
-# 本地 SSH config 不完整时，显式传入 JumpServer 认证信息
+# 本地 SSH config 不完整时,显式传入 JumpServer 认证信息
 bash easystack-env-debugging/scripts/env-access.sh \
   --env BJ-<ENV_ID> \
   --jumpserver-host <JUMPSERVER_HOST> \
@@ -169,13 +183,15 @@ bash easystack-env-debugging/scripts/env-access.sh --target <JUMP_IP> --control-
 ```
 
 - `<JUMP_IP>` 由用户指定
-- `<CONTROL_NODE_IP>` 通常为 **10.20.0.3**，失败时询问用户
-- 跳板机本身没有 kubectl，必须内层 SSH 到控制节点
+- `<CONTROL_NODE_IP>` 通常为 **10.20.0.3**,失败时询问用户
+- 跳板机本身没有 kubectl,必须内层 SSH 到控制节点
 - 控制节点可执行 `kubectl get/describe/logs`、`helm list/history`、
   `kubectl get cm -o yaml`、busybox 中的
   `openstack server list` 和 `openstack volume list`
 
-## 直连模式(非 172.18. 开头)
+<a id="直连模式非-17218-开头"></a>
+
+## Direct Mode 直连模式
 
 直连 IP 也必须通过统一访问脚本进入, 不直接手写 `ssh root@<TARGET_IP>`。
 
@@ -192,20 +208,20 @@ bash easystack-env-debugging/scripts/env-access.sh --target <TARGET_IP> --cmd 'w
 
 ## SSH 直连/跳板补充说明
 
-- **复杂命令避免嵌套 SSH 引号传递** — 无论是跳板机双层 SSH 还是直连后跳 node，引号和变量展开都容易丢失。通过 `bash <path>/env-access.sh --cmd '<CMD>'` 执行短命令; 复杂排查先用脚本进入交互式会话
+- **复杂命令避免嵌套 SSH 引号传递** - 无论是跳板机双层 SSH 还是直连后跳 node,引号和变量展开都容易丢失。通过 `bash <path>/env-access.sh --cmd '<CMD>'` 执行短命令; 复杂排查先用脚本进入交互式会话
 - 直连和 `172.18.*` 跳板模式不要求排障者手写 SSH 命令, 密码或密钥由脚本的对应模式处理
-- **不要从本机直连 K8s 节点内网 IP**(如 10.10.1.x)，必须通过控制节点中转
-- 默认只允许查看操作；变更操作必须获得用户明确授权
+- **不要从本机直连 K8s 节点内网 IP**(如 10.10.1.x),必须通过控制节点中转
+- 默认只允许查看操作;变更操作必须获得用户明确授权
 
 ## JumpServer 堡垒机模式
 
-部分环境通过 JumpServer 堡垒机管理，而非直接 SSH 到 K8s 控制节点。
+部分环境通过 JumpServer 堡垒机管理,而非直接 SSH 到 K8s 控制节点。
 对于 BJ-xx 且本机已配置 `Host 172.*.0.2` 的环境, 仍然通过统一访问脚本的
 `--env BJ-<ENV_ID>` 入口进入。只有 SSH config 跳板直达失败、没有直达 Host
 配置、需要 TUI 菜单搜索、或用户明确要求 `ssh js` 菜单交互时, 才使用统一访问
 脚本的 `--asset <ASSET_NAME> --mode jumpserver` 参数。
 
-### 连接流程
+### Connection Flow 连接流程
 
 ```
 确认用户指定的资产名或环境名
@@ -218,7 +234,7 @@ bash easystack-env-debugging/scripts/env-access.sh --target <TARGET_IP> --cmd 'w
 
 JumpServer 连接信息优先来自用户 SSH 配置。排障者只选择统一访问脚本参数,
 不要把 HostName、Port、User、IdentityFile 等字段硬编码到文档或临时命令里。
-如果本机 SSH config 没有对应的 JumpServer 入口，统一访问脚本支持通过
+如果本机 SSH config 没有对应的 JumpServer 入口,统一访问脚本支持通过
 `--jumpserver-host`、`--jumpserver-user`、`--jumpserver-port`、
 `--jumpserver-identity-file` 或 `--jumpserver-password-file` 显式传入认证信息;
 脚本不会回退去用当前本机用户的普通 SSH 认证信息。密码只从文件读取, 不接受明文
@@ -302,7 +318,9 @@ JumpServer 是交互式 TUI 菜单, 统一访问脚本内部会调用固化脚�
 内容新建临时脚本, 也不要直接改固化脚本。脚本执行确实失败时, 先把失败目标、
 执行命令、错误输出和建议改动点反馈给用户, 获得明确允许后再改脚本。
 
-### 查询超时选择
+<a id="查询超时选择"></a>
+
+### Query Timeouts 查询超时选择
 
 `env-access.sh` 对一次性只读命令默认启用超时梯度。简单命令先用短超时,
 只有本轮以 timeout 退出时才自动加大超时重试; 非超时错误立即返回。
@@ -320,28 +338,30 @@ JumpServer 是交互式 TUI 菜单, 统一访问脚本内部会调用固化脚�
   不自动重复发送。
 - 超时只表示本轮查询未完成; 不要因为超时执行重启、删除、回滚等变更操作。
 
-### 资产名使用方式
+### Asset Names 资产名使用方式
 
-JumpServer 资产名由用户在任务中指定。用户说 “ssh js 到 `<ASSET_NAME>` 环境”
-或 “到 `<ASSET_NAME>` 环境” 时, 先判断能否转换为 `--env BJ-<ENV_ID>`。
+JumpServer 资产名由用户在任务中指定。用户说 "ssh js 到 `<ASSET_NAME>` 环境"
+或 "到 `<ASSET_NAME>` 环境" 时, 先判断能否转换为 `--env BJ-<ENV_ID>`。
 不能转换时, 把 `<ASSET_NAME>` 原样传给统一访问脚本的 `--asset` 参数。
 
-### 注意事项
+### Notes 注意事项
 
 - JumpServer TUI 菜单支持: 输入资产名(唯一时自动登录)、`/ + IP/名称` 搜索、`p` 列出有权限的主机
 - 通过 JumpServer 进入环境时, 部分本地文件或敏感路径查询可能被堡垒机审计策略拦截。
   例如查询 `/root/.ssh/` 这类路径时, 可能不是目标环境命令本身失败, 而是 JumpServer
   拦截了操作。遇到这类结果时先记录拦截信息, 不要把它直接判断为目标主机文件不存在或权限配置错误。
-- 如果 `sudo su -` 需要密码，说明不是 NOPASSWD 配置，需询问用户密码
+- 如果 `sudo su -` 需要密码,说明不是 NOPASSWD 配置,需询问用户密码
 - JumpServer 不是单独手写的登录入口, 而是统一访问脚本的一个模式
 
-## 进入后台后
+<a id="进入后台后"></a>
+
+## After Login 进入后台后
 
 以下步骤适用于通过统一访问脚本进入后的所有模式。默认只做查看操作。
 
-### 连接验证
+### Connection Verification 连接验证
 
-进入目标主机并切到 root 后，先做最小只读验证:
+进入目标主机并切到 root 后,先做最小只读验证:
 
 ```bash
 whoami       # 应返回 root
@@ -350,7 +370,7 @@ hostname
 pwd
 ```
 
-如果目标节点具备 kubectl 和 kubeconfig，再执行 Kubernetes 只读验证:
+如果目标节点具备 kubectl 和 kubeconfig,再执行 Kubernetes 只读验证:
 
 ```bash
 kubectl get namespaces | grep openstack
@@ -364,14 +384,14 @@ pod 所在节点判断和跨节点检查的基准:
 kubectl get nodes -o name
 ```
 
-### 节点间跳转
+### Node Hops 节点间跳转
 
 `env-access.sh` 是从本机进入目标环境的唯一入口。进入目标环境后, 可以使用节点主机名
 执行节点间 SSH; 禁止从本机直接执行该节点间 SSH。
 
 始终使用主机名而非 IP 地址访问其他节点。节点有多个 IP 分布在管理网、
-存储网、VXLAN 等多个网平面；`/etc/hosts` 由部署工具维护，解析到当前
-可用的正确网络路径。直接使用 IP 可能会指定到有问题的网络，导致误判或
+存储网、VXLAN 等多个网平面;`/etc/hosts` 由部署工具维护,解析到当前
+可用的正确网络路径。直接使用 IP 可能会指定到有问题的网络,导致误判或
 SSH 不通。
 
 ```bash

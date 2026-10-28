@@ -1,10 +1,12 @@
-# 云硬盘页面其他操作
+# Operations
 
-> 来源:`easystack-cloud-web-e2e/volume/volume.md`，按原文标题边界拆分。
+UI 引用中的 `\uFF0C` 表示原文全角逗号, 使用原文定位时须还原; 不将转义文本当作按钮或提示原值.
 
-## 页面其他操作
+> 来源:`easystack-cloud-web-e2e/volume/volume.md`,按原文标题边界拆分。
 
-### 按钮操作
+## Other Page Actions 页面其他操作
+
+### Button Actions 按钮操作
 
 | 按钮 | 定位方式 | 说明 |
 |------|--------|------|
@@ -14,7 +16,7 @@
 | Update Status | `buttonByText("Update Status")` | 更新卷状态 |
 | More | `buttonByText("More")` | 更多操作下拉菜单 |
 
-### 表格列信息
+### Table Columns 表格列信息
 
 云硬盘列表表格通常包含以下列:
 - Name(名称)
@@ -26,7 +28,7 @@
 
 ## More 菜单操作
 
-### 菜单完整列表(9 项)
+### Menu Actions 菜单完整列表(9 项)
 
 | 操作 | 定位方式 | 可用状态 | 弹窗类型 |
 |------|--------|----------|----------|
@@ -58,18 +60,18 @@
 
 ### Modify Property 对话框
 
-- 说明: "将修改卷属性为可启动磁盘，之后该卷可用作新实例的启动源"
+- 说明: "将修改卷属性为可启动磁盘\uFF0C之后该卷可用作新实例的启动源"
 - 确认按钮: Confirm
 
 ### Edit Tags 对话框
 
 - **Edit Resource Tags**
 - 提示: "最多可添加 20 个标签"
-- 标签输入框: 输入 key=value 格式，按 Enter 添加
+- 标签输入框: 输入 key=value 格式,按 Enter 添加
 
 ### Reset Attach Status 对话框
 
-- 说明: "重置卷的挂载状态，解决异常挂载问题"
+- 说明: "重置卷的挂载状态\uFF0C解决异常挂载问题"
 - 确认按钮: Confirm
 
 ### Migrate 对话框(In use 时可用)

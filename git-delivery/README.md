@@ -2,14 +2,14 @@
 
 统一处理个人 Git 项目和公司 Gerrit 项目的代码提交与交付。自动识别项目类型,
 执行通用提交前门禁, 区分用户授权边界并生成符合规范的提交信息。默认只读生成信息,
-然后询问是否提交; `commit`、amend、`git review` 与 push 均需单独明确授权。
+然后询问是否提交; `commit`、amend、`git review` 与 push 均需明确授权; 当前会话有效授权可沿用, 明确授权的动作序列可以连续完成。
 
 ## 功能列表
 
 - 自动识别 `company-gerrit` 与 `personal-git` 项目类型
 - 通用提交前门禁: 仓库、分支、工作区、staged diff、无关文件、敏感信息
 - 用户授权边界: 区分生成提交信息、commit、amend、git review、push、历史改写
-- 公司 Gerrit: OpenStack / Gerrit 提交信息规范, `git review -r origin <branch>`
+- 公司 Gerrit: OpenStack / Gerrit 提交信息规范, `git review -R -r origin <branch>`
 - 原 Change 更新与新 Change 创建判断
 - 个人项目: 遵循仓库既有风格, 普通 commit 和 push
 - 验证与交付门禁, 如实报告命令、测试和远程操作结果
@@ -32,4 +32,4 @@
 1. 代码修改完成并准备进入交付阶段时, 加载本 skill。
 2. Skill 自动识别项目类型并执行通用门禁。
 3. 未明确授权写操作时, 输出提交信息并询问是否需要提交。
-4. 按单独明确授权执行一个交付动作后停止并报告。
+4. 按当前会话有效授权完成对应动作或动作序列, 检查结果; 未授权动作或失败处停止。

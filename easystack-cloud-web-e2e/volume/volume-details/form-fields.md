@@ -1,8 +1,8 @@
-# 云硬盘创建表单字段
+# Form Fields
 
-> 来源:`easystack-cloud-web-e2e/volume/volume.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/volume/volume.md`,按原文标题边界拆分。
 
-## 页面信息
+## Page Information 页面信息
 
 | 项目 | 值 |
 |------|-----|
@@ -10,7 +10,7 @@
 | 导航路径 | Service Catalog → Block Storage → Volume |
 | 页面标题 | EasyStack Cloud |
 
-## 创建云硬盘表单字段
+## Volume Form Fields 创建云硬盘表单字段
 
 ### Volume Name(卷名称)⭐ 必填
 
@@ -77,4 +77,3 @@
 | 默认值 | 1 |
 | 步长 | 1 |
 | 定位方式 | `fieldInput("Size", ".ant-input-number input")` |
-

@@ -2,7 +2,7 @@
 
 本目录按 OpenStack 子项目和平台扩展服务组织组件详情。后续新增组件时在本目录增加对应 `<component>.md`, 并在下表补链接。
 
-## 组件索引
+## Component Index 组件索引
 
 | 组件 | 文档 |
 |------|------|
@@ -21,7 +21,7 @@
 | `networking` | [networking.md](networking.md) |
 | `nova` | [nova.md](nova.md) |
 
-## 静态组件参考
+## Component References 组件参考
 
 | 内容 | 文档 |
 |------|------|

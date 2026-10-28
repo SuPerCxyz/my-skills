@@ -59,4 +59,4 @@ Use this file when generating target folder and file names after media type and 
 | `{seasonNr2}` | 季号(2位) | 01、02 |
 | `{episodeNr2}` | 集号(2位) | 01、02 |
 | `{realSeason}` | 特殊内容所属真实季 | 01、02 |
-| `{episodeInSeasonNr2}` | 特殊内容在所属季内的全局序号，跨所有特殊类型统一从 1 递增(不是按类型分组重新编号) | 01、67 |
+| `{episodeInSeasonNr2}` | 特殊内容在所属季内的全局序号, 跨所有特殊类型统一从 1 递增(不是按类型分组重新编号) | 01、67 |

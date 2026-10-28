@@ -1,11 +1,11 @@
 ---
 name: easystack-ci-test
-description: "Use only for EasyStack OpenStack repository CI: tox cover, tox pep8, flake8 diagnostics, coverage gaps, stestr, privsep tests, and Miniconda/tox setup. This skill validates code CI only; it does not run backend functional tests, frontend E2E, live environment debugging, offline log analysis, or delivery writes."
+description: "Use when running or fixing EasyStack OpenStack repository CI: tox cover/pep8, coverage, flake8, stestr, privsep, or Python/tox setup. Excludes live resource tests, Web E2E, incident diagnosis, offline logs, and Git writes."
 ---
 
 # EasyStack CI Test
 
-# Role
+## Role 角色
 
 You are a senior Cloud Platform Python CI and Test Automation expert specializing in tox, flake8, stestr, coverage diagnostics, bounded repair cycles, and repository-safe validation.
 
@@ -35,7 +35,8 @@ EasyStack OpenStack 项目使用 tox 进行 CI 测试。本 skill 运行 `tox -e
 
 ## Quick Start 快速开始
 
-1. 先按 [setup.md](setup.md) 定位 Miniconda、激活或创建 `easystack-<project>-py<version>` 环境。
+1. 先按 [setup.md](setup.md) 读取所选 tox 环境的明确 Python major, 2 映射 2.7、3 映射 3.9;
+   固定独立 AUX_PYTHON, 再核实实际 CI_PYTHON。未知、动态或多 major 冲突时停下报告。
 2. 如果找不到环境或依赖, 先报告建议安装命令和影响, 等待用户明确确认。
 3. 环境激活后先运行 `cover`, 再运行 `pep8`; 任一失败时先核对修复授权.
    仅验证时报告结果, 不进入自动修复; 已授权修复时按 [auto-fix.md](auto-fix.md)
@@ -45,17 +46,23 @@ EasyStack OpenStack 项目使用 tox 进行 CI 测试。本 skill 运行 `tox -e
    按 [gerrit-delivery.md](gerrit-delivery.md) 转入 `git-delivery`, 本 skill 不执行 Git 写入.
 
 ```bash
-tox -e cover   # 覆盖率检查(先跑, 约 5 分钟)
-tox -e pep8    # 代码风格检查(后跑, 约 40 秒)
+"$CI_PYTHON" -m tox -e cover   # 已通过 setup 门禁的 CI 解释器
+"$CI_PYTHON" -m tox -e pep8
 ```
 
-> 永远先激活 Miniconda 环境再运行 `tox`。直接用系统 Python 运行 `tox` 会用错解释器或缺失依赖。
+> CI 环境按 tox.ini major 选择: 2 -> 2.7, 3 -> 3.9。辅助脚本独立使用 Python 3,
+> 不让 CI 2.7 执行 Python 3 专用工具; 原 tox 目标约束保留并核验。
 
 ## Quick Reference 快速参考 - 文件索引
 
 | 需要做什么 | 阅读 |
 |------------|------|
-| 环境配置(Miniconda 虚拟环境自动创建/激活) | [setup.md](setup.md) |
+| 用途、文件和快速开始 | [README.md](README.md) |
+| 宿主/目标解释器与 Miniconda 环境准备 | [setup.md](setup.md) |
+| 只读提取常见 Python 约束 | [scripts/discover-python.py](scripts/discover-python.py) |
+| 解释器约束离线 fixture | [tests/test-discover-python.py](tests/test-discover-python.py) |
+| 完整 diff 的全部 Python 可执行行覆盖 | [scripts/check-diff-coverage.py](scripts/check-diff-coverage.py) |
+| 多文件、多 hunk 与历史缺口 fixture | [tests/test-diff-coverage.py](tests/test-diff-coverage.py) |
 | 运行 tox 命令(pep8, cover, stestr) | [tox.md](tox.md) |
 | 已授权范围内的自动修复循环(cover -> pep8) | [auto-fix.md](auto-fix.md) |
 | 修复 pep8 / flake8 错误 | [pep8.md](pep8.md) |

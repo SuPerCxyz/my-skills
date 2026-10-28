@@ -60,4 +60,7 @@ kubectl get pods -n openstack --selector=application=<service>,component=api --f
 |------|----------|-----------|-----------------|
 | **Deployment** | `cinder-api-*`, `nova-conductor-*` | 随机后缀(如 `cinder-api-6b58d8ddd6-jncth`) | 新 pod 使用新名称 |
 | **StatefulSet** | `glance-api-0`, `mariadb-0` | 编号后缀(`-0`, `-1`, `-2`) | 名称不变, 有持久卷 |
-| **DaemonSet** | `ovn-controller-*`, `nova-compute-*` | 每个 compute 节点一个 | 同一节点上名称不变 |
+| **DaemonSet** | `ovn-controller-*`, `nova-compute-*` | 每个匹配节点一个 | Pod 替换可改变名称和 UID, 容器重启可保留 Pod |
+
+区分容器重启、Pod 替换和副本并存。名称相同不证明同一 Pod, 名称改变也不单独证明
+节点重启; 结合 Pod UID、restart count、creation timestamp 与事件核对。

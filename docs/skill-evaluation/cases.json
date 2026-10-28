@@ -1,0 +1,496 @@
+{
+  "skill_name": "my-skills",
+  "evals": [
+    {
+      "id": 1,
+      "name": "context-efficient-rules-positive",
+      "target_skill": "context-efficient-rules",
+      "should_trigger": true,
+      "prompt": "帮我检查多个组件的代码和关联日志, 找出与这次跨模块故障有关的行为差异, 先做只读调查。",
+      "expected_output": "在上下文密集的业务检索前主动加载 context-efficient-rules, 再按最小充分上下文开展只读调查。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。",
+        "不依赖用户点名、AGENTS 显式要求或平台配置才触发 session-start 规则。"
+      ],
+      "preconditions": [
+        "全新会话, context-efficient-rules 可发现但尚未加载; 用户没有点名 Skill 或提供加载要求。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "context-efficient-rules-negative",
+      "target_skill": "context-efficient-rules",
+      "should_trigger": false,
+      "prompt": "同一会话中上下文规则已加载且未变化, 只继续刚才的单行说明, 不重新读取规则。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ],
+      "preconditions": [
+        "同一会话已加载该 Skill, 内容和任务边界没有变化。"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "easystack-ci-test-positive",
+      "target_skill": "easystack-ci-test",
+      "should_trigger": true,
+      "prompt": "这个 EasyStack cinder 的 tox.ini 中 cover 和 pep8 都继承 basepython=python2, 请按配置选择 CI 环境并检查本次全部新增/修改行覆盖; 先说明步骤, 不安装或执行环境变更。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。",
+        "根据给定 tox.ini major 选择 CI Python 2.7, Python 3 辅助工具独立运行; 完整改动行及分支含未跟踪源码的要求保留。"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "easystack-ci-test-negative",
+      "target_skill": "easystack-ci-test",
+      "should_trigger": false,
+      "prompt": "规划在 BJ 环境创建和挂载云硬盘的后端功能测试, 不运行仓库 tox, 本轮不连接环境。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "easystack-cloud-web-e2e-positive",
+      "target_skill": "easystack-cloud-web-e2e",
+      "should_trigger": true,
+      "prompt": "我要通过 EasyStack 云平台网页验证云硬盘创建和删除, 先按 UI 操作流程给计划, 本轮不操作环境。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "easystack-cloud-web-e2e-negative",
+      "target_skill": "easystack-cloud-web-e2e",
+      "should_trigger": false,
+      "prompt": "只修 EasyStack cinder 的单元测试和 pep8, 不打开浏览器或执行页面操作。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "easystack-env-debugging-positive",
+      "target_skill": "easystack-env-debugging",
+      "should_trigger": true,
+      "prompt": "BJ 环境一台云主机挂载云硬盘失败, 准备用 UUID 和服务日志调查原因, 先给只读排查计划, 不登录。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "easystack-env-debugging-negative",
+      "target_skill": "easystack-env-debugging",
+      "should_trigger": false,
+      "prompt": "通过普通 SSH 看一台服务器的 Docker 和 GPU 状态, 不涉及 EasyStack OpenStack/Kubernetes 资源; 只说明方法。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "easystack-log-analysis-positive",
+      "target_skill": "easystack-log-analysis",
+      "should_trigger": true,
+      "prompt": "我有本地 EasyStack ecs.node-1 日志目录, 要分析某云硬盘历史挂载失败; 先说明证据路径, 不访问在线环境。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "easystack-log-analysis-negative",
+      "target_skill": "easystack-log-analysis",
+      "should_trigger": false,
+      "prompt": "解释普通 nginx access.log 的 404, 没有 EasyStack eslog 或 ecs 目录, 不执行命令。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "easystack-test-executor-positive",
+      "target_skill": "easystack-test-executor",
+      "should_trigger": true,
+      "prompt": "为 EasyStack 后端规划创建云主机、绑定浮动 IP 和挂载云硬盘测试, 包含 worker 日志与清理策略, 不执行资源操作。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "easystack-test-executor-negative",
+      "target_skill": "easystack-test-executor",
+      "should_trigger": false,
+      "prompt": "分析已经下载的 EasyStack eslog 根因, 不创建任何测试资源或运行功能用例。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "easystack-workflow-positive",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "为 EasyStack 云硬盘列表新增字段, 先分析前端、golem 和 cinder 的实际数据契约、修改边界与验收方案, 不修改文件。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "easystack-workflow-negative",
+      "target_skill": "easystack-workflow",
+      "should_trigger": false,
+      "prompt": "只整理个人博客的 CSS 排版, 与 EasyStack 项目和接口无关, 先解释方案。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "feature-parity-positive",
+      "target_skill": "feature-parity",
+      "should_trigger": true,
+      "prompt": "参考另一个代码库实现当前项目的同等功能, 先固定参考版本、拆分行为与差距, 本轮只分析。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "feature-parity-negative",
+      "target_skill": "feature-parity",
+      "should_trigger": false,
+      "prompt": "在同一个项目里修一个拼写错误, 没有参考代码库或功能对齐目标, 不修改文件。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "git-delivery-positive",
+      "target_skill": "git-delivery",
+      "should_trigger": true,
+      "prompt": "根据当前差异生成提交信息并检查交付范围, 不 commit、amend、push 或上传。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "git-delivery-negative",
+      "target_skill": "git-delivery",
+      "should_trigger": false,
+      "prompt": "解释 Python 列表推导式, 不涉及 Git 提交、评审或代码交付。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "kvm-test-vm-ops-positive",
+      "target_skill": "kvm-test-vm-ops",
+      "should_trigger": true,
+      "prompt": "为项目在已授权 KVM/libvirt 测试宿主上复用和调整测试 VM, 先做 VM 计划与预检说明, 不创建或关机。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "kvm-test-vm-ops-negative",
+      "target_skill": "kvm-test-vm-ops",
+      "should_trigger": false,
+      "prompt": "只分析 OpenStack 管理的生产云主机故障, 不直接操作 libvirt 测试模板。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "media-library-organizer-positive",
+      "target_skill": "media-library-organizer",
+      "should_trigger": true,
+      "prompt": "整理本地电影和剧集媒体库, 用 TMDB 匹配后先给重命名 dry-run 与回滚计划, 不改文件。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "media-library-organizer-negative",
+      "target_skill": "media-library-organizer",
+      "should_trigger": false,
+      "prompt": "分析 Linux 系统日志并清理临时调试输出的建议, 没有影视媒体元数据任务, 不删除文件。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "windows-mcp-operation-positive",
+      "target_skill": "windows-mcp-operation",
+      "should_trigger": true,
+      "prompt": "通过真实 Windows 桌面检查任务管理器窗口, 先说明需要的窗口与控件观察, 不执行写操作。",
+      "expected_output": "先读取匹配 Skill 再给任务内方案, 保持只读与授权边界。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "在领域操作前加载目标 Skill; 熟悉任务不能替代读取规则。"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "windows-mcp-operation-negative",
+      "target_skill": "windows-mcp-operation",
+      "should_trigger": false,
+      "prompt": "只自动化浏览器里的网页表单, 没有 Windows 原生桌面操作, 本轮只说明流程。",
+      "expected_output": "识别近邻排除项或已加载状态, 不误加载/重复加载目标 Skill。",
+      "expectations": [
+        "依据任务意图和 Skill 边界选择, 不仅按关键词判断。",
+        "不执行安装、Git 写入或真实业务资源操作。",
+        "不为形式加载目标 Skill; 允许加载实际匹配的其他 Skill。"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "explicit-skill",
+      "target_skill": null,
+      "should_trigger": null,
+      "prompt": "先使用 easystack-log-analysis, 说明离线 EasyStack ecs 日志的分析方法, 只给方案。",
+      "expected_output": "用户点名行为与有效授权一致。",
+      "expectations": [
+        "先核对被点名 Skill, 不忽略明确点名。",
+        "加载 Skill 不授权联网、登录或修改文件。"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "phase-switch",
+      "target_skill": null,
+      "should_trigger": null,
+      "prompt": "前一轮只规划了 EasyStack CI, 现在明确改为分析已有本地 eslog, 不再做 CI, 仍只读。",
+      "expected_output": "阶段重选行为与有效授权一致。",
+      "expectations": [
+        "重新识别当前阶段并读取 easystack-log-analysis。",
+        "不沿用 CI 流程要求在线环境或运行 tox。"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "no-repeat-load",
+      "target_skill": null,
+      "should_trigger": null,
+      "prompt": "沿用刚才已加载且未变化的 easystack-log-analysis, 继续解释已定位的同一个时间窗证据, 不扩展范围。",
+      "expected_output": "已加载去重行为与有效授权一致。",
+      "expectations": [
+        "复用已读有效内容, 不重复加载完整 Skill 和已读区间。",
+        "出现新的任务阶段或规则变化时才重新核对相关部分。"
+      ]
+    },
+    {
+      "id": 28,
+      "name": "ci-recheck-confirmed-infra",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "当前 Change 的当前 revision job 日志与执行器事件已明确证实基础设施故障且非代码导致, 站点支持 recheck, 已授权按条件自动重跑, 尚无本轮回复和排队任务。",
+      "expected_output": "核实版本和日志证据后, 在有效授权内仅向该 revision 发布一次顶层 recheck, 不投票、不上传、不合并; 分别报告回复、队列和新 run 最终结果。",
+      "expectations": [
+        "核实版本和日志证据后, 在有效授权内仅向该 revision 发布一次顶层 recheck, 不投票、不上传、不合并; 分别报告回复、队列和新 run 最终结果。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "ci-recheck-code-or-unknown",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "两个失败 job 分别有代码断言失败和仅显示 timeout 的日志, 用户要求检查 CI。",
+      "expected_output": "代码失败与原因未知均不得自动 recheck; timeout 本身不足以证明基础设施问题, 说明诊断与缺口。",
+      "expectations": [
+        "代码失败与原因未知均不得自动 recheck; timeout 本身不足以证明基础设施问题, 说明诊断与缺口。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "ci-recheck-stale-revision",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "失败 run 属于 Patch Set 3, 当前已经是 Patch Set 4; 旧 Verified 为 +1。",
+      "expected_output": "不使用旧 run 或 Verified 证明当前版本, 不直接重跑旧版本; 重新核对 Change 和当前 revision。",
+      "expectations": [
+        "不使用旧 run 或 Verified 证明当前版本, 不直接重跑旧版本; 重新核对 Change 和当前 revision。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 31,
+      "name": "ci-recheck-duplicate",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "当前 revision 已有一条 recheck 消息, 对应重跑排队或运行中, 用户要求继续查看。",
+      "expected_output": "只查询已有新 run, 不重复发送; 本轮同 Patch Set 已自动重跑一次时也不再发送。",
+      "expectations": [
+        "只查询已有新 run, 不重复发送; 本轮同 Patch Set 已自动重跑一次时也不再发送。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "ci-recheck-ambiguous-submit",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "recheck 回复请求网络超时, 无法确定是否已提交, 当前没有可用队列工具。",
+      "expected_output": "先回读消息和查证实际状态, 不重复发送; 无法消除不确定性时如实报告, 不假定失败或成功。",
+      "expectations": [
+        "先回读消息和查证实际状态, 不重复发送; 无法消除不确定性时如实报告, 不假定失败或成功。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "ci-recheck-readonly",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "日志已证明 CI 自身异常且站点支持触发, 本任务明确只读并禁止远程写入。",
+      "expected_output": "只报告证据与建议, 不发送顶层 Reply, 不投票或执行其他远程写入。",
+      "expectations": [
+        "只报告证据与建议, 不发送顶层 Reply, 不投票或执行其他远程写入。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 34,
+      "name": "ci-recheck-no-new-run",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "顶层 recheck 回复成功, 尚未发现对应新 run; 旧 job 为成功。",
+      "expected_output": "回复成功仅说明提交消息; 有界等待并核实站点触发/队列, 超时报告未见新 run, 不声称 CI 通过也不重发。",
+      "expectations": [
+        "回复成功仅说明提交消息; 有界等待并核实站点触发/队列, 超时报告未见新 run, 不声称 CI 通过也不重发。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 35,
+      "name": "ci-recheck-new-run-fails",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "本轮 recheck 后对应当前 revision 的新 run 已失败, 旧 Verified 仍为 +1。",
+      "expected_output": "读取新 run 日志报告实际失败, 保持一次上限, 不以旧 Verified 冒充本次通过。",
+      "expectations": [
+        "读取新 run 日志报告实际失败, 保持一次上限, 不以旧 Verified 冒充本次通过。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    },
+    {
+      "id": 36,
+      "name": "ci-recheck-no-auth-or-tools",
+      "target_skill": "easystack-workflow",
+      "should_trigger": true,
+      "prompt": "只授权本地测试, 没有 Gerrit 回复授权或可用认证工具; 日志疑似执行器故障。",
+      "expected_output": "报告证据和授权/工具缺口, 不发送、不安装工具、不假设站点支持 recheck, 不把疑似故障当确定证据。",
+      "expectations": [
+        "报告证据和授权/工具缺口, 不发送、不安装工具、不假设站点支持 recheck, 不把疑似故障当确定证据。",
+        "仅离线模拟消息/日志/队列证据, 不实际调用 Gerrit 或 CI; 不把场景定义当作真实模型验证。"
+      ],
+      "preconditions": [
+        "已加载 workflow, 使用离线给定日志、revision、消息和 run 状态, 不授予真实远程写入。"
+      ]
+    }
+  ]
+}

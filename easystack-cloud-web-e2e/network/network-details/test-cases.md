@@ -1,50 +1,53 @@
-# 网络管理测试用例
+# Test Cases
 
-## agent-browser 迁移说明
+## Scenario Status 场景状态
 
-本文件保留页面字段、步骤和断言知识;执行入口统一迁移到 agent-browser。
-文中的历史代码块已替换为 agent-browser 迁移说明，新增用例必须使用 `agent-browser eval --stdin` 或 `agent-browser batch` 示例。
+以下是基于现有页面知识的场景规范, 不是已运行的自动化结果. 使用 agent-browser,
+先核实项目与精确资源身份, 复用对应 patterns 操作及 interactions helper.
+`planned` 表示缺少已确认的可调用操作或字段, 先现场只读发现, 不编造入口/参数.
+场景执行不要求先修改 skill; 缺少必要控件或权限时报告未验证及恢复点.
+清理只针对本用例记录的实际资源, 按已有准确授权执行; 未授权时只列清单和依赖顺序.
+任何提交未确认都先回读, 不因超时重复提交或自动删除.
 
-> 来源:`easystack-cloud-web-e2e/network/network.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/network/network.md`,按原文标题边界拆分。
 
-## 测试用例
+## Test Cases 测试用例
 
 ### TC-NET001: 验证网络页面加载
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 目标项目明确 |
+| 操作 | 打开 /ens/networks, 等待列表/空态与项目范围可核实 |
+| 可观察断言与恢复 | 路径未回登录, 表头/当前页数据显示完整; 无数据时保留空态结论 |
+
 
 ### TC-NET002: 按名称过滤网络
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例网络名称/UUID及项目明确 |
+| 操作 | 使用真实Name筛选并提交, 回读完整结果后清除 |
+| 可观察断言与恢复 | 名称/UUID/项目匹配且筛选撤销; 不把同名前缀网络当目标 |
+
 
 ### TC-NET003: Create Network 页面验证
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 只读表单探测, 不提交创建 |
+| 操作 | 点击Create Network进入 /ens/networks/creator, 检查类型/名称/可用域/子网必填字段后Cancel |
+| 可观察断言与恢复 | 独立创建页而非modal, 必填状态与当前模式一致, 结束未创建网络 |
+
 
 ### TC-NET004: 行内操作验证
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例网络UUID明确, 仅探测行内入口 |
+| 操作 | 精确行中观察Edit/Edit Tags/Delete入口, 仅打开已确认无直接副作用的编辑弹窗并Cancel |
+| 可观察断言与恢复 | 弹窗目标与UUID匹配且原字段不变; 未知是否直接提交的动作不点击, 不用真实删除证明入口存在 |

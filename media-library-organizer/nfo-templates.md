@@ -40,7 +40,7 @@ Use this file only when generating NFO content. It does not decide whether a fil
   <country>中国</country>
   <language>汉语普通话</language>
   <plot>简介...</plot>
-  <tagline>一个人抵达，一群人出发</tagline>
+  <tagline>一个人抵达&#xFF0C;一群人出发</tagline>
   <status>Returning Series</status>
   <mpaa>TV-Y7</mpaa>
   <studio>腾讯视频</studio>

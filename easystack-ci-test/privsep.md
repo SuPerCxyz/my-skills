@@ -2,7 +2,7 @@
 
 Use this file only when unit tests touch functions decorated with a privsep entrypoint and fail because the helper process would be started. It explains the test-side handling pattern.
 
-## Problem
+## Problem 问题现象
 
 Functions decorated with `@cinder.privsep.sys_admin_pctxt.entrypoint` cannot be called directly in unit tests:
 
@@ -11,7 +11,7 @@ Exception: You have attempted to start a privsep helper.
 This is not allowed in the gate.
 ```
 
-## Solution: Disable client_mode
+## Solution: Disable client_mode 测试侧处理
 
 Set `client_mode = False` on the privsep context so the entrypoint calls the inner function directly:
 

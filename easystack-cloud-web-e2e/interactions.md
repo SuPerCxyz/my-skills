@@ -1,4 +1,4 @@
-# UI 组件交互
+# Interactions
 
 EasyStack Cloud 使用 Angular + NG-ZORRO 组件库。本文件只记录可嵌入
 `agent-browser` 的定位方式和交互模式。
@@ -10,25 +10,29 @@ EasyStack Cloud 使用 Angular + NG-ZORRO 组件库。本文件只记录可嵌�
 [数字输入框](#数字输入框) | [标签页](#标签页) | [消息与通知](#消息与通知) |
 [确认对话框](#确认对话框) | [加载状态](#加载状态) | [截图](#截图)
 
-## 使用约定
+<a id="使用约定"></a>
+
+## Usage 使用约定
 
 - 示例均为 `agent-browser` CLI 或可放入 `agent-browser eval --stdin` 的定位方式知识。
-- 优先合并为单次 `agent-browser eval --stdin` 或 `agent-browser batch`，减少 snapshot 和 token 消耗。
+- 优先合并为单次 `agent-browser eval --stdin` 或 `agent-browser batch`,减少 snapshot 和 token 消耗。
 - 固定等待只作为动画兜底;成功判定应依赖 URL、目标元素或状态文本。
-- 业务操作优先复用 `patterns/*-ops.md`，本文件只提供组件级 helper。
-- `agent-browser` 不是 Playwright，不能直接使用 `:has-text()`、`text=` 等
+- 业务操作优先复用 `patterns/*-ops.md`,本文件只提供组件级 helper。
+- `agent-browser` 不是 Playwright,不能直接使用 `:has-text()`、`text=` 等
   Playwright 风格伪选择器。CLI 文本定位使用 `agent-browser find text ...`;
   `eval --stdin` 内使用下方 helper。
 - EasyStack Cloud 前端大量使用 Angular + NG-ZORRO。不要把页面按钮、modal
   footer 按钮、form submit 按钮、checkbox 当成同一种元素处理。
-- 打开/关闭 modal、切页、刷新表格、切换步骤后，旧 ref 默认失效;必须重新
+- 打开/关闭 modal、切页、刷新表格、切换步骤后,旧 ref 默认失效;必须重新
   snapshot 或重新查询可见 DOM。
-- 列表实时刷新、高频新增、切换排序/筛选后，旧行号、旧位置判断、旧 checkbox ref
+- 列表实时刷新、高频新增、切换排序/筛选后,旧行号、旧位置判断、旧 checkbox ref
   也默认失效;不要依赖“第 1 行/第 2 行”这类位置假设。
-- `Service Catalog`、dropdown、`More` 菜单、首页配置区块等覆盖层打开后，会遮挡
-  原页面元素;此时先处理覆盖层，不要继续点被遮挡元素。
+- `Service Catalog`、dropdown、`More` 菜单、首页配置区块等覆盖层打开后,会遮挡
+  原页面元素;此时先处理覆盖层,不要继续点被遮挡元素。
 
-## 按钮
+<a id="按钮"></a>
+
+## Buttons 按钮
 
 ```bash
 agent-browser find text "Create Volume" click
@@ -95,9 +99,9 @@ const submitNearestForm = (node) => {
 };
 ```
 
-列表页按钮在页面刚打开后可能先渲染为 `disabled`，随后由权限、配额或数据
+列表页按钮在页面刚打开后可能先渲染为 `disabled`,随后由权限、配额或数据
 加载结果异步放开。例如实例列表的 `Create Instance` 按钮可能需要等待数秒
-才可点击。执行操作前必须轮询目标按钮进入 enabled 状态，不能仅凭首次
+才可点击。执行操作前必须轮询目标按钮进入 enabled 状态,不能仅凭首次
 探测到 disabled 就判定无权限或配额不足。
 
 ```bash
@@ -114,8 +118,8 @@ const waitButtonEnabledOnce = (text) => {
 };
 ```
 
-长等待不要放进单次 `eval`，否则容易触发 CDP evaluate 超时。需要等待超过
-数秒时，优先使用 `agent-browser wait --fn`，或在 shell 层做短轮询:
+长等待不要放进单次 `eval`,否则容易触发 CDP evaluate 超时。需要等待超过
+数秒时,优先使用 `agent-browser wait --fn`,或在 shell 层做短轮询:
 
 ```bash
 for i in $(seq 1 30); do
@@ -132,17 +136,17 @@ done
 
 等待规则补充:
 
-- 普通页面交互默认只做短等待，不允许把“按钮启用”“下拉加载”“modal 提交后列表刷新”
+- 普通页面交互默认只做短等待,不允许把“按钮启用”“下拉加载”“modal 提交后列表刷新”
   这类动作写成长时间循环。
-- 如果按钮连续数次检查仍 disabled，先停止等待，回查:
+- 如果按钮连续数次检查仍 disabled,先停止等待,回查:
   - 必填输入/下拉是否都已满足
   - 是否有校验错误、配额提示、遮挡层或项目不对
   - 当前动作是否实际位于 `More` 菜单而不是顶部工具栏
-- 如果点击后没有任何跳转、提示或网络请求，也要回查隐藏字段、登录类型、权限提示或
+- 如果点击后没有任何跳转、提示或网络请求,也要回查隐藏字段、登录类型、权限提示或
   当前动作是否实际受覆盖层阻挡。
-- 只有迁移、数据拷贝、`fio`、用户明确说明的后台长任务，才允许扩大等待预算。
+- 只有迁移、数据拷贝、`fio`、用户明确说明的后台长任务,才允许扩大等待预算。
 
-如果必须在页面上下文中短等待，控制在几秒内:
+如果必须在页面上下文中短等待,控制在几秒内:
 
 ```javascript
 const waitButtonEnabledBriefly = async (text, timeoutMs = 5000) => {
@@ -169,31 +173,33 @@ const waitButtonEnabledBriefly = async (text, timeoutMs = 5000) => {
 1. `agent-browser click <ref/selector>` 做真实点击
 2. modal 内按钮使用 `modalButtonByText()` 限定当前最上层弹窗
 3. 表单提交优先 `form.requestSubmit()`
-4. 仅在以上都不可用时，才用 `clickWithMouse()` 作为兜底
+4. 仅在以上都不可用时,才用 `clickWithMouse()` 作为兜底
 
 不要直接对全局 `document.querySelectorAll('button')` 的第一个同名按钮做 `.click()`。
 
 入口类型补充:
 
 - 顶部工具栏按钮通常要求目标行已选中。
-- `More` 菜单动作通常也要求目标行已选中，然后再展开菜单选择动作。
+- `More` 菜单动作通常也要求目标行已选中,然后再展开菜单选择动作。
 - 行名称、详情链接、行内链接通常不依赖 checkbox 选中。
-- 也有例外页面采用“纯行内动作”模式，例如计算节点、浮动 IP;这些页面很多操作不在
-  顶部工具栏，而在每行的 Action 列。
-- 执行动作前先判断当前入口类型，避免把“行内入口”当成“批量工具栏动作”，或反过来。
+- 也有例外页面采用“纯行内动作”模式,例如计算节点、浮动 IP;这些页面很多操作不在
+  顶部工具栏,而在每行的 Action 列。
+- 执行动作前先判断当前入口类型,避免把“行内入口”当成“批量工具栏动作”,或反过来。
 
 主操作按钮规则:
 
-- 对 `Create`、`Confirm`、`Associate`、`Attach`、`Save` 这类主操作按钮，
+- 对 `Create`、`Confirm`、`Associate`、`Attach`、`Save` 这类主操作按钮,
   先检查按钮是否 disabled。
-- 如果按钮 disabled，优先检查当前页面或弹窗内:
+- 如果按钮 disabled,优先检查当前页面或弹窗内:
   - 必填输入是否已填值
   - 必填下拉是否已选中
   - 联动字段是否已刷新完成
   - 页面是否有校验错误或配额提示
-- 只有在必填项满足、按钮变 enabled 后，才执行点击或提交。
+- 只有在必填项满足、按钮变 enabled 后,才执行点击或提交。
 
-## 文本输入
+<a id="文本输入"></a>
+
+## Text Inputs 文本输入
 
 ```bash
 agent-browser fill '#id_username' "$USERNAME"
@@ -220,9 +226,11 @@ Boolean(input);
 JS
 ```
 
-## 下拉选择框
+<a id="下拉选择框"></a>
 
-NG-ZORRO Select 不是原生 `<select>`。优先点击当前可见下拉，再从未隐藏的
+## Select Controls 下拉选择框
+
+NG-ZORRO Select 不是原生 `<select>`。优先点击当前可见下拉,再从未隐藏的
 dropdown 中选项。
 
 ```javascript
@@ -240,19 +248,19 @@ const selectOption = (formItemText, optionText) => {
 };
 ```
 
-下拉选择完成后，必须回读当前展示值;如果展示值没有切换到目标值，就视为选择失败，
+下拉选择完成后,必须回读当前展示值;如果展示值没有切换到目标值,就视为选择失败,
 不得继续提交后续操作。
 
 筛选输入补充:
 
-- 列表上 `Click here for filters.` 这类控件，很多页面是“打开筛选条件面板”的入口，
+- 列表上 `Click here for filters.` 这类控件,很多页面是“打开筛选条件面板”的入口,
   不是立即按名称过滤的数据搜索框。
-- 如果填入文本后列表没有立刻收窄，不要继续等待“结果自己出现”;应先确认该控件
-  是否需要额外的筛选字段、确认按钮、回车提交，或改用真正的列筛选/分页定位。
+- 如果填入文本后列表没有立刻收窄,不要继续等待“结果自己出现”;应先确认该控件
+  是否需要额外的筛选字段、确认按钮、回车提交,或改用真正的列筛选/分页定位。
 - 不要把“文本已经输入到筛选框”误判为“筛选已经生效”。
-- 表格列筛选会影响当前列表展示的数据集合，不只是某一个单元格;一旦启用列筛选，
+- 表格列筛选会影响当前列表展示的数据集合,不只是某一个单元格;一旦启用列筛选,
   后续定位、分页、状态判断都必须基于筛选后的整张表重新判断。
-- 某些列表页的 `Click here for filters.` 只是筛选入口，但不是立即过滤框;
+- 某些列表页的 `Click here for filters.` 只是筛选入口,但不是立即过滤框;
   某些页面填入文本后不会立刻变更结果集。
 
 获取当前值:
@@ -265,12 +273,12 @@ const selectedText = document
 
 列表与通知判定补充:
 
-- toast / notification 只能说明“前端收到了提交结果”或“后台开始处理”，不能替代
+- toast / notification 只能说明“前端收到了提交结果”或“后台开始处理”,不能替代
   列表稳定态判定。
-- 如果 toast 仍显示 `creating`，但列表或详情页已经进入目标稳定态，应以列表或详情页
+- 如果 toast 仍显示 `creating`,但列表或详情页已经进入目标稳定态,应以列表或详情页
   的当前状态为准。
-- 某些权限不足的动作不会打开 modal，而是直接在正文区域给出文本提示;这属于产品
-  权限反馈，不应误判为 click 失败。
+- 某些权限不足的动作不会打开 modal,而是直接在正文区域给出文本提示;这属于产品
+  权限反馈,不应误判为 click 失败。
 
 搜索并选择:
 
@@ -294,7 +302,9 @@ const searchAndSelect = (formItemText, searchText, optionText) => {
 };
 ```
 
-## 弹窗
+<a id="弹窗"></a>
+
+## Dialogs 弹窗
 
 ```javascript
 const modal = topModal();
@@ -311,10 +321,10 @@ if (primary) {
 弹窗操作规则:
 
 - 只在当前最上层可见 modal 内查找按钮。
-- 双确认弹窗点完第一层后，必须重新获取 `topModal()`，不能复用旧按钮引用。
-- 如果按钮语义是 `triggerOk()` / `nzModalRef.triggerOk()`，仍按真实点击该按钮处理;
+- 双确认弹窗点完第一层后,必须重新获取 `topModal()`,不能复用旧按钮引用。
+- 如果按钮语义是 `triggerOk()` / `nzModalRef.triggerOk()`,仍按真实点击该按钮处理;
   不要试图越过 UI 直接找组件实例。
-- 对带表单的 modal，优先填值后提交 form;不要先全局搜索 `Create/Confirm`。
+- 对带表单的 modal,优先填值后提交 form;不要先全局搜索 `Create/Confirm`。
 
 表单优先提交:
 
@@ -344,35 +354,138 @@ const fillModalField = (label, value) => {
 };
 ```
 
-## 表格
+<a id="表格"></a>
 
-定位包含指定文本的行:
+## Tables 表格
 
+资源操作必须在已确认的项目和唯一可见表格内精确定位名称列. 不在整行文本中做
+`includes(name)` 匹配. 名称相同且不能由项目或 UUID 消除歧义时停止, 不取第一行.
+有资源 UUID 时跨刷新继续使用同一 UUID; 调用方指定 UUID 而页面无法核实则停止.
+
+将下面 helper 与资源调用片段放进同一次 `eval --stdin`; 不假设变量跨调用保留.
+表格应由现场观察选择, 不用“第一张表”代替资源域判断.
+
+<!-- resource-contract:start -->
 ```javascript
-const rowByText = (value) => [...document.querySelectorAll('.ant-table-tbody tr')]
-  .find((row) => row.innerText.includes(value));
+const resourceText = (node) => (node?.innerText || node?.textContent || '').trim();
+const resourceTable = () => {
+  const tables = [...document.querySelectorAll('.ant-table')].filter((node) => node.getClientRects().length > 0);
+  if (tables.length !== 1) throw new Error('resource_table_unavailable_or_ambiguous');
+  return tables[0];
+};
+const resourceRows = (table) => [...table.querySelectorAll('.ant-table-tbody tr')]
+  .filter((row) => row.querySelectorAll('td').length > 1);
+const identityFromHref = (href) => href.match(/(?:^|[/?#=&])([0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}|[0-9a-f]{32})(?=$|[/?#=&])/i)?.[1] || null;
+const resourceIdentity = (table, row) => {
+  const headers = [...table.querySelectorAll('thead th')]
+    .map((node) => resourceText(node).replace(/\s+/g, ' ').replace(/\s*\/\s*/g, '/'));
+  const cells = [...row.querySelectorAll('td')];
+  const cell = (labels) => cells[headers.findIndex((header) => labels.includes(header))];
+  const nameCell = cell(['Name', 'IP Address']);
+  const projectCell = cell(['Project', 'Domain/Project']);
+  const projectParts = resourceText(projectCell).split(/\n|\s+\/\s+/).map((s) => s.trim()).filter(Boolean);
+  const href = nameCell?.querySelector('a[href]')?.getAttribute('href') || '';
+  const uuid = identityFromHref(href);
+  return {
+    name: resourceText(nameCell?.querySelector('a') || nameCell),
+    project: projectParts.at(-1) || '',
+    domain: projectParts.length > 1 ? projectParts[0] : resourceText(cell(['Domain'])),
+    projectId: identityFromHref(projectCell?.querySelector('a[href]')?.getAttribute('href') || ''),
+    id: row.getAttribute('data-resource-id') || resourceText(cell(['UUID', 'ID'])) || uuid || null
+  };
+};
+const resolveResource = (table, expected) => {
+  if (!table || !expected.name || !expected.project || (!expected.domain && !expected.projectId)) throw new Error('resource_identity_required');
+  const currentProject = resourceText(document.querySelector('.projects-switch-wrapper'));
+  if (currentProject !== expected.project) throw new Error('project_mismatch');
+  const matches = resourceRows(table).map((row) => ({ row, identity: resourceIdentity(table, row) }))
+    .filter(({ identity }) => identity.name === expected.name && identity.project === expected.project &&
+      (!expected.domain || identity.domain === expected.domain) &&
+      (!expected.projectId || identity.projectId === expected.projectId) &&
+      (!expected.id || identity.id === expected.id));
+  if (matches.length !== 1) throw new Error(matches.length ? 'ambiguous_resource' : 'resource_not_found');
+  return matches[0];
+};
+const resourceSelected = (row) => {
+  const input = row.querySelector('input[type="checkbox"]');
+  return Boolean(input?.checked || row.getAttribute('aria-selected') === 'true');
+};
+const selectOnlyResource = async (table, row, readSelectionCount, timeoutMs = 2000) => {
+  if (!Number.isFinite(timeoutMs) || timeoutMs < 0) throw new Error('invalid_timeout');
+  if (typeof readSelectionCount !== 'function') throw new Error('global_selection_probe_required');
+  if (!resourceRows(table).includes(row)) throw new Error('resource_row_stale');
+  const original = resourceIdentity(table, row);
+  const live = () => {
+    if (resourceTable() !== table) throw new Error('resource_table_stale');
+    if (!resourceRows(table).includes(row)) throw new Error('resource_row_stale');
+    if (JSON.stringify(resourceIdentity(table, row)) !== JSON.stringify(original)) throw new Error('resource_identity_changed');
+    if (resourceText(document.querySelector('.projects-switch-wrapper')) !== original.project) throw new Error('project_mismatch');
+    if (resourceRows(table).some((item) => item !== row && resourceSelected(item))) throw new Error('other_resources_selected');
+  };
+  const count = () => {
+    const value = readSelectionCount();
+    if (!Number.isInteger(value) || value < 0) throw new Error('global_selection_unconfirmed');
+    return value;
+  };
+  live();
+  if (count() !== (resourceSelected(row) ? 1 : 0)) throw new Error('other_resources_selected');
+  if (!resourceSelected(row)) {
+    const control = row.querySelector('label.ant-checkbox-wrapper, .ant-checkbox-wrapper');
+    if (!control || control.getAttribute('aria-disabled') === 'true') throw new Error('selection_unavailable');
+    control.click();
+  }
+  const deadline = Date.now() + timeoutMs;
+  while (true) {
+    live();
+    const selectedCount = count();
+    if (selectedCount > 1) throw new Error('other_resources_selected');
+    if (resourceSelected(row) && selectedCount === 1) return row;
+    if (Date.now() >= deadline) throw new Error('selection_unconfirmed');
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+};
+const uniqueButton = (root, label, selector = 'button') => {
+  const matches = [...root.querySelectorAll(selector)].filter((node) =>
+    resourceText(node) === label && node.getClientRects().length > 0 &&
+    !node.disabled && node.getAttribute('aria-disabled') !== 'true');
+  if (matches.length !== 1) throw new Error('action_unavailable_or_ambiguous');
+  return matches[0];
+};
+const actionButton = (root, action) => {
+  const labels = { start: 'Start', stop: 'Shutoff', reboot: 'Reboot', allocate_floating_ip: 'Apply For IP To Project' };
+  if (!Object.hasOwn(labels, action)) throw new Error('unsupported_action');
+  return uniqueButton(root, labels[action]);
+};
 ```
+<!-- resource-contract:end -->
 
-选中行:
+`resourceIdentity` 的列名是当前英文基线. 语言、列配置或 DOM 不同时先现场校准
+读取方式, 不回退为全文模糊匹配. `Domain/Project` 必须可明确拆出项目; 单元格无法
+区分时先打开资源详情核实身份. `selectOnlyResource` 不切换已选目标. `readSelectionCount` 必须从当前 UI 可验证的
+全局选择汇总读取跨页/筛选后的总选择数, 不能只统计可见行或硬编码 0/1. 无法观测
+时停止批量动作, 或按当前 UI 的明确清除入口清除后重新核实; 不编造 selector.
+资源项目使用 project UUID 或 domain/name 消歧, 同名项目的显示文本不足以证明租户
+身份. 缺少这些字段时先通过当前页面/详情核实, 无法核实则停止. 包装元素点击未生效时返回失败, 再用当前 snapshot 的真实
+checkbox ref 点击并回读, 不跳过选择校验.
 
 ```javascript
-const row = rowByText('<name>');
-const checkbox = row?.querySelector('label.ant-checkbox-wrapper, .ant-checkbox-wrapper, input[type="checkbox"], .ant-checkbox-input');
-clickWithMouse(checkbox);
+const { row, identity } = resolveResource(table, { name: '<name>', project: '<project>', domain: '<domain>', id: null });
+await selectOnlyResource(table, row, readSelectionCount);
 ```
 
 表格选择规则:
 
-- 优先点击 `label.ant-checkbox-wrapper` 或可见的包装元素，不要默认只点
+- 优先点击 `label.ant-checkbox-wrapper` 或可见的包装元素,不要默认只点
   `input[type="checkbox"]`。
 - 点击后验证 `checked`、`aria-checked="true"` 或行进入 selected 状态。
-- 如果列表刷新、筛选、翻页后 DOM 重建，必须重新定位目标行。
+- 如果列表刷新、筛选、翻页后 DOM 重建,必须重新定位目标行。
 
 读取行状态:
 
 ```javascript
-const rowText = rowByText('<name>')?.innerText || '';
-const reached = rowText.includes('<target-status>');
+const { row, identity } = resolveResource(table, { name: '<name>', project: '<project>', domain: '<domain>', id: '<uuid>' });
+const observedStatus = resourceText(row.querySelector('<observed-status-cell-selector>'));
+const reached = observedStatus === '<target-status>';
 ```
 
 搜索表格:
@@ -384,7 +497,9 @@ search.dispatchEvent(new Event('input', { bubbles: true }));
 search.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
 ```
 
-## 数字输入框
+<a id="数字输入框"></a>
+
+## Number Inputs 数字输入框
 
 NG-ZORRO 数字输入框有时需要触发 `input` 和 `change` 事件。
 
@@ -401,7 +516,9 @@ const setNumberInput = (selector, value) => {
 };
 ```
 
-## 标签页
+<a id="标签页"></a>
+
+## Tabs 标签页
 
 ```javascript
 const tab = [...document.querySelectorAll('.ant-tabs-tab')]
@@ -409,7 +526,9 @@ const tab = [...document.querySelectorAll('.ant-tabs-tab')]
 clickWithMouse(tab);
 ```
 
-## 消息与通知
+<a id="消息与通知"></a>
+
+## Notifications 消息与通知
 
 ```javascript
 const success = document.querySelector('.ant-message-success, .ant-notification-notice-success');
@@ -422,21 +541,27 @@ Boolean(success);
 document.querySelectorAll('.ant-notification-notice').forEach((node) => node.remove());
 ```
 
-## 确认对话框
+<a id="确认对话框"></a>
+
+## Confirmation Dialogs 确认对话框
 
 ```javascript
 clickWithMouse(document.querySelector('.ant-modal-confirm-btns .ant-btn-primary'));
 ```
 
-## 加载状态
+<a id="加载状态"></a>
+
+## Loading States 加载状态
 
 ```javascript
 const loading = document.querySelector('.ant-spin-spinning');
 Boolean(!loading);
 ```
 
-## 截图
+<a id="截图"></a>
 
-```javascript
+## Screenshots 截图
+
+```bash
 agent-browser screenshot "/tmp/easystack-screenshots/<case-name>/result.png"
 ```

@@ -7,7 +7,7 @@ Use this file to map an extracted `ecs.*` directory to service domains before se
 复制为 `components/openstack/cinder/cinder-volume...log`。同名文件保留较大者; 调查
 报告仍引用原始 `ecs.*` 路径, 以便审计具体来源。
 
-## Top-Level Directory Layout
+## Directory Layout 目录布局
 
 ```
 ecs.<host>.<date>.<N>/
@@ -44,8 +44,8 @@ ecs.<host>.<date>.<N>/
 │   │   ├── ironic-dashboard.*.log        # Ironic 控制台
 │   │   ├── dnsmasq*.log                  # PXE DHCP
 │   │   └── tftp*.log                     # PXE TFTP
-│   └── ... (其他云产品按集群版本而定，例如 esecf / esks / esdb / dts / esobs / esbackup
-│            等数据库/对象存储/容器/灾备等产品，启用后会出现在此目录)
+│   └── ... (其他云产品按集群版本而定,例如 esecf / esks / esdb / dts / esobs / esbackup
+│            等数据库/对象存储/容器/灾备等产品,启用后会出现在此目录)
 │
 │
 ├── ecas/                    # Automation services
@@ -203,7 +203,7 @@ ecs.<host>.<date>.<N>/
     └── kube.craftman.*.log           # Craftman node image manager
 ```
 
-## Critical Log Files by Failure Scenario
+## Scenario Log Map 场景日志映射
 
 | Scenario | Primary Log (search first) | Secondary Logs (cross-reference) |
 |----------|---------------------------|----------------------------------|

@@ -1,11 +1,11 @@
 ---
 name: easystack-log-analysis
-description: "Use when independently analyzing offline EasyStack `.eslog` bundles or extracted `ecs.*` directories across OpenStack, Kubernetes, OS, Ceph, RabbitMQ, MariaDB, and operation history. Live checks are optional supplemental evidence, not a prerequisite. Do not use for unrelated generic logs."
+description: "Use when analyzing offline EasyStack .eslog bundles or extracted ecs.* logs: decompression, service mapping, correlated evidence, and incident reports. Works without live access. Excludes unrelated generic logs, live-only debugging, CI, and resource tests."
 ---
 
 # EasyStack Log Analysis
 
-# Role
+## Role 角色
 
 You are a senior Cloud Platform Offline Forensics and Distributed Systems Troubleshooting expert specializing in `.eslog` analysis, cross-service evidence correlation, time-window reconstruction, and version-aligned Linux source analysis.
 
@@ -26,6 +26,9 @@ skill 范围。
 
 | 需要做什么 | 阅读 |
 |------------|------|
+| 用途、文件和快速开始 | [README.md](README.md) |
+| 明确日志根、无输入/无命中/限流的检索 | [scripts/search-logs.py](scripts/search-logs.py) |
+| 真实脚本和文档命令离线 fixture | [tests/test-search-examples.py](tests/test-search-examples.py) |
 | **标准端到端分析流程 + 报告模板** | [analysis-playbook.md](analysis-playbook.md) |
 | 含问题原因、操作时间线和关键日志的问题调查报告格式 | [report-format.md](report-format.md) |
 | kernel 或系统软件包源码调研、版本对齐和证据记录 | [source-analysis.md](source-analysis.md) |
@@ -39,6 +42,14 @@ skill 范围。
 | 故障排查场景与实战 case | [troubleshooting.md](troubleshooting.md) |
 
 ## Workflow 工作流
+
+所有检索示例从确认的解压根执行, 该目录直接包含所选 `ecs.*`。单节点输入使用其父目录
+作为根, 不混用组件相对路径与解压根路径。优先使用 [search-logs.py](scripts/search-logs.py)
+明确 root 和文件模式: exit 0 表示命中, exit 1 表示所选文件未命中, exit 2 表示输入
+缺失或读取失败, exit 3 表示扫描完成但输出被限流; 这些状态不得互相替代或证明事件未发生。
+默认输出同时限制为 200 行和 20 KiB, 单条超长日志也会标记限流, 不能当作完整证据。
+只选择目标 bundle 对应的节点目录, 不混入 components 或其他采集批次。详细 grep 示例在确认文件集合非空后
+执行, 保留 stderr 并启用 `set -o pipefail`。
 
 本节定义离线分析的路由和停止条件。端到端步骤以 [analysis-playbook.md](analysis-playbook.md)
 为准, 解压行为以 [decompress.md](decompress.md) 为准, 报告字段和证据规则以
@@ -113,7 +124,7 @@ bash scripts/decompress-eslog.sh --input <FILE_OR_DIR> --output <OUTPUT_DIR>
 # Find which nodes have logs mentioning a VM UUID
 for d in ecs.*/; do
   count=$(find "$d" -name "nova-compute*.log" \
-    -exec grep -l -F "<VM_UUID>" {} \; 2>/dev/null | wc -l)
+    -exec grep -l -F "<VM_UUID>" {} \;  | wc -l)
   [ "$count" -gt 0 ] && echo "$(basename $d): $count files match"
 done
 ```
@@ -123,22 +134,25 @@ done
 深入排查前, 先解析跨层标识符 - 同一个云主机在栈内有**三种**名字, 各自出现在不同日志中。
 
 ```bash
-# VM UUID -> libvirt domain name (instance-0000XXXX) -> qemu log file
-grep -hoE "instance-[0-9a-f]{8}" \
-  $(grep -l "<VM_UUID>" openstack/nova/nova-compute.*.log libvirt/libvirt.*.log) \
-  | sort -u
-# Then: libvirt/qemu.instance-<HEX>.<node>.<date>.log
+# 只提取同一条 UUID 命中记录中的 domain, 不读取文件内其他云主机的记录
+python3 <SKILL_DIR>/scripts/search-logs.py --root <EXTRACTED_ROOT> \
+  --pattern 'ecs.*/openstack/nova/nova-compute.*.log' \
+  --pattern 'ecs.*/libvirt/libvirt.*.log' --text '<VM_UUID>' \
+  | grep -oE 'instance-[0-9a-f]{8}' | sort -u
+# Then: ecs.*/libvirt/qemu.instance-<HEX>.<node>.<date>.log
 
 # Volume ID -> target IQN / WWID (for iSCSI/Alcubierre volumes)
-grep "<VOLUME_ID>" alcubierre/alcubierre-node.*.log | grep -oE "iqn\.[^ ]+|target_iqn[^ ]+|wwid[^ ]+"
+grep "<VOLUME_ID>" ecs.*/alcubierre/alcubierre-node.*.log | grep -oE "iqn\.[^ ]+|target_iqn[^ ]+|wwid[^ ]+"
 
 # Volume ID -> rbd image (for Ceph RBD volumes)
-grep "<VOLUME_ID>" openstack/cinder/cinder-volume.*.log | grep -oE "volume-[0-9a-f-]+"
+grep "<VOLUME_ID>" ecs.*/openstack/cinder/cinder-volume.*.log | grep -oE "volume-[0-9a-f-]+"
 
 # Request ID propagation (single user action -> all services)
-grep -rh "<VM_UUID>" openstack/nova/nova-api.*.log | grep -oE "req-[0-9a-f-]+" | sort -u
+grep -rh "<VM_UUID>" ecs.*/openstack/nova/nova-api.*.log | grep -oE "req-[0-9a-f-]+" | sort -u
 # Then trace that req-* across services:
-grep -r "req-<REQ_UUID>" .
+python3 <SKILL_DIR>/scripts/search-logs.py --root <EXTRACTED_ROOT> \
+  --pattern 'ecs.*/openstack/nova/*.log' --pattern 'ecs.*/openstack/cinder/*.log' \
+  --text 'req-<REQ_UUID>'
 ```
 
 完整速查表见 [analysis-playbook.md](analysis-playbook.md)。

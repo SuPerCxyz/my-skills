@@ -36,3 +36,6 @@
 | [safety.md](safety.md) | 回滚要求、mapping 格式、校验、冲突处理、路径安全 | 回滚与冲突处理时查阅 |
 | [scripts/plan-gate.py](scripts/plan-gate.py) | 生成和复核 deterministic `plan_id` | Dry-run 和执行前运行 |
 | [tests/test_plan_gate.py](tests/test_plan_gate.py) | Plan gate 回归测试 | 修改脚本后运行 |
+| [tests/test_technical_reference.py](tests/test_technical_reference.py) | 检测失败与字段来源回归 | 修改技术信息参考示例后运行 |
+
+本地回归: `python3 -B -m unittest discover -s <skill-directory>/tests -p 'test_*.py'`。测试只使用临时目录和 mock, 不修改真实媒体库。

@@ -227,4 +227,4 @@ host free memory, storage free bytes, MAC/interface, QGA, IPv4/IPv6, SSH,
 guest root layout and required tools
 ```
 
-每次检查写入带时区的 ISO 8601 时间戳. 详细结构见 [environment-discovery.md](../environment-discovery.md).
+每次检查报告带时区的 ISO 8601 时间戳。仅在本地记录写入已获授权时更新状态文件, 严格只读模式不落盘. 详细结构见 [environment-discovery.md](../environment-discovery.md).

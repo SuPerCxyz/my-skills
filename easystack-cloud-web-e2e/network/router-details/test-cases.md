@@ -1,59 +1,62 @@
-# 路由器测试用例
+# Test Cases
 
-## agent-browser 迁移说明
+## Scenario Status 场景状态
 
-本文件保留页面字段、步骤和断言知识;执行入口统一迁移到 agent-browser。
-文中的历史代码块已替换为 agent-browser 迁移说明，新增用例必须使用 `agent-browser eval --stdin` 或 `agent-browser batch` 示例。
+以下是基于现有页面知识的场景规范, 不是已运行的自动化结果. 使用 agent-browser,
+先核实项目与精确资源身份, 复用对应 patterns 操作及 interactions helper.
+`planned` 表示缺少已确认的可调用操作或字段, 先现场只读发现, 不编造入口/参数.
+场景执行不要求先修改 skill; 缺少必要控件或权限时报告未验证及恢复点.
+清理只针对本用例记录的实际资源, 按已有准确授权执行; 未授权时只列清单和依赖顺序.
+任何提交未确认都先回读, 不因超时重复提交或自动删除.
 
-> 来源:`easystack-cloud-web-e2e/network/router.md`，按原文标题边界拆分。
+> 来源:`easystack-cloud-web-e2e/network/router.md`,按原文标题边界拆分。
 
-## 分页
+## Pagination 分页
 
 | 项目 | 值 |
 |------|-----|
 | 默认每页 | 10 条 |
-| 每页定位方式 | 下拉，"10 / page" |
+| 每页定位方式 | 下拉,"10 / page" |
 | 总数显示 | "Total N items, last updated [timestamp]" |
 | 翻页 | 上一页/下一页、页码按钮 |
 
-## 测试用例
+## Test Cases 测试用例
 
 ### TC-RT001: 验证路由器页面加载
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 目标项目明确 |
+| 操作 | 打开 /ens/routers, 等待完整表格/空态 |
+| 可观察断言与恢复 | 路径与项目正确, 外部网络/IP等列可读; 不要求不存在的Status列 |
+
 
 ### TC-RT002: Create Router 页面验证
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 只探测创建页, 不提交 |
+| 操作 | 点击Create Router进入 /ens/routers/creator, 检查类型/名称/网关开关与联动字段后Cancel |
+| 可观察断言与恢复 | 独立页面加载, 网关关闭时不强求外部网络字段, 打开时必填项联动; 结束无新路由器 |
+
 
 ### TC-RT003: 按名称过滤路由器
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `ready-template`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例路由器name/UUID明确 |
+| 操作 | 用真实Name筛选提交条件并回读, 再清除筛选 |
+| 可观察断言与恢复 | 目标UUID/项目精确且原列表可恢复; 空结果不作为删除成功 |
+
 
 ### TC-RT004: 行内操作验证
 
-```text
-agent-browser 执行说明:
-- 当前 skill 只维护 agent-browser 执行入口。
-- 执行本用例时，先读取 `patterns/login.md` 准备登录态。
-- 页面操作优先复用 `patterns/` 下已迁移的原子操作。
-- 未迁移的步骤应补充为 `agent-browser eval --stdin` 或 `agent-browser batch` 示例后再执行。
-```
+| 项目 | 场景要求 |
+|---|---|
+| 状态 | `planned`, 当前未执行真实 UI 验证 |
+| 前置条件 | 本用例路由器UUID明确, 不授权清除业务网关 |
+| 操作 | 只观察行内Clear Gateway/Edit/More, 安全编辑弹窗核对目标后Cancel |
+| 可观察断言与恢复 | 原网关/路由保持不变; 不点击可能直接生效的Clear Gateway来验证按钮 |

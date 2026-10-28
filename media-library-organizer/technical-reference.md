@@ -6,15 +6,16 @@ Use this file when implementing or reviewing parsing and media-info extraction l
 
 ```python
 import re
+from pathlib import Path
 
 def parse_filename(filename):
-    base = filename.replace(".mp4", "").replace(".mkv", "")
+    base = Path(filename).stem
     info = {
-        "resolution": "1080p",
-        "video_codec": "HEVC",
-        "hdr": "SDR",
-        "source": "WEB-DL",
-        "audio": "2.0",
+        "resolution": None,
+        "video_codec": None,
+        "hdr": None,
+        "source": None,
+        "audio": None,
     }
     m = re.search(r'\.(\d+p)\.', base)
     if m: info["resolution"] = m.group(1)
@@ -23,6 +24,7 @@ def parse_filename(filename):
     if "HDR10" in base: info["hdr"] = "HDR10"
     elif "DV" in base or "DoVi" in base: info["hdr"] = "DV"
     elif "HLG" in base: info["hdr"] = "HLG"
+    elif "SDR" in base: info["hdr"] = "SDR"
     if "BluRay" in base: info["source"] = "BluRay"
     elif "WEB-DL" in base: info["source"] = "WEB-DL"
     elif "HDTV" in base: info["source"] = "HDTV"
@@ -39,11 +41,12 @@ def parse_filename(filename):
 - 分辨率、编码、HDR、声道、音频编码都从同一份 ffprobe 结果中读取
 - ffprobe 失败时才允许从文件名猜测
 - 从文件名猜测的字段必须标记为 guessed
+- helper 缺少可信结果时返回 `None`, 不补造 SDR、2.0 或默认分辨率。汇总时记录字段来源, 预览将 `None` 显示为 `unknown`
 
 ```python
 import subprocess, json
 
-# 缓存 ffprobe 结果，避免重复执行
+# 缓存 ffprobe 结果, 避免重复执行
 _ffprobe_cache = {}
 
 def get_ffprobe_data(filepath):
@@ -53,20 +56,22 @@ def get_ffprobe_data(filepath):
     try:
         result = subprocess.run(
             ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", filepath],
-            capture_output=True, text=True, timeout=30
+            capture_output=True, text=True, timeout=30, check=True
         )
         data = json.loads(result.stdout)
+        if not isinstance(data, dict) or not isinstance(data.get("streams"), list):
+            data = None
         _ffprobe_cache[filepath] = data
         return data
-    except:
+    except (OSError, subprocess.SubprocessError, ValueError):
         _ffprobe_cache[filepath] = None
         return None
 
 def get_hdr(filepath):
-    """ffprobe 检测 HDR，优先于文件名猜测"""
+    """ffprobe 检测 HDR, 优先于文件名猜测"""
     d = get_ffprobe_data(filepath)
     if not d:
-        return "SDR"  # fallback
+        return None  # 未取得证据, 不冒充 SDR
     for s in d.get("streams", []):
         if s.get("codec_type") == "video":
             ct = s.get("color_transfer", "")
@@ -83,20 +88,24 @@ def get_hdr(filepath):
             # HLG
             if ct == "arib-std-b67":
                 return "HLG"
-            return "SDR"
-    return "SDR"
+            if ct in {"bt709", "smpte170m", "bt470m", "bt470bg", "iec61966-2-1"}:
+                return "SDR"
+            return None
+    return None
 
 def get_audio_channels(filepath):
     """ffprobe 检测声道数"""
     d = get_ffprobe_data(filepath)
     if not d:
-        return "2.0"
+        return None
     for s in d.get("streams", []):
         if s.get("codec_type") == "audio":
-            ch = s.get("channels", 2)
+            ch = s.get("channels")
+            if type(ch) is not int or ch <= 0:
+                return None
             channel_map = {1: "1.0", 2: "2.0", 6: "5.1", 8: "7.1"}
             return channel_map.get(ch, f"{ch}.0")
-    return "2.0"
+    return None
 
 def get_video_codec(filepath):
     """ffprobe 检测视频编码"""
@@ -117,7 +126,9 @@ def get_resolution(filepath):
         return None
     for s in d.get("streams", []):
         if s.get("codec_type") == "video":
-            h = s.get("height", 0)
+            h = s.get("height")
+            if type(h) is not int or h <= 0:
+                return None
             if h >= 2160: return "2160p"
             if h >= 1440: return "1440p"
             if h >= 1080: return "1080p"
@@ -133,9 +144,34 @@ def get_resolution(filepath):
 技术信息优先级:
 1. ffprobe 实际检测结果(prefer_ffprobe=true 时)
 2. 文件名标签
-3. 默认值
+3. `None` / `unknown`, 不自动猜默认值
 
-如果字段来自文件名猜测而非 ffprobe 检测，必须在预览中标记为 [guessed]。
+如果字段来自文件名猜测而非 ffprobe 检测, 必须在预览中标记为 [guessed]。
+```
+
+字段汇总示例保持原有 helper 的标量接口, 在调用方记录来源; 没有可信值时不执行字符串拼接或伪造 NFO 测量字段:
+
+```python
+def collect_technical_info(filepath):
+    guessed = parse_filename(filepath)
+    measured = {
+        "resolution": get_resolution(filepath),
+        "video_codec": get_video_codec(filepath),
+        "hdr": get_hdr(filepath),
+        "audio": get_audio_channels(filepath),
+    }
+    fields = {}
+    for name in ("resolution", "video_codec", "hdr", "audio", "source"):
+        value = measured.get(name)
+        source = "ffprobe"
+        if value is None or value == "":
+            value = guessed.get(name)
+            source = "filename" if value is not None else "unknown"
+        fields[name] = {"value": value, "source": source}
+    return fields
+
+# 预览: source=filename 的值标记 guessed, source=unknown 显示 unknown。
+# 本例的 source 字段表示证据来源; fields["source"] 的 value 仍表示媒体来源 (如 BluRay)。
 ```
 
 ## 下载文件

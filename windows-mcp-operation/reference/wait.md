@@ -45,4 +45,4 @@ Use this file when an action needs fixed or conditional waiting. Prefer conditio
 
 ### 已知问题
 
-- `element_exists` + `window_name` 组合可能匹配失败，优先用 `text_exists`
+- `element_exists` + `window_name` 组合可能匹配失败, 优先用 `text_exists`

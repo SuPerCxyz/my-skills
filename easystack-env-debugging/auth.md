@@ -6,7 +6,7 @@ after logs require extra resource context or the user asks for resource status.
 
 ## 重要:执行 OpenStack 命令前必须先 source 认证
 
-**busybox pod 没有预设的 OS_ 环境变量，所有 openstack 命令必须在 source 之后执行。**
+**busybox pod 没有预设的 OS_ 环境变量,所有 openstack 命令必须在 source 之后执行。**
 
 ```bash
 # 推荐:一次性只读命令
@@ -22,10 +22,10 @@ kubectl exec -n openstack services/busybox -- cinder show <volume-id>
 list 类命令优先带跨项目参数, 例如 `cinder list --all`; 其他资源列表命令也按
 对应 CLI 的跨项目参数处理。
 
-避免默认进入交互式 busybox shell。交互式 shell 容易执行到有影响操作，
+避免默认进入交互式 busybox shell。交互式 shell 容易执行到有影响操作,
 只有在用户明确要求时再进入。
 
-## 两种用户身份
+## User Identities 用户身份
 
 busybox 内可以通过不同认证方式切换身份:
 
@@ -46,9 +46,9 @@ export OS_AUTH_URL='http://keystone-api.openstack.svc.cluster.local/v3'
 ...
 ```
 
-## Drone User (/openrc)
+## Drone User (/openrc) 日常认证
 
-日常排障用 `source /openrc` 就够，admin 权限更大但很少需要。
+日常排障用 `source /openrc` 就够,admin 权限更大但很少需要。
 默认只执行 `list`、`show`、`get` 等查询命令。
 
 `/openrc` 包含 `drone` 用户凭据(keystone v2.0 auth):
@@ -66,7 +66,7 @@ nova list --all
 Service Catalog` under `/openrc`. Do not use it as the default busybox
 authentication check; prefer `server list` or `volume list`.
 
-## Admin Credentials
+## Admin Credentials 管理员认证
 
 Admin credentials have broader permissions. Use them only for explicit read-only
 queries that cannot be completed with `/openrc`. Any create/update/delete action
