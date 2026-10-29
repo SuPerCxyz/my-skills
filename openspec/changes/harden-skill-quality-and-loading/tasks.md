@@ -88,3 +88,27 @@
   CI、云或 VM, 未安装依赖、修改客户端或 AGENTS、执行 Git 写入或 Archive.
 - 完整 recheck 运行闭环、站点触发能力和真实模型遵循仍未验证, 本轮仅交付文档规则与
   离线场景定义; 独立只读审查及主 Agent 最终需求验收已完成, 无剩余必须修复项.
+
+## 5. Frontend Design And Deployment 前端统一设计与部署验收
+
+- [x] 5.1 就地同步七份 workflow 文档, 串联统一设计、实现、Review、部署和视觉/主题验证。
+- [x] 5.2 将本地联调限于开发/预验证, 明确改后构建、已授权环境部署、版本与配置保护、备份恢复和用户直接查看清单。
+- [x] 5.3 同步当前 change 的 proposal/design 及相关 MODIFIED requirement, 保留原场景名称并补充必要验收场景。
+- [x] 5.4 执行定向文档格式/链接/元数据、需求与场景语义走查、OpenSpec strict 和 diff 检查, 如实记录验证。
+- [x] 5.5 主 Agent 独立审查并逐项验收本轮确认需求, 不执行真实部署或 Git 写入。
+
+## Frontend Validation Record 前端规则修订验证记录
+
+- 2026-10-28: Python 3 只读检查本轮 11 个 Markdown 的 57 个本地链接及锚点, 全部可达;
+  七份 workflow 文档无全角字符, 主入口 frontmatter、索引和 Execution Feedback 保留。
+  检查同时核对 MODIFIED requirement 和三个原场景名各保留一次, 旧额外部署门禁已移除。
+  初次链接检查未识别既有 HTML 显式锚点, 补充解析后复验通过, 未改动该既有锚点。
+- 逐项语义走查统一设计来源、禁止任意常量/包装绕过、合法布局与运行时计算、新增值集中维护;
+  构建失败、目标/授权缺失、备份与配置保护、部署失败恢复、版本/API/缓存与视觉验证、
+  用户直接查看清单及无可见变化路径. 实现阶段 Review 不等待部署结果, 纯只读 Review 不部署。
+- `openspec validate harden-skill-quality-and-loading --strict --no-interactive` 与
+  `git diff --check` 均通过. 独立只读审查无必须修复项; 主 Agent 已完成 5.5 最终验收,
+  核对 11 个路径仅含七份文档和当前 change, 点读核心差异、前端专用模板条件及完整场景,
+  确认需求闭环且 AGENTS、全局 AGENTS 和 OpenCode 配置 SHA 未变; 根实际 strict 与 diff 检查通过。
+- 本轮仅修订规则与当前有效规格, 没有实际前端源码/构建/部署、浏览器或主题验证、模型评估、
+  远端 CI/Gerrit、安装、Git 写入或 Archive. 文档检查不能证明实际环境部署和 UI 行为已通过。

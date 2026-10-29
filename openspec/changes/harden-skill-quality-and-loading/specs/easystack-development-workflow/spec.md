@@ -39,3 +39,76 @@ Workflow SHALL 分开记录回复提交、新 run 排队/运行和最终结果, 
 #### Scenario: 新 run 失败
 - **WHEN** 本次新 run 终态失败而旧 Verified 仍成功
 - **THEN** 读取新日志并报告本次失败, 不冒充通过, 不再次自动重跑
+
+### Requirement: 遵循现有前端统一设计
+
+Frontend changes SHALL identify and reuse the target project's existing Design System,
+component library, theme/tokens, shared style variables and established page patterns.
+They MUST NOT introduce arbitrary scattered design literals for colors, typography, spacing,
+radii, shadows or stacking levels, or bypass conventions through inline styles or local
+variables wrapping arbitrary constants. Meaningful structural layout values and necessary
+runtime calculations MAY follow existing conventions without bypassing design or theme rules.
+Necessary new design values SHALL be maintained centrally under project conventions and
+matching authorization. The workflow MUST NOT introduce a new design system or dependency.
+
+#### Scenario: A frontend change introduces styles
+- **WHEN** implementation or review encounters changed frontend styles
+- **THEN** it checks actual design sources and reuse, rejects arbitrary hardcoding and disguised constants, and verifies affected visual states and applicable supported themes
+
+#### Scenario: A layout or runtime value is required
+- **WHEN** a value has clear structural layout semantics or is calculated from actual runtime state
+- **THEN** it may follow the project's established pattern without being rejected solely for containing a literal or binding, while arbitrary design constants remain prohibited
+
+#### Scenario: An existing design value does not cover the need
+- **WHEN** a necessary design value is missing from the project's established design sources
+- **THEN** it is maintained centrally according to project conventions within authorized scope, or the missing basis or authorization is reported before proceeding
+
+## MODIFIED Requirements
+
+### Requirement: Default frontend debugging to local development
+
+Frontend development debugging SHALL use the target project's local development entrypoint
+and authorized API proxy by default, solely for development and preliminary verification.
+It MUST distinguish standalone SPA and Host Remote loading and identify the actual code and
+API source. Every frontend code modification SHALL then be built from the confirmed source,
+deployed through the project's existing entrypoint to an authorized acceptance environment,
+and verified in the actual environment page for version, business behavior and visual/theme
+effects. Local development MUST NOT replace required deployment and acceptance verification.
+The workflow SHALL preserve deployment/configuration baselines, backups and other people's
+overlays, use matching existing authorization without repeatedly asking, and MUST NOT infer
+arbitrary production, restart or configuration-overwrite permission. Missing environment or
+authorization SHALL leave deployment explicitly incomplete while independent work proceeds.
+It SHALL report build, deployment and actual acceptance states separately and MUST NOT claim
+complete delivery when deployment or required verification remains incomplete.
+
+#### Scenario: Frontend code is debugged against an environment
+- **WHEN** a frontend change needs runtime debugging with environment APIs
+- **THEN** the workflow discovers the project's actual scripts, serve path, local address and proxy, verifies local code and API provenance for preliminary testing, then completes the required authorized environment deployment and acceptance checks
+
+#### Scenario: An environment page is reached through a tunnel
+- **WHEN** the browser can open a tunneled environment page or receives HTTP 200
+- **THEN** that alone proves neither changed local code nor the required deployment is loaded; the workflow checks actual bundle/remote/chunk source, entrypoint and base path, cache, content type, host mapping, API target and session/tenant
+
+#### Scenario: No browser or local runtime is available
+- **WHEN** the local code and API chain cannot be exercised
+- **THEN** static checks are reported separately and local runtime validation remains unverified; the required deployment and actual environment-page acceptance remain explicit requirements and any unavailable verification is reported without claiming complete delivery
+
+#### Scenario: A frontend build is ready for deployment
+- **WHEN** the confirmed frontend source and task changes build successfully for the authorized acceptance environment
+- **THEN** the workflow records source/artifact/version correspondence, confirms target and compatibility, backs up the effective deployment and recovery baseline, preserves environment configuration and existing overlays, deploys the complete matching artifact through the existing mechanism and verifies actual page code, API source, business and visual/theme effects
+
+#### Scenario: The environment or deployment permission is missing
+- **WHEN** the acceptance target, deployment scope or matching action authorization cannot be confirmed
+- **THEN** the workflow reports the gap and deployment as incomplete, pauses dependent steps and continues independent work without substituting local testing, assuming production permission or claiming complete delivery
+
+#### Scenario: The build or deployment fails
+- **WHEN** the frontend build or environment deployment fails
+- **THEN** a failed build cannot be replaced with an old package presented as current; a failed deployment stops expanding impact and uses the preconfirmed recovery plan, with recovery and remaining risks reported truthfully
+
+#### Scenario: The user needs to inspect the frontend change
+- **WHEN** the workflow reports frontend code changes to the user
+- **THEN** the final response directly gives environment URL and actual version, page entrypoint, changed location, viewing steps, expected results, risks and unverified items by reusing the existing product document; a code-file list or document link alone is insufficient
+
+#### Scenario: There is no visible frontend behavior change
+- **WHEN** a frontend code modification has no visible UI change
+- **THEN** deployment and applicable verification still remain required, while the workflow describes actual impact and verification without inventing changed interface elements

@@ -87,7 +87,8 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    不叠加之前未合入的 Patch; 确有依赖时记录具体代码证据和原因, 不擅自改写 Git 历史.
 3. **按证据实现.** 保留已有修改, 在确认范围内完成业务闭环. 后端先读
    `backend-development.md`, 核对实际语言/依赖、API/RPC/object、持久化和生命周期;
-   前端读 `frontend-design.md`, 接通入口、请求、状态和反馈. 工具或接口事实缺失时
+   前端读 `frontend-design.md`, 沿用项目统一设计, 禁止随意硬编码样式, 接通入口、请求、状态和反馈.
+   工具或接口事实缺失时
    查真实代码和契约; 关键不确定性无法消除时澄清, 不靠猜测补接口或业务语义.
 4. **完成代码 Review.** 每次由主 Agent 按 `code-review.md` 新建独立审查会话, 不复用旧会话或
    继承旧对话; 传递当前有效需求、设计边界、功能范围与排除项、目标 Patch 和基线、
@@ -101,14 +102,18 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    区分回归、CI、契约和真实资源验证, Go/C 等项目用自身入口;
    远端 CI 仅在日志证实非代码的 CI 自身异常、当前版本和有效授权匹配时, 按测试文档
    的去重与一次上限执行 recheck, 分开记录回复、排队/运行与新 run 最终结果;
-   前端默认本地 dev-server + 代理联调, 按 `frontend-testing.md` 核实浏览器加载本地修改、
-   API 到达目标环境及真实交互. 后端需环境调试时, 按
+   前端本地 dev-server + 代理仅作开发和预验证; 代码修改后必须按 `frontend-testing.md`
+   完成构建、已授权验收环境部署及页面版本、业务与视觉验证. 部署规则见
+   `runtime-debugging.md`; 环境或权限缺失时保留部署未完成项, 不以本地联调代替.
+   后端需环境调试时, 按
    [runtime-debugging.md](runtime-debugging.md) 发现运行基线, 以完整项目运行代码
    或匹配构建产物更新、备份和回滚, 保留环境配置, 验证相关工作负载及副本.
-   前端环境产物替换仅用于用户明确要求的部署验证. 环境写入和激活动作须有具体授权;
+   环境写入和激活动作须有范围匹配的具体授权, 不从代码修改推导生产或额外配置覆盖权限;
    失败或限制如实记录, 不将编译、渲染或 Mock 演示当作实际业务验收.
 6. **对账并交付.** 核对每个相关仓库的实现、Review、验证、产品文档和有效 artifact,
    将实际行为、测试结果、未验证项及文档链接同步到交付说明, 再说明剩余项.
+   前端直接向用户提供 `product-documentation.md` 规定的环境、版本及页面查看验收清单,
+   不只列代码文件或文档链接.
    交付先读取 `project-relationships.md` 的公司约定, 再按本目录 `delivery.md` 执行,
    新建/更新 EasyStack Patch 及完整待上传范围逐项核对 Jira 关联, Gerrit Topic 与对应
    Jira key 一致; 缺号时暂停相关交付,
@@ -147,6 +152,8 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 - 已确认需求及必要补全逐项对应实现和验证, 相关仓库没有遗漏或无依据的同步修改.
 - Review 已按完整流程完成, P0-P3 发现和修复状态真实, 不把简短报告等同于简化分析.
 - 行为验证与实际变更版本一致; 失败、未验证项和剩余资源有明确记录.
+- 前端代码修改已按本目录规则完成构建、验收环境部署和实际页面验证, 统一设计检查及用户
+  查看说明已对账; 未部署或未验证时明确缺口, 不声称完整交付.
 - 有效 OpenSpec / Plan 与实现一致; 关键路径未验证时不声称完整交付.
 - 本次新增或修改均有对应产品文档, 覆盖功能列表、边界、异常场景和测试内容; 实际
   测试顺序及结果、未验证项与文档链接已对账, 无可见行为变化时未虚构功能.

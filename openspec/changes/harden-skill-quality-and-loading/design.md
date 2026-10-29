@@ -17,6 +17,8 @@
 5. 在 docs/skill-evaluation 维护小型正负场景集, 复用常见 prompt/expected_output/expectations 结构。离线验证不填写模型成功率; 未来真实评估必须独立保存输出并语义评分。
 
 6. 远端 CI 先读 job 日志, 只有证实非代码的 CI 自身异常才可在有效授权内自动重跑。发送前核对当前 Change/revision 和消息/队列, 同 Patch Set 本轮最多一次; 顶层 review message 仅含 recheck, 不投票或上传。回复成功、CI 新 run 排队/运行及最终结果分开记录, 失败或未知不盲重试。使用可用已认证入口, 不依赖固定 MCP、其他 Skill 或新 runner。
+7. 前端统一设计的详细约束维护在 frontend-design.md, 入口、Review 和视觉/主题检查引用它。复用项目已有组件、theme/tokens 和公共变量, 禁止随意散落或包装任意常量绕过规范; 合法结构布局和必要运行时计算按既有模式使用, 必要新增设计值在授权范围集中维护, 不引入设计系统或依赖。
+8. 前端本地 dev-server/proxy 仅用于开发与预验证, 代码修改后必须构建、部署到已授权验收环境并验证实际页面。部署详细闭环维护在 runtime-debugging.md: 源码与产物对应、目标和权限、完整基线备份与配置/他人覆盖保留、已有部署机制、生效与缓存检查、失败恢复。frontend-testing.md 负责页面版本/API/业务/视觉证据, product-documentation.md 复用现有模板定义最终直接向用户展示的环境版本、入口位置、操作、预期和风险清单。缺环境/权限时保留必做未完成项并推进独立工作, 不拿本地或旧包代替, 不推导生产或额外覆盖权限。本轮只修改七份文档和当前有效 artifacts, 不操作实际前端环境。
 
 ## Risks / Trade-offs
 
