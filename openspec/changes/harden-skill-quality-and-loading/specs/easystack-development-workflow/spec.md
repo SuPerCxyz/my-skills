@@ -63,6 +63,61 @@ matching authorization. The workflow MUST NOT introduce a new design system or d
 - **WHEN** a necessary design value is missing from the project's established design sources
 - **THEN** it is maintained centrally according to project conventions within authorized scope, or the missing basis or authorization is reported before proceeding
 
+### Requirement: 交付前维护关联 Jira Conclusion
+
+For new and updated EasyStack Patches, the workflow SHALL verify the actual Patch-to-Jira
+mapping across the complete delivery scope and maintain the real Conclusion before dependent
+commit/amend operations, then recheck it before upload. It SHALL discover the actual field ID,
+type and edit permission at runtime through an available authenticated entrypoint, without a
+hardcoded customfield ID, required MCP or replacement with Description/comments. Applicable
+site or actual CI rules SHALL be checked when available; unknown rules MUST remain explicit,
+not invented as fixed length/format requirements or guarantees of CI success.
+
+Conclusion SHALL reflect the current problem, actual Patch changes and real verification,
+with unverified results and remaining scope stated honestly. Placeholders, unsupported
+resolution claims and reporting unexecuted remote CI as passed MUST NOT be used. Accurate
+existing content MAY be read back and verified without another write. Updates MUST have
+valid authorization for the target Issue and field, which MUST NOT be inferred from Git
+commit/upload authorization or expanded into Issue creation, closure, transitions or assignment.
+Matching existing explicit authorization SHALL be reused without repeated confirmation.
+Shared Issues SHALL retain other Patch, contributor and unrelated content; only the current
+scope may be safely merged after checking the latest content. Conflicts or unsafe merge
+capabilities SHALL leave the update incomplete rather than blindly overwrite the whole field.
+After a necessary update, readback of the same Issue's actual Conclusion SHALL verify the
+intended current content and preservation of existing content before dependent delivery proceeds.
+
+#### Scenario: New and updated Patches enter delivery
+- **WHEN** delivery includes new or updated Patches, including multiple commits beyond HEAD
+- **THEN** the workflow verifies every actual Jira mapping and its real Conclusion before dependent commit/amend/upload, discovers the field and permission at runtime, and preserves the existing Jira creation and Topic rules without requiring or inventing future SHA, Gerrit URL or new Patch Set identifiers
+
+#### Scenario: Conclusion already covers the current Patch
+- **WHEN** readback confirms that the real Conclusion accurately covers current changes and actual verification without stale claims
+- **THEN** it is verified without a duplicate write and matching existing authorization is reused for any necessary action
+
+#### Scenario: Conclusion is missing or outdated
+- **WHEN** the current Conclusion does not reflect the current Patch or includes obsolete verification claims
+- **THEN** a truthful scoped conclusion is prepared, unverified results remain explicit, and only authorized safe update plus successful readback can release dependent delivery
+
+#### Scenario: Multiple Patches share an Issue or content changes concurrently
+- **WHEN** an Issue has other Patch/contributor conclusions or a write-time reread reveals conflicting or unclear content
+- **THEN** existing content is preserved and only the current scope is safely merged; conflicts are investigated and unsafe merge capability results in a draft and paused dependent delivery rather than a blind field overwrite
+
+#### Scenario: Field, tool or update authorization is unavailable
+- **WHEN** the actual Conclusion field cannot be identified or the necessary tool, edit permission or scoped update authorization is missing
+- **THEN** the workflow provides a draft, states the update is incomplete and pauses dependent delivery while independent authorized analysis and implementation continue, without installing tools or assuming Git authority permits Jira writes
+
+#### Scenario: Update succeeds but readback fails or disagrees
+- **WHEN** the update API returns success but readback is unavailable, differs from intended content or shows existing content was not preserved
+- **THEN** the workflow reports the unresolved update/readback status and pauses dependent delivery; API success alone proves neither the field gate nor CI success
+
+#### Scenario: Update fails or submission outcome is unknown
+- **WHEN** a Conclusion update fails or its submission outcome cannot be determined
+- **THEN** it is reported as incomplete or uncertain, a usable draft remains available and readback is attempted to establish the actual state before any further write, without blind repetition or dependent delivery
+
+#### Scenario: Conclusion validation fails in CI
+- **WHEN** CI reports a Conclusion documentation validation failure
+- **THEN** the workflow investigates the actual rule and reports truthful field, Git and Issue states separately, without treating it as CI infrastructure failure or using recheck to hide or bypass it
+
 ## MODIFIED Requirements
 
 ### Requirement: Default frontend debugging to local development

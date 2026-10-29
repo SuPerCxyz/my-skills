@@ -11,6 +11,7 @@
 - workflow 增加有证据且非代码导致的 CI 自身异常 recheck: 当前 revision、有效授权、同 Patch Set 本轮一次、去重与新 run 结果复查, 不实际触发远程 CI。
 - workflow 前端沿用现有统一设计并禁止随意硬编码样式, 保留合法布局和必要运行时计算; 前端代码修改后必须构建并部署到已授权验收环境, 验证实际页面及业务/视觉效果, 直接向用户给出环境版本和页面查看清单。仅修改规则与规格, 不实际执行部署。
 - 修复交付命令的隐含 rebase、网络和 Pod 生命周期的绝对推断, 保留用户已有 Jira 规则。
+- workflow 提交/更新 Patch 前维护真实关联 Jira 的 Conclusion 并回读核实, 上传前复核完整范围; 保留共享 Issue 内容、独立字段更新授权与失败门禁, 不臆造实际 CI 格式或执行真实 Jira 更新。
 - 修复 Web 精确选目标、等待终态、凭据和镜像输入契约, 区分已验证操作与场景成熟度。
 - 修复 parity 空/非法 ID 和占位值校验、KVM no-op 不关机及 mutation 前全量预检。
 - 修复媒体匹配 unknown/provenance、Windows 真实工具名称和 Git 会话授权持续性。
@@ -23,7 +24,7 @@
 
 ### Modified Capabilities
 - `offline-log-analysis-workflow`: 复用完整解压结果, 搜索示例正确且负结果不冒充不存在。
-- `easystack-development-workflow`: 交付命令不得隐含未授权的 rebase; 增加统一设计约束, 将本地前端调试限于开发/预验证, 要求改后环境部署与用户查看验收闭环。
+- `easystack-development-workflow`: 交付命令不得隐含未授权的 rebase; 增加统一设计约束, 将本地前端调试限于开发/预验证, 要求改后环境部署与用户查看验收闭环; 交付前维护并核实真实 Jira Conclusion。
 
 ## Impact
 

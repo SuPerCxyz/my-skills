@@ -117,8 +117,9 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    前端直接向用户提供 `product-documentation.md` 规定的环境、版本及页面查看验收清单,
    不只列代码文件或文档链接.
    交付先读取 `project-relationships.md` 的公司约定, 再按本目录 `delivery.md` 执行,
-   新建/更新 EasyStack Patch 及完整待上传范围逐项核对 Jira 关联, Gerrit Topic 与对应
-   Jira key 一致; 缺号时暂停相关交付,
+   新建/更新 EasyStack Patch 及完整待交付范围逐项核对 Jira 关联, 按 `delivery.md` 在有效
+   字段更新授权内维护并回读核实真实 Conclusion, 提交/上传前未完成则暂停依赖交付;
+   Gerrit Topic 与对应 Jira key 一致, 缺号时暂停相关交付,
    仅执行实际授权的操作, 不从实现授权推导上传授权.
 
 ## Capability Routing 能力路由
@@ -160,7 +161,8 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 - 本次新增或修改均有对应产品文档, 覆盖功能列表、边界、异常场景和测试内容; 实际
   测试顺序及结果、未验证项与文档链接已对账, 无可见行为变化时未虚构功能.
 - 每个 EasyStack Patch 均关联与修改内容对应的真实 Jira 号; 已上传 Gerrit Change 的
-  实际 Topic 与对应 Jira key 一致. 新建 Jira 的实际编号和默认指派当前 Jira 登录用户
+  实际 Topic 与对应 Jira key 一致, 关联 Conclusion 已按 `delivery.md` 对完整交付范围
+  维护并回读核实. 新建 Jira 的实际编号和默认指派当前 Jira 登录用户
   本人的结果已核实, 未完成项如实报告, 不虚报建单或交付成功.
 - 最终只报告改动、关键证据、验证、剩余风险及实际 Git 操作, 不复述全过程.
 

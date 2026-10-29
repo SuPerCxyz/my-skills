@@ -112,3 +112,29 @@
   确认需求闭环且 AGENTS、全局 AGENTS 和 OpenCode 配置 SHA 未变; 根实际 strict 与 diff 检查通过。
 - 本轮仅修订规则与当前有效规格, 没有实际前端源码/构建/部署、浏览器或主题验证、模型评估、
   远端 CI/Gerrit、安装、Git 写入或 Archive. 文档检查不能证明实际环境部署和 UI 行为已通过。
+
+## 6. Jira Conclusion Gate Jira 结论交付门禁
+
+- [x] 6.1 就地补充 delivery 的 Jira/授权/上传/结果段落, 覆盖真实字段、完整 Patch 范围、共享内容保护与更新回读门禁。
+- [x] 6.2 简短同步 workflow 入口、完成门禁和 README, 保留既有 Jira 创建、Topic、CI、recheck 与前端部署规则。
+- [x] 6.3 同步当前 change 的 proposal/design/spec, 加入正确/过期结论、共享冲突、无授权、接口成功但回读失败等离线语义场景。
+- [x] 6.4 执行定向格式/元数据/链接及场景语义走查、OpenSpec strict 和 diff 检查, 如实记录验证边界。
+- [x] 6.5 主 Agent 独立审查并逐项完成本轮确认需求验收, 不执行实际 Jira 更新或 Git 写入。
+
+## Conclusion Validation Record 结论门禁修订验证记录
+
+- 2026-10-29: Python 3 只读检查七份本轮 Markdown 的 45 个本地链接与锚点, 全部可达;
+  三份 workflow 文档无全角字符, 主入口 frontmatter、文件索引覆盖和 Execution Feedback 保留。
+  检查新增八个 Conclusion 场景名唯一, diff 恰好为三份文档及当前 change 的四个 artifacts,
+  无未跟踪文件; 已提交的 runtime 注入指引未修改。
+- 定点阅读最终 diff 与八个场景, 逐项走查新建/更新与完整交付范围、准确结论免重复写、
+  过期结论需维护、共享 Issue 与并发冲突、无字段/工具/权限、接口成功但回读失败、提交结果
+  未知先查证及资料失败不能 recheck. 结论不要求未来 SHA/URL/Patch Set 编号, 不形成前置循环。
+- `openspec validate harden-skill-quality-and-loading --strict --no-interactive` 和
+  `git diff --check` 均通过. 独立只读审查无必须修复项, 主 Agent 已完成 6.5 最终验收:
+  点读三份文档完整 diff、Conclusion requirement 与八个场景, 确认需求闭环、七个路径无越界,
+  AGENTS、全局 AGENTS 和 OpenCode 配置 hash 未变, HEAD 2fdbdf0 的既有 runtime 内容保留;
+  根实际 diff 检查通过。
+- 当前没有可用 Jira 工具或实际 CI 校验脚本证据, 字段 ID、类型、可写性及站点具体格式
+  仍需执行时发现; 本轮没有实际读取/更新 Issue、Git 写入、CI/Gerrit/环境操作、安装或 Archive。
+  场景仅作规则语义走查, 未运行真实模型或验证 Jira 更新、回读及 CI 是否通过。
