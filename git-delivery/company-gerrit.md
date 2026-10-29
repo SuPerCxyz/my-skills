@@ -5,16 +5,20 @@
 公司项目使用:
 
 ```bash
-git review -R -r origin <branch>
+git review -R -r origin -t <JIRA-KEY> <branch>
 ```
+
+EasyStack 上传必须显式携带 `-t`; `<JIRA-KEY>` 是本次 Patch 对应的 Jira key 本身,
+例如 `EAS-123456`, 不带 `#` 或 `Related-Task` 等 footer 标签.
+非 EasyStack 且没有 Jira 关联的项目可以省略 Topic, 但 EasyStack 不得裸上传.
 
 默认必须同时携带 `-R`、remote 和真实目标分支。`-R` 禁止上传前隐含 rebase, 不修改全局配置。不得把 `<branch>` 字面量
 直接传给命令。执行前必须解析出真实目标分支, 例如:
 
 ```bash
-git review -R -r origin master
-git review -R -r origin stable/2026.1
-git review -R -r origin feature/example
+git review -R -r origin -t <JIRA-KEY> master
+git review -R -r origin -t <JIRA-KEY> stable/2026.1
+git review -R -r origin -t <JIRA-KEY> feature/example
 ```
 
 目标分支识别优先级:
@@ -38,6 +42,26 @@ git config --get-regexp '^branch\..*'
 无法可靠确定时, 不得执行 `git review`, 应简短列出当前检测结果并请求用户确认
 目标分支。
 
+## Gerrit Topic
+
+Gerrit Topic 必须等于本次 Patch 对应的 Jira key 本身, 例如 `EAS-123456`, 不带 `#`
+或 footer 标签. `Closes-Bug`、`Related-Task` 等 footer、提交标题和本地分支名都不能
+代替 Gerrit Topic. 上传参数及非 EasyStack 项目的例外见上节; 命令中的 Jira key、用户、
+Change 和分支占位符须先核实替换. 上传后通过 Gerrit API 或页面读取实际 `topic` 字段,
+确认等于本次 Patch 对应的 Jira key, 不以命令参数代替核验.
+
+已有 Change 且没有新 Patch Set 时, 带 `-t` 的上传也可能被 Gerrit 以 `no new changes`
+拒绝; 若被拒绝, Topic 不会因此更新. 不得为设置 Topic 制造新 Patch Set. 仅在已有明确授权覆盖
+该目标 Change 的 Topic 元数据更新时, 可执行以下独立入口; 不从上传授权推导该写入权限:
+
+```bash
+ssh -p 29418 <user>@review.easystack.cn \
+  gerrit set-topic <change> --topic <JIRA-KEY>
+```
+
+设置后回读实际 `topic` 字段, 并分别报告 Topic 更新结果与本次未产生新 Patch Set 的事实.
+无匹配授权、更新失败或无法核实时如实报告, 不自动补做其他写入.
+
 ## Commit SHA 与 Change-Id 的区别
 
 Git commit SHA 标识一次具体的 Git 提交对象。执行 `git commit --amend`、
@@ -54,7 +78,7 @@ Git commit SHA 会变化, Gerrit 中生成新的 Patch Set。
 
 用户所说"继续提交到之前的提交"、"commit id 不变", 应正确理解为: 保持原 Gerrit
 `Change-Id` 不变, 通过 amend 生成新的 Git commit, 再用
-`git review -R -r origin <branch>` 上传到原 Change。不得声称 amend 后 Git commit
+`git review -R -r origin -t <JIRA-KEY> <branch>` 上传到原 Change。不得声称 amend 后 Git commit
 SHA 保持不变。
 
 ## 更新原 Change 与创建新 Change
@@ -79,7 +103,7 @@ SHA 保持不变。
 11. 保留原 `Change-Id`
 12. 必要时更新 summary 和正文
 13. 再次检查提交信息
-14. 使用真实目标分支执行 `git review -R -r origin <branch>`
+14. 使用真实目标分支执行 `git review -R -r origin -t <JIRA-KEY> <branch>`
 15. 根据真实命令输出判断是否成功
 16. 报告上传的是原 Change 的新 Patch Set
 
@@ -139,7 +163,7 @@ diff、问题根因、修改方式、行为变化、测试结果、兼容性影�
 
 ## git review 门禁
 
-执行 `git review -R -r origin <branch>` 之前必须确认:
+执行 `git review -R -r origin -t <JIRA-KEY> <branch>` 之前必须确认:
 
 1. 已识别为公司 Gerrit 项目
 2. 当前仓库正确

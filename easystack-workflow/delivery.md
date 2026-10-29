@@ -216,6 +216,19 @@ git review -R -r origin -t <已核实的Jira号> <已核实的目标分支>
 `-R/--no-rebase` 显式禁用 git-review 的测试 rebase, 避免其内部 rebase/reset 恢复动作.
 不以上传授权推导历史整理授权; 工具要求超出授权的操作时停止并报告.
 
+已有 Change 且没有新 Patch Set 时, 带 `-t` 的上传也可能被 Gerrit 以 `no new changes`
+拒绝; 若被拒绝, Topic 不会因此更新. 不得为设置 Topic 制造新 Patch Set. 仅在已有明确授权覆盖
+该目标 Change 的 Topic 元数据更新时使用以下独立入口, 不从上传授权推导该写入权限:
+
+```bash
+ssh -p 29418 <user>@review.easystack.cn \
+  gerrit set-topic <change> --topic <Jira号>
+```
+
+先核实并替换用户、Change 和真实 Jira 号占位符, 设置后通过实际 API 或页面回读 Topic,
+确认等于对应 Jira key, 分别报告 Topic 结果和本次未产生新 Patch Set 的事实.
+无匹配授权、更新失败或无法核实时如实报告, 不自动补写 Topic 或执行其他写入.
+
 个人 Git 在单独 push 授权下, 核实 remote、目标分支、待推送提交及远端历史影响后:
 
 ```bash
