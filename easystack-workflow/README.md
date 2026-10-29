@@ -15,7 +15,8 @@
 - 前端代码修改后构建并部署到已授权验收环境, 验证实际页面版本、业务和视觉效果, 直接说明改动位置和查看步骤.
 - 远端 CI 日志证实非代码的 CI 自身异常时, 在有效授权内核对当前版本、去重并最多自动 recheck 一次, 复查新 run 结果.
 - 区分静态检查、构建与真实功能验收, 按影响调用现有测试、调试和交付能力.
-- 代码修改后按需进入授权环境调试, 现场选择注入和生效方式, 保留版本证据与回滚基线.
+- 代码修改后按需进入授权环境调试, 用参数化模板发现挂载与消费者、暂存并对账完整项目,
+  现场选择生效方式, 逐目标验证与恢复; 前端 Host、入口或资源回退异常按证据检查实际路由.
 
 ## Files 文件说明
 
@@ -29,7 +30,7 @@
 | [code-review.md](code-review.md) | 完整 Review 提示词及精简输出约定 |
 | [frontend-design.md](frontend-design.md) | 前端实现、设计规范、来源与可选工具边界 |
 | [frontend-testing.md](frontend-testing.md) | 前端静态检查、真实功能验收与结果记录 |
-| [runtime-debugging.md](runtime-debugging.md) | 在线调查、代码更新与回滚、离线日志和问题结论 |
+| [runtime-debugging.md](runtime-debugging.md) | 在线调查、完整项目调试操作模板与恢复、离线日志和问题结论 |
 | [delivery.md](delivery.md) | 独立 Patch、交付范围、Git / Gerrit 授权、提交及顶层 recheck Reply |
 
 ## Quick Start 快速开始

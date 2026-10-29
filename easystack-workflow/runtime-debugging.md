@@ -52,6 +52,24 @@
 配置或数据. 本地分支不代表环境版本; 当前运行目录可能已有覆盖, 不称为干净发布基线.
 按已授权且版本兼容的消费组分别记录目标版本与基线, 不将同一包未经核实覆盖所有服务.
 
+以下是只读发现模板, 通过用户已授权的环境入口执行; 占位符须替换为现场确认值,
+不是本地可直接运行的部署命令. 对每个实际消费者分别核对, 不按名称猜测控制器类型:
+
+```bash
+NS='<namespace>'; KIND='<confirmed-controller-kind>'; WORKLOAD='<name>'
+SELECTOR='<confirmed-label-selector>'; POD='<current-pod>'; CONTAINER='<container>'
+kubectl -n "$NS" get "$KIND" "$WORKLOAD" -o jsonpath='{.spec.selector}{"\n"}'
+kubectl -n "$NS" get pods -l "$SELECTOR" -o wide
+kubectl -n "$NS" get pod "$POD" -o jsonpath='{.spec.nodeName}{"\n"}{.spec.nodeSelector}{"\n"}{.spec.affinity}{"\n"}{.spec.tolerations}{"\n"}{.spec.schedulingGates}{"\n"}{.spec.topologySpreadConstraints}{"\n"}'
+kubectl -n "$NS" get pod "$POD" -o jsonpath='{.spec.volumes}{"\n"}{range .spec.containers[*]}{.name}{"\t"}{.image}{"\n"}{.volumeMounts}{"\n"}{.command}{"\n"}{.args}{"\n"}{end}'
+kubectl -n "$NS" exec "$POD" -c "$CONTAINER" -- ls -ld '<confirmed-project-path>'
+```
+
+从定向输出确认 volume/volumeMount、subPath、节点、镜像和启动参数; 仅路径存在
+不能证明真实加载位置. 控制器字段按实际 kind 校准, 不适用时定向检查其真实模板路径;
+需要时核对 init container 的启动复制逻辑及其他相关调度字段, 不读取全部 env 或凭据.
+按实际运行栈继续检查进程与加载来源, 启动参数和配置中的敏感内容须脱敏.
+
 ## Apply And Activate 应用与生效
 
 1. 保存每组完整有效基线和恢复清单, 备份可恢复性、权限及摘要可核对.
@@ -71,6 +89,29 @@
    不能默认 Python 热更新, 也不能复制容器可写层后用重建当持久化方案.
 6. 失败时停止扩大影响, 记录各目标当前状态, 按已授权方案恢复. 镜像、运行覆盖、
    持久挂载和管理配置分别对账, 临时覆盖成功不代表正式镜像含修复或发布已完成.
+
+操作模板按下列对象串联, 每个消费组单独填写; 传输和切换使用现场已有且获授权的机制,
+不假设通用远端路径、登录链或部署脚本:
+
+```text
+revision=<confirmed-revision>; project=<runtime-code-boundary>; cohort=<compatible-consumers>
+baseline=<complete-effective-project-backup>; stage=<complete-target-project>
+targets=<all-eligible-nodes-and-consumers>; restore=<recorded-original-state>
+1. 备份 baseline 及权限/摘要, 单独记录环境配置生成来源和原挂载/启动/调度值.
+2. 从 revision 和任务内改动生成 stage, 用项目文件清单逐项列出新增/修改/删除与摘要.
+3. 通过已授权传输方式暂存至 targets, 对账完整清单; 不直接 tar 合并到生效目录.
+4. 按下表选择切换方式, 保留环境配置及写权限, 再按真实加载机制激活全部消费者.
+5. 逐目标记录文件/运行版本/行为证据; 任一失败停止扩散, 按 restore 恢复并复验.
+```
+
+| 现场状态 | 切换与恢复要求 |
+|----------|----------------|
+| 无持久覆盖 | 不先同步到假定 hostPath. 选择获授权的完整项目挂载、运行层替换或镜像更新; 新挂载须确认管理源、完整目录和配置生成兼容性, 保存原定义供恢复 |
+| 已有目录或单文件覆盖 | 先确认有效来源及遮盖优先级. 支持完整项目的覆盖可复用; 单文件/subPath 阻挡完整项目时, 先将精确调整纳入授权, 不仅更新该单文件或擅自拆旧挂载 |
+| 节点本地源及多副本 | 列出全部可能调度节点与实际消费者, 全部暂存对账后再激活; 某节点失败不继续扩大更新. 保留逐目标状态, 不以一个 Pod 成功代表全部完成 |
+
+暂存与基线清单必须能区分代码、环境配置和已有修改, 明确删除项及恢复来源;
+目录清单相同也仍需确认内容摘要、权限与真实进程加载. 不将部分成功包装为原子更新.
 
 前端本地 dev-server + proxy 仅作开发和预验证. 前端代码修改后必须完成以下部署闭环,
 无可见变化也需部署并说明实际影响, 不以本地调试替代:
@@ -110,6 +151,10 @@
 不等于撤销覆盖. 按真实加载机制使恢复生效并复验运行版本、全部相关副本和关键行为.
 不以恢复命令成功当作回滚完成; 有意保留调试状态须记录授权、对象和后续动作,
 无法恢复时如实说明当前状态与风险.
+
+恢复记录可按 `消费组 -> 目标节点/工作负载 -> 原完整清单/摘要/权限 -> 原管理配置 ->
+恢复激活动作 -> 新 Pod/worker 版本与行为结果` 填写. 逐目标恢复本次删除项、移除本次
+新增代码, 同时还原本次覆盖内容及挂载定义; 不只回滚 Deployment 或镜像就结束.
 
 ## Offline Evidence 离线证据
 

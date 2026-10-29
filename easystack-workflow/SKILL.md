@@ -30,7 +30,7 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 | 按完整提示词进行 Review, 精简输出 P0-P3 发现 | [code-review.md](code-review.md) |
 | 修改前端页面、数据层和接线 | [frontend-design.md](frontend-design.md) |
 | 验证前端改动和真实业务效果 | [frontend-testing.md](frontend-testing.md) |
-| 在线调查、整项目环境调试、部署验证或离线日志分析 | [runtime-debugging.md](runtime-debugging.md) |
+| 在线调查、整项目环境调试操作模板、部署验证与完整恢复或离线日志分析 | [runtime-debugging.md](runtime-debugging.md) |
 | 检查交付范围、生成提交信息及授权的 Git / Gerrit 操作 | [delivery.md](delivery.md) |
 
 ## Entry Selection 入口选择
@@ -108,6 +108,8 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    后端需环境调试时, 按
    [runtime-debugging.md](runtime-debugging.md) 发现运行基线, 以完整项目运行代码
    或匹配构建产物更新、备份和回滚, 保留环境配置, 验证相关工作负载及副本.
+   参考其中参数化模板发现挂载与消费者, 对账完整暂存内容并选择生效方式;
+   前端入口、Host 或资源回退异常按 `frontend-testing.md` 定向检查, 不默认改网关路由.
    环境写入和激活动作须有范围匹配的具体授权, 不从代码修改推导生产或额外配置覆盖权限;
    失败或限制如实记录, 不将编译、渲染或 Mock 演示当作实际业务验收.
 6. **对账并交付.** 核对每个相关仓库的实现、Review、验证、产品文档和有效 artifact,
