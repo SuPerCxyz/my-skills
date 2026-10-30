@@ -144,6 +144,12 @@ targets=<all-eligible-nodes-and-consumers>; restore=<recorded-original-state>
 实际行为验证见 [backend-testing.md](backend-testing.md) 和
 [frontend-testing.md](frontend-testing.md), 按本次范围执行, 不自动启动全部回归.
 环境或授权不足时列明未执行路径、原因、替代检查与剩余风险, 不用静态检查冒充业务验收.
+开发任务将当前 Patch、源码/产物摘要、实际环境运行版本及 E2E/本次全部必验项的真实
+执行者、状态和结果对应记录, 作为 [code-review.md](code-review.md) 正式 Review 的前置证据.
+全部真实通过且无已知 bug 才进入开发 Review; 工具、环境、必需入口或权限缺失时暂停
+依赖 Review/提交. Review 或最终本地检查失败引起修复后, 更新用例并重新部署、核对版本和
+真实验收, 清零并重做三轮 Review, 再执行最终本地门禁. 未改码且同版环境和证据仍有效时
+可复用验收结果, 不机械重复部署三次. 纯测试或只读 Review 不因此获得部署权限或启动完整开发链.
 
 只撤销本次变更, 各消费组按备份恢复完整项目、权限及本次删除项, 移除本次新增代码;
 恢复本次挂载、启动、镜像、配置来源/加载方式和原调度/副本值, 保留已有修改与共享目录.

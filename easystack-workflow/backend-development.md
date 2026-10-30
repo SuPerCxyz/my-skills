@@ -98,9 +98,12 @@ force detach 和资源清理的真实消费者. 涉及 fencing 时同时检查�
 
 ## Review And Delivery 审查与交付
 
-按 [code-review.md](code-review.md) 保留完整问题、功能和跨项目分析, 输出保持精简,
-严重性使用 P0-P3. 按 [backend-testing.md](backend-testing.md) 完成对应验证, 修复后
-复验受影响行为, 将实际结果与确认的需求及有效 artifact 逐项对账.
+实现后先按 [backend-testing.md](backend-testing.md) 依据需求和实际代码补齐自动化 E2E 与
+人工用例, 完成授权环境部署、版本核对及全部必验项的真实验收, 无已知 bug 后再按
+[code-review.md](code-review.md) 完成三 Agent 连续三轮审查. 保留完整问题、功能和跨项目
+分析, 输出精简并使用 P0-P3. 最后 Review 后运行同版最终本地门禁; Review 或最终检查
+失败引起修复时, 更新用例、重新部署验收并从零开始三轮 Review, 再执行最终检查.
+按 `SKILL.md` 统一顺序对账实际结果、确认需求和有效 artifact, 不沿用修复前证据.
 
 交付说明区分已改、无需改、待查证的仓库及原因, 列明被测版本、未验证项和部署依赖.
 Git 操作转 [delivery.md](delivery.md), 仅执行当前明确授权的操作;
