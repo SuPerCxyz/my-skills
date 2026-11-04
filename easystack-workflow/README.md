@@ -6,6 +6,7 @@
 
 ## Capabilities 功能
 
+- 工作入口先核实对应 Jira, 无对应单时准备草稿并在明确授权后创建、核实, 取得编号后继续工作.
 - 根据用户确认的项目关系和实际调用链确定必要修改范围, 区分事实、推断和待查证项.
 - 为每次新增功能或修改生成/更新产品文档, 记录功能边界、异常场景及按依赖排序的测试步骤.
 - 覆盖核心服务、API 网关、公共库、operator、部署与镜像项目, 按实际版本和工具开发后端.
@@ -36,12 +37,13 @@
 | [frontend-design.md](frontend-design.md) | 前端实现、设计规范、来源与可选工具边界 |
 | [frontend-testing.md](frontend-testing.md) | 前端静态检查、真实功能验收与结果记录 |
 | [runtime-debugging.md](runtime-debugging.md) | 在线调查、完整项目调试操作模板与恢复、离线日志和问题结论 |
-| [delivery.md](delivery.md) | 独立 Patch、交付范围、Git / Gerrit 授权、提交及顶层 recheck Reply |
+| [delivery.md](delivery.md) | Jira 创建模板、独立 Patch、交付范围、Git / Gerrit 授权及顶层 recheck Reply |
 
 ## Quick Start 快速开始
 
 1. 在支持 skill 的客户端加载 `easystack-workflow`, 提供目标项目、需求或待 Review 的改动范围.
-2. 修改任务先识别仓库和相关实现, 按当前会话规则完成需求确认和项目影响分析.
+2. 先按 `SKILL.md` 核实对应 Jira; 缺号时按 `delivery.md` 准备草稿并在明确授权后创建、核实.
+   修改任务识别仓库和相关实现, 按当前会话规则完成需求确认和项目影响分析.
    已确认的任务直接继续; 只读 Review 或纯测试从对应入口开始.
 3. 按目标栈完成代码修改, 依据需求与实际代码补齐受影响前后端及必要跨层测试,
    提供可重复自动化 E2E 入口/脚本/断言和可人工执行的前置、步骤、预期; 未涉及的一端说明不适用.

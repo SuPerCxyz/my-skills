@@ -31,9 +31,16 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 | 修改前端页面、数据层和接线 | [frontend-design.md](frontend-design.md) |
 | 验证前端改动和真实业务效果 | [frontend-testing.md](frontend-testing.md) |
 | 在线调查、整项目环境调试操作模板、部署验证与完整恢复或离线日志分析 | [runtime-debugging.md](runtime-debugging.md) |
-| 检查交付范围、生成提交信息及授权的 Git / Gerrit 操作 | [delivery.md](delivery.md) |
+| Jira 创建模板、交付范围、提交信息及授权的 Git / Gerrit 操作 | [delivery.md](delivery.md) |
 
 ## Entry Selection 入口选择
+
+任何需求或工作先核实与当前范围对应的真实 Jira. 用户提供编号时核对内容和范围;
+未提供时使用实际可用入口查找已有 Issue, 避免重复创建. 已有对应 Issue 时记录编号并继续.
+缺少对应 Issue 时按 [delivery.md](delivery.md) 准备可审阅的建单草稿,
+取得本次创建的明确授权后创建并核实结果; 取得真实编号前暂停相关工作.
+允许为确认需求、查询已有 Issue 和准备建单所必需的只读检查. 工具、权限或必填信息
+不足时报告缺口, 不将未创建或结果不明视为已有 Jira.
 
 开发请求先按下方业务域索引定位项目及候选关联仓库, 再判断单仓库或跨仓库实施路径.
 
@@ -76,8 +83,7 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 1. **明确需求和验收.** 读取相关实现, 做功能完整性审查, 将用户要求与必要补全纳入
    Requirement Review. 建议补全经确认后纳入, 范围外能力不顺带实现. 是否需要确认按
    当前 `AGENTS.md` 和本会话有效授权判断; 范围实质变化时重新 Review.
-   同时核实对应的真实 Jira 号和问题范围; 缺号时告知用户, 按本目录
-   [delivery.md](delivery.md) 处理, 仅经用户明确授权创建 Jira.
+   按入口要求核实对应 Jira 号和问题范围, 缺号时按 `delivery.md` 处理.
    确认后为本次新增功能或修改生成/更新产品文档初稿, 逐项记录可观察行为; 无可见行为
    变化时说明修改影响, 不虚构用户功能. 文档格式、位置和测试步骤见
    [product-documentation.md](product-documentation.md).
