@@ -6,7 +6,7 @@
 
 - [x] 2.1 统一 SKILL、README、backend-development 的开发顺序, 保留英文注释与独立入口。
 - [x] 2.2 更新 backend-testing、frontend-testing 和 product-documentation 的双轨用例、版本/执行者/结果及最终本地门禁。
-- [x] 2.3 连接 runtime 环境验收证据、code-review 三 Agent 审查和 delivery 提交门禁, 闭环修复与清零规则。
+- [x] 2.3 连接 runtime 环境验收证据、code-review 固定 2 + 1 本地审查和 delivery 提交门禁, 闭环汇总修复、复审及停止规则。
 
 ## 3. Static Validation 静态验证
 
@@ -51,3 +51,9 @@
 - `openspec validate enforce-test-first-review-delivery-cycle --type change --strict --no-interactive --json` 退出码 0, 一个 change 通过且 issues 为空。
 - 根据修复后文档静态走查正常路径、E2E 失败/必验人工项未执行、Review 修复、最终本地检查失败修复、权限/工具/入口/审查容量缺失、单端不适用及只读 Review/纯测试入口, 顺序、阻断与恢复闭环一致。仓内产品文档在首轮 Review 前冻结, 后续审查和最终门禁真实结果由 Patch 外的当前会话记录按基线与完整版本承接, 不要求回填而再次改动 Patch; 若确需修改目标文档仍清零重走闭环。独立 CI 最多三轮修复未与三轮审查通过计数混用。
 - 本轮仅实现文档规则并完成静态验证, 真实业务部署、项目 E2E、人工验收、pep8/coverage 未执行且不适用此次文档任务, 不据此声称业务验证通过。独立干净会话 `/root/clean_initial_review` 原初审未发现有效问题, 后续三个干净 Agent 独立审查及交叉核验确认最终结果回填仓内文档导致版本无法收敛的 P2, 主会话采纳后已修复冻结记录约定。4.1/4.2 记录已开展审查、处理反馈、需求与实现对账及固定本次当前会话交付记录为证据入口; 修复版本的新一轮干净复审和最终验收尚待实际完成, 后续结果仅在该入口按明确基线和完整 Patch 指纹报告, 不回填冻结文件或以勾选替代最终通过。未执行 Git 写操作或 Archive。
+
+## 6. Bounded Local Review 固定本地审查
+
+- [x] 6.1 按用户确认将本地审查改为两个独立只读 reviewer 并行完整审查、汇总去重与统一修复、一个新建独立 reviewer 完整复审一次并处理发现后结束.
+- [x] 6.2 同步有效规格与关联入口, 取消修复/最终门禁修复自动清零重开, 保留必要验收、本地门禁、版本修复链和未解决阻塞报告; 历史执行记录不代表当前轮次要求.
+- [x] 6.3 完成本次文档定向检查与 OpenSpec strict, 在当前会话记录真实结果和未验证项.

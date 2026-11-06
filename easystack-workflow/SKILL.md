@@ -27,7 +27,7 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 | 识别项目关系和必要的跨仓库修改 | [project-relationships.md](project-relationships.md) |
 | 开发后端服务、API、公共库或 operator | [backend-development.md](backend-development.md) |
 | 选择后端回归、CI 和真实资源验证 | [backend-testing.md](backend-testing.md) |
-| 按完整提示词进行 Review, 执行提交前三 Agent 连续三轮门禁 | [code-review.md](code-review.md) |
+| 按完整提示词进行 Review, 执行提交前固定 2 + 1 本地审查 | [code-review.md](code-review.md) |
 | 修改前端页面、数据层和接线 | [frontend-design.md](frontend-design.md) |
 | 验证前端改动和真实业务效果 | [frontend-testing.md](frontend-testing.md) |
 | 在线调查、整项目环境调试操作模板、部署验证与完整恢复或离线日志分析 | [runtime-debugging.md](runtime-debugging.md) |
@@ -120,17 +120,18 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    环境写入和激活动作须有范围匹配的具体授权, 不从代码修改推导生产或额外配置覆盖权限;
    环境、工具、必需入口或权限缺失时暂停依赖 Review/提交, 不用静态检查或 Mock 冒充真实验收.
 6. **完成代码 Review.** 按 `code-review.md` 传递完整 Patch、明确基线、有效需求/设计边界、
-   必要修改上下文及当前环境验收结果. 每轮新建 3 个干净且不继承旧对话的只读审查 Agent,
-   各自完整审查后交叉核验, 主 Agent 汇总证据; 同一最终 Patch 连续三轮无有效问题才进入
-   最终本地门禁. 发生修改即清零计数, 修复后回到用例更新、重部署和真实验收, 再新建审查组.
-   未改码且同版环境及证据仍有效时可复用验收结果, 不机械重部署三次. 会话调度和逐轮记录
-   按该文档执行; 工具或容量不足时报告缺口并暂停提交, 不降低门禁或将自查冒充独立 Review.
+   必要修改上下文及当前环境验收结果. 首轮新建两个干净独立只读 reviewer 并行完整审查,
+   汇总去重并核验冲突后, 由唯一写入 Agent 统一修复; 再新建一个独立只读 reviewer
+   审查修复后的完整 Patch 一次, 处理发现后结束本次本地 Review, 不因修复自动重开.
+   修复后更新适用用例和文档, 补齐受影响的部署及真实验收; 同版有效证据可复用.
+   按 `code-review.md` 记录审查版本、修复链和最终验证版本, 不将未经复审的修改称为已获无问题复审.
+   工具或容量不足、有效问题未解决或关键验证缺失/失败时报告缺口并暂停依赖交付.
    普通只读 Review 保持原独立会话入口, 不自动启动开发链或部署.
-7. **执行最终本地门禁.** 最后 Review 通过且功能正常后, 对同版代码按 `backend-testing.md`
+7. **执行最终本地门禁.** 固定 Review 及发现处理结束且功能正常后, 对最终版本代码按 `backend-testing.md`
    运行 Python pep8/coverage 并核验完整本次 diff 的增量覆盖, 其他栈按各自测试文档使用
    项目对应入口. 项目阈值保持不变; Python 首次验证和修复重跑均按同一增量判据执行.
    不适用写明依据且不记为通过, 必需入口缺失时暂停提交. 失败引起修复后须更新用例、
-   重部署并真实验收, 重新完成三轮 Review 后再运行最终门禁, 不只重跑失败检查.
+   重部署并真实验收, 不重开 Review, 再运行最终门禁, 不只重跑失败检查.
    远端 CI 仅在日志证实非代码的 CI 自身异常、当前版本和有效授权匹配时, 按测试文档
    的去重与一次上限执行 recheck, 分开记录回复、排队/运行与新 run 最终结果.
 8. **对账并交付.** 核对每个相关仓库的实现、Review、验证、产品文档和有效 artifact,
@@ -180,10 +181,10 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
   Review 前环境必验项真实通过且无已知 bug; 最终本地门禁单列在 Review 后,
   执行者、状态和结果记录准确.
 - Review 已按完整流程完成, 新增/修改代码注释无中文, P0-P3 发现和修复状态真实.
-  提交前已有同一最终 Patch 连续三轮、每轮 3 个全新只读 Agent 完整审查与交叉核验的记录,
+  提交前已有两个独立 reviewer 并行审查、汇总修复及一个独立 reviewer 复审一次和发现处理的记录,
   无有效问题或未完成项; 按 `delivery.md` 核对最终暂存版本, 审查通过不产生 Git 权限.
 - 最后 Review 后同版最终本地门禁真实通过; 不适用有依据, 失败修复已重新完成部署验收、
-  三轮 Review 和最终检查, 不沿用失效结果或以先前快速检查替代.
+  受影响验证和最终检查, 不自动重开 Review, 不沿用失效结果或以先前快速检查替代.
   EasyStack commit/amend 与直接上传已有提交均核对对应完整范围、基线和同版质量证据.
 - 行为验证与实际变更版本一致; 失败、未验证项和剩余资源有明确记录.
 - 前端代码修改已按本目录规则完成构建、验收环境部署和实际页面验证, 统一设计检查及用户

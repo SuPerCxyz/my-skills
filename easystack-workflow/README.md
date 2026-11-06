@@ -13,9 +13,10 @@
 - 覆盖核心服务、API 网关、公共库、operator、部署与镜像项目, 按实际版本和工具开发后端.
 - 新增或修改的代码注释统一使用英文并纳入 Review, 不批量清理历史注释或业务字符串.
 - 代码修改后依据需求与实现补齐适用的自动化 E2E 和人工用例, 授权部署并真实验收后再 Review.
-- 普通只读 Review 每次新建独立会话; 提交前每轮新建 3 个干净只读 Agent 完整审查并互相核验,
-  主会话汇总, 同一 Patch 连续三轮无有效问题后运行同版最终本地门禁, 全通过才可已授权提交.
-  任一修改清零计数, Review 或最终门禁失败引起修复后重新更新用例、部署验收并 Review.
+- 普通只读 Review 每次新建独立会话; 开发本地 Review 首轮两个干净独立只读 reviewer
+  并行完整审查, 汇总去重后统一修复, 再由一个新建独立 reviewer 复审一次并处理发现后结束.
+  修复和最终门禁修复不重开 Review; 更新用例、补齐受影响验收并执行最终本地门禁,
+  保留审查版本与修复后验证版本记录, 未解决问题或关键验证缺失/失败时暂停依赖交付.
 - 无明确代码依赖的 Patch 基于 `master` 独立提交, 不叠加之前未合入的 Patch.
 - 提交/更新 Patch 前在有效授权内维护真实关联 Jira 的 Conclusion 并回读核实, 已有提交直接上传同样核对完整范围和同版质量证据; 未完成不放行依赖交付.
 - 上传后对适用 Bug 的 Review Links 按仓库/版本核验, 缺项只在匹配字段授权内合并并回读; 字段未完成与上传结果分别报告.
@@ -35,7 +36,7 @@
 | [project-relationships.md](project-relationships.md) | 项目矩阵、跨仓库修改判定和证据要求 |
 | [backend-development.md](backend-development.md) | 后端开发流程、规范来源、兼容性和生命周期 |
 | [backend-testing.md](backend-testing.md) | 后端回归、CI、契约、真实资源验证及 recheck 判断/复查 |
-| [code-review.md](code-review.md) | 完整 Review 提示词、提交前三 Agent 连续三轮门禁及精简输出约定 |
+| [code-review.md](code-review.md) | 完整 Review 提示词、提交前固定 2 + 1 本地门禁及精简输出约定 |
 | [frontend-design.md](frontend-design.md) | 前端实现、设计规范、来源与可选工具边界 |
 | [frontend-testing.md](frontend-testing.md) | 前端静态检查、真实功能验收与结果记录 |
 | [runtime-debugging.md](runtime-debugging.md) | 在线调查、完整项目调试操作模板与恢复、离线日志和问题结论 |
@@ -52,9 +53,9 @@
 4. 按依赖呈现测试顺序, 使用 `runtime-debugging.md` 的已有授权、版本、备份和恢复机制完成
    环境部署, 按前后端测试文档完成 Review 前环境必验项. 真实通过且无已知 bug 后才 Review;
    执行者、版本和结果写入产品文档, Agent 操作不冒充真人, 必验人工项未执行不得全通过.
-5. 按 `code-review.md` 完成三 Agent 连续三轮审查, 最后 Review 后运行同版最终本地门禁;
+5. 按 `code-review.md` 完成固定 2 + 1 本地审查, 最后 Review 后运行同版最终本地门禁;
    该门禁未执行不反向阻塞 Review. Python 首次验证和修复重跑均需满足项目门禁与本次增量覆盖判据.
-   Review 或最终检查失败引起修复时, 更新用例、重新部署验收并清零重做三轮 Review,
+   Review 或最终检查失败引起修复时, 更新用例、重新部署验收并复验受影响行为, 不重开 Review,
    再运行最终本地门禁. 工具、环境或权限缺失时报告并暂停依赖流程, 不降低门禁.
 6. 需要提交且全部门禁通过时先读取项目关系文档中的公司默认值, 再按实际授权执行本目录 `delivery.md`;
    加载本 skill 不代表授权 Git 或环境写操作.
