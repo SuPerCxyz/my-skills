@@ -1,6 +1,11 @@
 # Auto-Fix Loop
 
-Use this file after either `tox -e cover` or `tox -e pep8` fails. It defines the repair loop and points to the specialized files for coverage, pep8, and privsep failures.
+项目命令或 [coverage.md](coverage.md) 的增量质量门禁未通过时, 仅在已有修复授权且具备
+验证条件时使用本流程. 首次验证与修复重跑共用同一判据, 不因进入 auto-fix 才增加覆盖要求.
+tox 成功但有本次 `mis/par` 时保留 "tox 通过, 增量覆盖门禁未通过" 的分别记录;
+证据缺失记为未验证, 先补证, 不猜测缺口或无授权修改配置. 仅测试请求只报告结果和修复方向.
+修复决策使用 coverage.md 对原始报告分类后的增量门禁结论; 仅因已核实有效的既有排除
+导致辅助检查非零时, 保留工具结果并按核实依据判定, 不自动改码或把所有非零结果都忽略.
 
 **Prerequisite:** 按 [setup.md](setup.md) 从所选 tox 环境映射 2.7/3.9,
 固定独立 AUX_PYTHON 并通过实际 CI_PYTHON 门禁; 原 tox 目标另行核验:
@@ -24,8 +29,8 @@ or stop earlier when a stop condition below is reached:
 │           → Go back to Step 1                │
 │           → PASS → continue                  │
 ├──────────────────────────────────────────────┤
-│  Step 2: Check HTML coverage for modified    │
-│          files (cover/<module>_py.html)      │
+│  Step 2: Check coverage for the full diff   │
+│          using the actual report           │
 │  └─ "mis" (missing) or "par" (partial) found │
 │           → Write targeted unit tests        │
 │           → Go back to Step 1                │
@@ -51,7 +56,9 @@ or stop earlier when a stop condition below is reached:
 - DONE only when all three conditions are met:
   1. `tox -e cover` passes (all tests pass)
   2. 本次 diff 新增或修改的 executable lines 没有 `mis` 或 `par`; touched file 中
-     与本次 diff 无关的历史缺口记录为 baseline, 不自动扩大修改范围
+     与本次 diff 无关的历史缺口记录为 baseline, 不自动扩大修改范围; 按 coverage.md
+     纳入全部确认文件/hunks 和未跟踪新源码, 按原始报告区分真实缺口与已核实有效的既有排除;
+     辅助检查非零的分类与通过条件沿用 coverage.md, 缺报告、排除依据或测量不算通过
   3. `tox -e pep8` passes
 - Direct `flake8` runs are diagnostic only and never replace `tox -e pep8`.
 - If completion requires changing `tox.ini`, show the proposed diff and wait for explicit

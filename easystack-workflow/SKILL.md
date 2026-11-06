@@ -35,8 +35,12 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 
 ## Entry Selection 入口选择
 
-任何需求或工作先核实与当前范围对应的真实 Jira. 用户提供编号时核对内容和范围;
-未提供时使用实际可用入口查找已有 Issue, 避免重复创建. 已有对应 Issue 时记录编号并继续.
+任何需求或工作先核实 Jira 的站点/项目、真实 key、存在性及与当前范围的对应关系,
+记录实际查询或用户提供的可信材料来源; 仅编号或未经核实的链接不足以满足前置.
+已核实这些事实但实时详情或讨论不可读时, 普通只读 Review 可按现有证据继续并披露缺口,
+关键依据不足时使用 `NEEDS VERIFICATION`, 不脑补验收范围或放宽开发交付门禁.
+未核实时暂停依赖工作. 未提供编号时使用实际可用入口查找已有 Issue, 避免重复创建;
+无权限或查询失败不证明 Issue 不存在. 已核实对应 Issue 时记录编号并继续.
 缺少对应 Issue 时按 [delivery.md](delivery.md) 准备可审阅的建单草稿,
 取得本次创建的明确授权后创建并核实结果; 取得真实编号前暂停相关工作.
 允许为确认需求、查询已有 Issue 和准备建单所必需的只读检查. 工具、权限或必填信息
@@ -80,6 +84,9 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 
 ## Development Flow 开发流程
 
+下文的 Review 前环境必验项仅指本次适用且已确认必验的环境 E2E、人工项和业务终态验收.
+最终本地门禁属于 Review 后阶段, 暂未执行不阻止进入正式 Review; 两阶段均满足才可交付.
+
 1. **明确需求和验收.** 读取相关实现, 做功能完整性审查, 将用户要求与必要补全纳入
    Requirement Review. 建议补全经确认后纳入, 范围外能力不顺带实现. 是否需要确认按
    当前 `AGENTS.md` 和本会话有效授权判断; 范围实质变化时重新 Review.
@@ -107,7 +114,7 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    将匹配源码的完整项目或构建产物部署到已授权验收环境, 核对 Patch、产物和实际运行版本,
    保留环境配置并验证相关工作负载及副本. 前端本地 dev-server + 代理仅作开发和预验证,
    按 `frontend-testing.md` 核实页面版本、API、业务与视觉效果, 不默认修改网关路由.
-   E2E 和本次全部必验项真实通过且无已知 bug 后, 才能进入开发 Review; 失败先修复、
+   本次 Review 前环境必验项真实通过且无已知 bug 后, 才能进入开发 Review; 失败先修复、
    更新用例并重新部署验收. 每项记录真实执行者、状态和结果, Agent 操作不得标为真人;
    不增加真人全量重复执行或签字要求, 但本次必验人工项未执行不得全通过.
    环境写入和激活动作须有范围匹配的具体授权, 不从代码修改推导生产或额外配置覆盖权限;
@@ -120,7 +127,8 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    按该文档执行; 工具或容量不足时报告缺口并暂停提交, 不降低门禁或将自查冒充独立 Review.
    普通只读 Review 保持原独立会话入口, 不自动启动开发链或部署.
 7. **执行最终本地门禁.** 最后 Review 通过且功能正常后, 对同版代码按 `backend-testing.md`
-   运行 Python pep8/coverage, 其他栈按各自测试文档使用项目对应入口, 阈值沿用项目配置.
+   运行 Python pep8/coverage 并核验完整本次 diff 的增量覆盖, 其他栈按各自测试文档使用
+   项目对应入口. 项目阈值保持不变; Python 首次验证和修复重跑均按同一增量判据执行.
    不适用写明依据且不记为通过, 必需入口缺失时暂停提交. 失败引起修复后须更新用例、
    重部署并真实验收, 重新完成三轮 Review 后再运行最终门禁, 不只重跑失败检查.
    远端 CI 仅在日志证实非代码的 CI 自身异常、当前版本和有效授权匹配时, 按测试文档
@@ -133,7 +141,9 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
    新建/更新 EasyStack Patch 及完整待交付范围逐项核对 Jira 关联, 按 `delivery.md` 在有效
    字段更新授权内维护并回读核实真实 Conclusion, 提交/上传前未完成则暂停依赖交付;
    Gerrit Topic 与对应 Jira key 一致, 缺号时暂停相关交付,
-   仅执行实际授权的操作, 不从实现授权推导上传授权.
+   已有提交直接上传也核验完整待发送范围和同版质量证据, 有效记录复用, 缺失或失效则暂停.
+   上传后对适用公司 Bug 规范的 Jira 核验各仓库/版本的 Review Links; 缺项仅在匹配字段授权内
+   合并并回读, 未完成单列交付缺口. 仅执行实际授权的操作, 不从实现授权推导上传或字段权限.
 
 ## Capability Routing 能力路由
 
@@ -167,12 +177,14 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
 
 - 已确认需求及必要补全逐项对应实现和验证, 相关仓库没有遗漏或无依据的同步修改.
 - 根据实际代码补齐适用的自动化 E2E 与人工用例, Patch/产物/环境版本一致,
-  全部必验项在正式 Review 前真实通过且无已知 bug; 执行者、状态和结果记录准确.
+  Review 前环境必验项真实通过且无已知 bug; 最终本地门禁单列在 Review 后,
+  执行者、状态和结果记录准确.
 - Review 已按完整流程完成, 新增/修改代码注释无中文, P0-P3 发现和修复状态真实.
   提交前已有同一最终 Patch 连续三轮、每轮 3 个全新只读 Agent 完整审查与交叉核验的记录,
   无有效问题或未完成项; 按 `delivery.md` 核对最终暂存版本, 审查通过不产生 Git 权限.
 - 最后 Review 后同版最终本地门禁真实通过; 不适用有依据, 失败修复已重新完成部署验收、
   三轮 Review 和最终检查, 不沿用失效结果或以先前快速检查替代.
+  EasyStack commit/amend 与直接上传已有提交均核对对应完整范围、基线和同版质量证据.
 - 行为验证与实际变更版本一致; 失败、未验证项和剩余资源有明确记录.
 - 前端代码修改已按本目录规则完成构建、验收环境部署和实际页面验证, 统一设计检查及用户
   查看说明已对账; 未部署或未验证时明确缺口, 不声称完整交付.
@@ -181,7 +193,8 @@ description: "Use when developing or reviewing EasyStack code, documenting chang
   测试顺序及结果、未验证项与文档链接已对账, 无可见行为变化时未虚构功能.
 - 每个 EasyStack Patch 均关联与修改内容对应的真实 Jira 号; 已上传 Gerrit Change 的
   实际 Topic 与对应 Jira key 一致, 关联 Conclusion 已按 `delivery.md` 对完整交付范围
-  维护并回读核实. 新建 Jira 的实际编号和默认指派当前 Jira 登录用户
+  维护并回读核实; 适用公司 Bug 规范的 Review Links 已覆盖相关仓库/版本并回读核实.
+  新建 Jira 的实际编号和默认指派当前 Jira 登录用户
   本人的结果已核实, 未完成项如实报告, 不虚报建单或交付成功.
 - 最终只报告改动、关键证据、验证、剩余风险及实际 Git 操作, 不复述全过程.
 

@@ -163,6 +163,13 @@ diff、问题根因、修改方式、行为变化、测试结果、兼容性影�
 
 ## git review 门禁
 
+已识别为 EasyStack 的项目, commit/amend 和直接上传已有提交还须按
+[EasyStack 质量门禁](../easystack-workflow/delivery.md#verification-and-staging-验证与暂存)
+核对完整目标范围、基线及同版环境验收、三轮 Review 和最后 Review 后本地门禁证据.
+已有有效记录复用, 缺失或失效则暂停依赖动作, 不因提交已存在而跳过, 不自动改码、部署或改写提交.
+独立分发时按当前能力定位同一 EasyStack 规则, 不假设相邻目录必然存在; 无法取得时报告缺口,
+不猜测或降级门禁. 此补充仅适用于 EasyStack, 不改变个人或其他公司项目的规则.
+
 执行 `git review -R -r origin -t <JIRA-KEY> <branch>` 之前必须确认:
 
 1. 已识别为公司 Gerrit 项目
@@ -181,3 +188,8 @@ diff、问题根因、修改方式、行为变化、测试结果、兼容性影�
 上传后必须根据真实输出判断: 命令是否成功、上传的是新 Change 还是新 Patch Set、
 是否出现 branch 错误、Change-Id 错误、权限错误、提交冲突或 hook 问题。无法从
 命令输出确认 Patch Set 编号时, 不得虚构编号。
+
+EasyStack 上传后还须按 [Jira 交付对账](../easystack-workflow/delivery.md#results-and-feedback-结果与反馈)
+核验适用 Bug 的 Review Links 是否覆盖相关仓库/版本的真实 Change URL. 缺项只在匹配的
+Issue/字段授权内安全合并、去重并回读; 上传或 Conclusion 授权不包含此写入权限.
+无权限或结果未知时分别报告上传结果及字段未完成项, 不声称完整交付, 不盲目重写或重新上传.

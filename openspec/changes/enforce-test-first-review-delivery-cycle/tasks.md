@@ -18,7 +18,34 @@
 - [x] 4.1 开展干净只读 Agent 审查、交叉核验并修复有效反馈; 最终版本的新一轮干净复审结果在本次当前会话交付记录中按基线和完整 Patch 指纹提供。
 - [x] 4.2 完成确认需求与实现对账, 固定本次当前会话交付记录为最终复审和验收的真实证据入口; 仓内勾选不代替该入口的实际最终结果, 未真实通过不放行提交。
 
+## 5. Gate Consistency 门禁衔接修复
+
+- [x] 5.1 同步本轮已确认范围和规格, 区分 Review 前环境必验集合与 Review 后本地门禁, 消除重复定义的循环.
+- [x] 5.2 补齐适用 Bug 的上传后 Review Links 集合核验、字段授权、安全合并/去重/回读及未完成状态.
+- [x] 5.3 将已有提交直接上传纳入同版完整质量证据核验, 对齐 git-delivery 的 EasyStack 条件分支.
+- [x] 5.4 统一首次验证与修复重跑的增量覆盖判据, 区分 tox 结果、质量失败和证据缺口, 保留授权与历史范围边界.
+- [x] 5.5 区分 Jira 尚未核实与可信核实后详情不可读, 对齐入口和普通 Review 的继续/阻断条件.
+
+## 6. Follow-up Validation 本轮验证
+
+- [x] 6.1 完成受影响文档格式、标点、frontmatter、索引、链接/锚点、diff 空白和 OpenSpec strict 校验.
+- [x] 6.2 按本轮五项确认场景走查输入、阶段、门禁及结果, 核对写入范围并如实记录运行时未验证项.
+- [x] 6.3 独立只读复核本轮最终修改并处理有效反馈, 由主会话依据实际证据组织最终验收.
+
+旧章节勾选仅记录原轮次, 不表示本轮五项修复或独立复核已完成.
+
 ## Validation Record 验证记录
+
+### Follow-up Validation 本轮五项修复验证
+
+- 2026-11-05: 本轮确认范围已实现, 修改限于 18 个授权 Markdown 文件, 未修改脚本、根配置、安装副本或其他 change.
+- `python3 -I -S -B` 内存检查覆盖受影响文档的末尾换行、代码围栏、全角字符、128 个本地链接和 18 个锚点, 以及 3 个 skill frontmatter. 两个已修改 SKILL 的参考文档索引完整. 扩展索引检查发现 git-delivery 原有 README 漏索引, 与 HEAD 对照确认入口未改且问题既有; 本轮未越界修复.
+- `git diff --check` 通过. `openspec validate enforce-test-first-review-delivery-cycle --type change --strict --no-interactive --json` 通过, issues 为空.
+- 五组静态场景已按输入、阶段、门禁与结果走查: Review 前后集合、Review Links 合并/权限/未知结果、已有提交同版证据复用/失效、首次/修复覆盖判据及 Jira 未核实/详情缺失分流. 保留纯测试、只读 Review 和独立写入授权边界.
+- 独立只读复核发现辅助覆盖脚本将既有排除并入 uncovered_lines 的 P2. 已仅在 coverage/auto-fix 原段落补足原始结果保留与分类判定, 不改脚本或新增豁免; 两文件格式、9 个本地链接/锚点和 diff 空白复验通过. 合法既有排除、真实缺口、未知排除和缺测量四分支静态走查完成, 独立复核确认五项无剩余阻断.
+- 本次为规则文档修复, 未执行真实 EasyStack 部署、项目 tox/E2E、Jira/Gerrit 写入、Git 提交/推送或 share-skills 同步; 静态验证不代表运行时行为或模型遵循已获验证. 当前 change 保持未归档.
+
+### Previous Validation 原轮次验证
 
 - 2026-10-30 P2 修复后复验: `git diff --check` 通过; Python 3 内存检查九份 skill 文档的 215 个新增行及四份新 change 文档, 无新增全角字符。主入口 frontmatter、文件索引和 Execution Feedback 保留, 84 个内部链接及锚点全部可达。
 - `openspec validate enforce-test-first-review-delivery-cycle --type change --strict --no-interactive --json` 退出码 0, 一个 change 通过且 issues 为空。

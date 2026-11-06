@@ -1,11 +1,17 @@
 # Fixing Coverage Gaps
 
-Use this file when `tox -e cover` reports missing coverage or test failures related to the current change set. For command order and the full repair loop, start from [auto-fix.md](auto-fix.md).
+每次 `tox -e cover` 后均按本文件核验完整本次 diff, 包括首次普通验证和修复重跑,
+不只在命令失败后进入. 有修复授权且具备验证条件时才按 [auto-fix.md](auto-fix.md) 处理缺口.
 
 ## Scope 覆盖范围
 
 覆盖报告可以包含整个项目, 本次门禁只检查已确认 diff 中新增或修改的可执行行及其
 分支。touched file 中无关历史缺口记录为 baseline, 不因此扩展修改范围。
+项目既有门禁通过且上述行及相关分支无 `mis/par` 才满足统一质量判据. tox 命令结果
+与增量判定分别记录: 命令成功但本次仍有缺口时报告 "tox 通过, 增量覆盖门禁未通过";
+报告或测量不足时记为未验证并保留交付缺口, 不把无记录当作零缺口.
+保留项目已有覆盖阈值与排除规则; 本次命中的排除项须核实既有依据和适用性并列明影响,
+不静默放行, 也不为消除缺口新增排除、降低阈值或修改配置. 仅验证无修复授权时只报告.
 基线沿用 [SKILL.md](SKILL.md#code-scope-代码范围): Gerrit 使用确认的提交父节点,
 本地分支使用用户确认的 base, 另合并 staged 与 unstaged 改动。
 
@@ -41,11 +47,16 @@ git diff --no-index --no-ext-diff --unified=0 -- /dev/null <UNTRACKED_SOURCE_FIL
 ```
 
 没有未跟踪源码时省略第二个 `--diff`。同一文件只提供一份最终版本 diff, 不将 staged
-和 unstaged 两个不同版本重复输入。分支未测量、报告字段缺失或不支持的 diff 格式会
-报告失败, 不能以没有记录推定没有 `mis/par`。
+和 unstaged 两个不同版本重复输入. 分支未测量、报告字段缺失或不支持的 diff 格式会
+使辅助检查报告失败, 应说明对应增量覆盖未验证, 不能以没有记录推定没有 `mis/par`.
 
-该辅助检查覆盖 Python 文件, 根据 coverage 的可执行行与分支信息计算交集, 注释和
-删除行不当作新增可执行行。缺少修改文件的报告会失败; 修改行的排除项不得静默跳过。
+该辅助检查覆盖 Python 文件, 注释和删除行不当作新增可执行行. 脚本会把
+`excluded_lines` 与 `missing_lines` 合并到 `uncovered_lines`, 因而既有排除也可能导致非零退出.
+保留辅助检查的原始输出和退出结果, 再对照同版 coverage 原始报告, 区分真实 `mis/par`、
+已核实的项目既有有效排除及证据不足. 只有排除依据和本次适用性已核实、其余确认范围
+完整测量且无真实 `mis/par` 时, 才可记录 "辅助检查失败(既有排除), 增量门禁按核实依据通过".
+存在真实缺口时增量门禁未通过; 排除依据不明、缺文件报告/分支测量或其他证据不足时
+记为未验证. 不整体忽略非零结果, 不通过新增排除或改码来消除合法既有排除的报告.
 非 Python 执行代码、特殊 diff 格式或无法生成 JSON 的旧 coverage 仍需明确人工核验,
 辅助脚本成功不等于全部项目和业务验收通过。
 
