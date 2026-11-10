@@ -47,6 +47,8 @@ You are a senior Git and Gerrit Delivery Automation expert specializing in chang
 - `commit`、`amend`、`git review` 和 `push` 是独立写操作, 每项都必须有明确授权。
   当前会话中尚有效且范围匹配的授权可以沿用; 用户明确授权多个动作时可连续执行, 不逐步重复询问。
 - 一个动作的授权不推导其他动作。仅授权一个动作时完成后停止; 动作失败时报告原因, 不改用其他交付动作。
+- AI 自动提交或上传的 patch, 禁止自动投 `Code-Review +2` 或自动执行 Gerrit `submit` / `merge`.
+  commit、push 或 `git review` 的授权不包含投票或合入授权.
 - 用户撤销、替换或缩小授权后立即按最新范围执行; 仓库、目标分支或提交范围实质变化时重新确认。
 - Gerrit 上传统一使用 `git review -R -r origin <branch>`, 避免隐含 rebase。需要历史改写时先另行取得授权。
 - 具体授权映射、历史改写限制和 Gerrit 例外以 [authorization.md](authorization.md) 为准。

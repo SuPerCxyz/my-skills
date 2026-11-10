@@ -29,6 +29,9 @@ commit、amend、git review、push 必须各有明确独立授权. 已确认且�
 rebase、squash、重排、cherry-pick、merge、force push、删除分支或远程 Change、
 abandon 等须另获针对目标和影响的明确授权. 不自动修改 Git 配置、remote 或环境.
 
+AI 自动提交或上传的 patch, 禁止自动投 `Code-Review +2` 或自动执行 Gerrit
+`submit` / `merge`. commit、push 或 `git review` 的授权不包含投票或合入授权.
+
 ## Repository And Scope 仓库与范围
 
 先核对任务仓库、实际 remote、分支、HEAD、目标基线及已有修改. 按需只读执行:
