@@ -1,6 +1,6 @@
 ---
 name: easystack-log-analysis
-description: "Use when analyzing offline EasyStack .eslog bundles or extracted ecs.* logs: decompression, service mapping, correlated evidence, and incident reports. Works without live access. Excludes unrelated generic logs, live-only debugging, CI, and resource tests."
+description: "Use when analyzing offline EasyStack .eslog bundles or extracted ecs.* logs: decompression, service mapping, correlated evidence, and incident reports. Works without live access; can combine supplied online evidence. Excludes unrelated generic logs, live-only debugging, CI, and resource tests."
 ---
 
 # EasyStack Log Analysis

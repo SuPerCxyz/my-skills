@@ -1,6 +1,6 @@
 ---
 name: easystack-workflow
-description: "Use when developing or reviewing EasyStack code, documenting changed behavior, assessing cross-project contracts, or planning version-aware verification. Routes implementation, tests, debugging, and delivery. For standalone CI, resource tests, Web E2E, or incident analysis, select the matching specialist."
+description: "Use when developing or reviewing EasyStack code, documenting behavior changes, assessing cross-project contracts, or planning version-aware verification. Includes implementation, tests, runtime debugging, and authorized delivery. Prefer available specialists for standalone CI, resource tests, Web E2E, or incident analysis."
 ---
 
 # EasyStack Workflow

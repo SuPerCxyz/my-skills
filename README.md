@@ -9,10 +9,10 @@
 | [context-efficient-rules](context-efficient-rules/) | 新会话或上下文密集任务的精简规则, 控制检索、读取、输出与恢复摘要, 不代替领域流程 |
 | [easystack-ci-test](easystack-ci-test/) | EasyStack OpenStack 仓库 CI 与授权修复, 按 tox.ini major 选择 CI Python 2.7/3.9, 独立使用 Python 3 辅助工具, 检查确认范围内全部新增/修改可执行行及分支(含未跟踪源码); Git 交付另行转接 |
 | [easystack-cloud-web-e2e](easystack-cloud-web-e2e/) | EasyStack Cloud Web UI 功能和 E2E 测试, 按实际页面精确选目标并验证业务终态 |
-| [easystack-env-debugging](easystack-env-debugging/) | 在线 EasyStack OpenStack/Kubernetes 资源调查、授权 runtime 调试和 Alcubierre 解挂, 不用于通用 SSH/OS/GPU 检查 |
-| [easystack-log-analysis](easystack-log-analysis/) | 离线 EasyStack .eslog/ecs.* 日志解压、服务映射、关联证据与问题报告, 不要求先有在线环境 |
-| [easystack-test-executor](easystack-test-executor/) | EasyStack 后端资源功能测试计划、确定性执行、worker 证据、清理与中文报告; Backup 仅在明确要求时纳入 |
-| [easystack-workflow](easystack-workflow/) | EasyStack 开发、Review、产品行为文档与跨项目契约分析, 按当前阶段选择相关测试、调试和授权交付流程 |
+| [easystack-env-debugging](easystack-env-debugging/) | 在线 EasyStack OpenStack/Kubernetes 资源调查、授权 runtime 调试和 Alcubierre 解挂, 历史故障可结合离线日志; 不用于通用 SSH/OS/GPU 检查 |
+| [easystack-log-analysis](easystack-log-analysis/) | 离线 EasyStack .eslog/ecs.* 日志解压、服务映射、关联证据与问题报告, 无需在线访问, 可结合已有在线证据 |
+| [easystack-test-executor](easystack-test-executor/) | EasyStack 后端资源生命周期、功能与回归测试计划、确定性执行、worker 证据、清理与中文报告; Backup 仅在明确要求时纳入 |
+| [easystack-workflow](easystack-workflow/) | EasyStack 开发、Review、产品行为文档与跨项目契约分析, 包含测试、runtime 调试和授权交付; 独立测试或故障分析优先选择可用专项 skill |
 | [feature-parity](feature-parity/) | 固定参考版本, 通过行为分解、证据矩阵和差分验证实现跨代码库功能对齐 |
 | [git-delivery](git-delivery/) | 个人 Git 与公司 Gerrit 交付检查、提交信息与授权动作, 沿用有效会话授权并区分 commit/amend/上传/push |
 | [kvm-test-vm-ops](kvm-test-vm-ops/) | 已授权项目 KVM/libvirt 测试 VM 的复用、创建与调整, 先完整预检, 无变化不关机, 验证 QGA 和 SSH |

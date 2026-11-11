@@ -1,6 +1,6 @@
 ---
 name: easystack-test-executor
-description: "Use when planning or executing EasyStack OpenStack backend resource functional tests across Compute, Storage, Network, Image, Security, or Bare Metal, with CLI, logs, cleanup, and Chinese reports. Backup requires an explicit request. Excludes CI, Web E2E, incident analysis, and runtime code changes."
+description: "Use when planning or running EasyStack OpenStack backend resource lifecycle, functional, or regression tests for Compute, Storage, Network, Image, Security, or Bare Metal. Includes CLI execution and cleanup. Backup only on explicit request. Not for repository CI, Web E2E, incident diagnosis, or runtime code changes."
 ---
 
 # EasyStack Test Executor

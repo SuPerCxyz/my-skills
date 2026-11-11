@@ -1,6 +1,6 @@
 ---
 name: kvm-test-vm-ops
-description: "Use when provisioning or validating project-scoped test VMs on an authorized KVM/libvirt host using prepared QGA/DHCP templates. Use for cloning, resource or disk changes, guest expansion, address discovery, SSH readiness, and project VM inventory. Not for production VM administration, generic libvirt diagnosis, or OpenStack-managed instances."
+description: "Use when inspecting, reusing, creating, resizing, or verifying project test VMs on an authorized KVM/libvirt host with prepared QGA/DHCP templates. Covers cloning, resource and disk changes, guest expansion, IP discovery, SSH readiness, and VM inventory. Not for production VMs, generic libvirt diagnosis, or OpenStack-managed instances."
 ---
 
 # KVM Test VM Operations

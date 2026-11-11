@@ -1,6 +1,6 @@
 ---
 name: easystack-env-debugging
-description: "Use when investigating live EasyStack OpenStack/Kubernetes resources, performing authorized runtime debugging, or unmapping Alcubierre volumes. Excludes generic SSH/OS/GPU checks, offline-only logs, CI, resource functional tests, and Web E2E."
+description: "Use when investigating live EasyStack OpenStack/Kubernetes resources or incidents, debugging authorized runtime code or patches, or unmapping Alcubierre volumes. Combine offline logs for historical incidents when needed. Not for generic SSH/OS/GPU checks, offline-only analysis, CI, resource tests, or Web E2E."
 ---
 
 # EasyStack Environment Debugging
