@@ -10,7 +10,7 @@ EasyStack OpenStack 集群日志(`.eslog`)安全解压、目录映射、跨服�
 - 容器化日志目录结构与组件映射
 - 跨域关联分析(云主机生命周期 / 云硬盘挂载卸载 / 网络 / 镜像 / 裸金属 Ironic)
 - 按异常信号关联 OS 系统层与控制面基础设施, 避免无条件全量扫描
-- 行首安全、无表格的离线分析报告模板与实战 case
+- 默认输出核心结论, 按需展开调查报告和完整证据上下文
 
 ## Quick Start 快速开始
 
@@ -36,7 +36,7 @@ bash scripts/decompress-eslog.sh
 |------|------|
 | [SKILL.md](SKILL.md) | Skill 主入口,工作流与快速参考 |
 | [analysis-playbook.md](analysis-playbook.md) | 标准端到端分析流程 + 报告模板 |
-| [report-format.md](report-format.md) | 完整问题调查报告格式 |
+| [report-format.md](report-format.md) | 核心结论、详细报告和最详细报告格式 |
 | [source-analysis.md](source-analysis.md) | kernel 和系统软件包源码调研、版本对齐与证据记录 |
 | [cross-domain-analysis.md](cross-domain-analysis.md) | 跨域关联分析矩阵(各场景必看哪些日志) |
 | [decompress.md](decompress.md) | eslog 解压方法 |

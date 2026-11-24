@@ -47,8 +47,8 @@ error message、server UUID、volume UUID 时, 即使没有明确说 "直接看�
 - 证据作用: 标明该日志证明用户现象、直接失败还是底层根因, 以及它需要由哪个关联
   组件继续验证。
 
-凭据、token、密码和私钥必须在保留或输出前脱敏。证据缺口不能由推测填补, 应记录为
-后续最小查询或第 3 节的未确认项。
+凭据、token、密码和私钥必须在保留或输出前脱敏。记录客观证据缺口和最小补证动作,
+按 [report-format.md](report-format.md) 在所选详略中说明。
 
 ## Real-time Logs (kubectl) 实时日志
 

@@ -30,7 +30,7 @@ skill 范围。
 | 明确日志根、无输入/无命中/限流的检索 | [scripts/search-logs.py](scripts/search-logs.py) |
 | 真实脚本和文档命令离线 fixture | [tests/test-search-examples.py](tests/test-search-examples.py) |
 | **标准端到端分析流程 + 报告模板** | [analysis-playbook.md](analysis-playbook.md) |
-| 含问题原因、操作时间线和关键日志的问题调查报告格式 | [report-format.md](report-format.md) |
+| 核心结论和按需展开的调查报告格式 | [report-format.md](report-format.md) |
 | kernel 或系统软件包源码调研、版本对齐和证据记录 | [source-analysis.md](source-analysis.md) |
 | **跨域关联分析矩阵(云主机/云硬盘/网络/镜像/裸金属 必看哪些日志)** | [cross-domain-analysis.md](cross-domain-analysis.md) |
 | 解压 eslog 并生成组件视图 | [decompress.md](decompress.md) |
@@ -207,18 +207,11 @@ commit、补丁和构建差异未对齐时, 只能将结果写为辅助线索或
 
 ### Step 7: Report 汇总报告
 
-MUST 使用 [report-format.md](report-format.md) 的无表格问题调查报告结构。标题后直接
-用自然段说明问题原因, 不输出一句话总结标签。第 1 至第 3 节必须输出, 第 4 节按需
-输出。核心结论必须依次包含`问题现象`、`通俗说明`、`问题原因`、`问题影响`和
-`修复建议`; `通俗说明`只用自然语言解释已验证的故障机制和结果。`问题原因`必须
-区分用户现象、直接失败和底层根因, 并用实际证据说明触发机制如何导致直接失败。
-只能确认直接失败时, 明确写`直接失败已确认, 根本原因未确认`, 并在第 3 节记录最小
-补证动作。第 2 节将关键操作时间线与证据合并, 每个项目使用`事件 N`标签, 附直接证据、
-来源和证据说明; 不使用与章节号冲突的裸数字序号。第 4 节详细分析仅在用户
-明确要求时输出。报告格式、字段顺序、禁用行首和离线 `path/to/file:line` 引证均以
-[report-format.md](report-format.md) 为准, 不在本入口维护另一套完整模板。
-
-同时使用在线补充证据时仍使用相同模板, 不切换为表格或其他报告结构。
+单独分析离线日志或合并在线证据时, 均按 [report-format.md](report-format.md) 输出结果。
+默认只给核心结论。用户要求详细时, 沿用现有报告开头和第 1 至第 3 节。在同一份
+详细报告后要求进一步展开时, 接续第 4 节。直接索要最详细报告时, 一次输出第 1 至第 4 节。
+各档共用证据要求, 根因未确认时写明关键缺口和最小补证动作。引用离线证据时使用
+原始 `path/to/file:line`。
 
 ## Execution Feedback 执行反馈
 

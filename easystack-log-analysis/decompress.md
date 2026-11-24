@@ -15,7 +15,8 @@ extracted `ecs.*` directory, skip to [directory-map.md](directory-map.md) and
 - 同一 bundle 已有经过校验的对应输出目录时, 不重复解压。只有输出缺失、不完整或用户
   明确要求刷新时才重新解压; 刷新时使用新的输出目录, 或先明确旧目录会被合并。
 - 发生明确刷新时, 同路径文件使用本次内容覆盖, 新文件追加, 本次 bundle 未包含的旧文件
-  保留; 合并结果必须在报告中标明涉及的 bundle 和输出目录。
+  保留, 并记录涉及的 bundle 和输出目录。单独汇报解包结果时附上这两项信息。调查时按
+  [report-format.md](report-format.md) 的所选详略引用。
 
 ## Safe Script 安全脚本
 

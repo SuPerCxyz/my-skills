@@ -188,6 +188,9 @@ targets=<all-eligible-nodes-and-consumers>; restore=<recorded-original-state>
 
 ## Investigation Report 调查报告
 
+调用 `easystack-env-debugging` 或 `easystack-log-analysis` 完成调查时, 按专项 skill 的规则确定报告详略。
+以下格式用于本工作流独立完成的问题调查.
+
 调查报告使用标题 `问题调查报告`, 开头以自然段说明对象、关键触发操作、已验证原因和结果.
 默认第 1 至第 3 节, 编号连续; 不使用表格, 章节用普通文本, 子项用 `事件 1`、`事项 1:`
 等标签, 避免裸数字与章节编号冲突. 报告任何行不得以 `-`、`#` 或 `$` 开头,
@@ -212,7 +215,7 @@ targets=<all-eligible-nodes-and-consumers>; restore=<recorded-original-state>
 ## Debugging Result 调试结果
 
 纯代码调试不强套根因报告, 记录授权范围、完整基线/版本组、实际改动及逐目标结果、
-文件/运行版本/行为证据、回滚或保留状态、未验证项和后续缺口. 同时调查故障时另附上述
-证据报告. CI、资源回归、UI 与正式部署分别标注, Git 交付统一见 [delivery.md](delivery.md).
+文件/运行版本/行为证据、回滚或保留状态、未验证项和后续缺口. 同时调查故障时, 按采用的
+调查流程附上调查结果. CI、资源回归、UI 与正式部署分别标注, Git 交付统一见 [delivery.md](delivery.md).
 执行中若说明不清、重复尝试、失效路径或工具/权限阻塞导致绕行, 报告触发位置、现象、
 影响、临时处理和优化建议; 无实际问题不输出空反馈, 所有证据和反馈必须脱敏.
