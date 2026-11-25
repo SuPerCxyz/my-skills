@@ -1,62 +1,44 @@
 ---
 name: easystack-cloud-web-e2e
-description: "Use when testing or operating EasyStack Cloud Web UI with agent-browser: resource lifecycle flows, buttons, tables, forms, validation, and page probes. Not for generic websites, backend resource tests, repository CI, live debugging, or offline logs; those are optional separate workflows."
+description: "Use when executing or optimizing EasyStack Cloud Web UI operations with agent-browser: login, page probes, resource actions, selectors, batching, state verification and evidence capture."
 ---
 
 # EasyStack Cloud Web E2E
 
-## Role 角色
-
-负责 EasyStack Cloud Web UI 和 E2E 验证, 关注资源身份、实际业务效果、异步状态、
-有限重试及授权范围.
-
 ## Scope Boundary 适用边界
 
-使用本 skill 处理 EasyStack Cloud Web 页面上的真实 UI 操作、资源类 E2E 用例、
-按钮/表格/表单状态验证和可复用页面操作沉淀。它只负责前端测试路径; backend 根因、
-离线日志和仓库 CI 不属于本 skill 的必需步骤。非 EasyStack Cloud 的普通网页自动化
-不属于本 skill 范围。
+负责 EasyStack Cloud Web 的页面探索、原子操作、状态回读、取证和操作库优化。
+单次登录、查询和资源操作可直接使用本 skill, 按目标核对会话、项目及必要资源。
 
-先读取当前可用的 agent-browser 操作说明, 再按用户目标选一个资源域. 仅当任务
-确需后端调查时读取 `easystack-env-debugging`, 离线日志读取 `easystack-log-analysis`,
-仓库 CI 读取 `easystack-ci-test`, Git 交付读取 `git-delivery`. 以本会话实际可用能力
-为准, 不将这些工作流作为 UI 前置条件, 不批量加载无关 skill. 能力缺失时说明限制并
-使用已有工具的等价只读检查, 不自行安装或扩大变更授权.
+用户要求执行用例或测试计划时, 通过当前客户端加载 `easystack-release-test` 做用例编排、
+预检和汇总。发布测试回调本 skill 时, 只执行传入的已授权 UI 操作并返回观察与证据。
+需要准备发布测试的项目、账号或配额时, 转接发布测试的环境预检。遇到能力缺口时说明限制,
+按现有授权继续可完成的任务。
 
 ## Hard Rules 执行硬规则
 
-- 只使用 `agent-browser`; 安装、连接、daemon、SSL 和 selector 规则见
-  [connection.md](connection.md) 与 [interactions.md](interactions.md)。
-- 独立用例创建唯一的新资源并记录逻辑名映射。用户明确指定现有资源时, 操作前回读
-  名称、项目和状态并说明影响。
-- 每次交互遵循 Observe -> Act -> Wait -> Verify。选中、填值和下拉切换必须回读,
-  页面刷新后重新定位, 不复用旧 ref 或行号。
-- `ok: true` 只允许表示稳定终态成功。菜单、dialog、wizard、toast 和资源名刚出现
-  都是中间信号, 返回 `ok: null`、`terminal: false` 并继续等待或诊断。
-- 等待拆为“短窗口等资源出现”和“按状态轮询”; 每段设置超时和中止条件。只有明确
-  的长耗时任务才扩大预算并在报告说明。
-- 创建终态未确认时先回读页面和后台资源状态; 最多使用新的 run id 重试 1 次, 不沿用旧名称。
-  第二次仍未确认时停止创建, 记录 `creation_unconfirmed` 和可能已创建的资源, 不自动清理。
-- 清理测试资源前必须先向用户说明待清理资源、影响和建议顺序;未得到用户明确
-  确认时,只在报告中记录 `cleanup: recommended`,不得主动删除 VM、浮动 IP、
-  云硬盘、快照等资源。
-- 使用过程中发现新的可复用操作时, 先在报告中记录 `skill_improvements`; 当前任务
-  明确包含 skill 维护或用户确认更新后, 再沉淀到 `patterns/*-ops.md` 并同步
-  `patterns/quick-reference.md`。
-- 操作状态分为 `ready-validated`、`ready-template`、`planned`;优先使用
-  `ready-validated`,`ready-template` 执行时必须现场确认页面状态,
-  `planned` 不作为当前执行入口。
+- 执行前读取当前 `agent-browser` 操作说明, 只用 `agent-browser` 操作 UI。安装、连接和
+  selector 规则见 [连接](connection.md) 和 [交互](interactions.md)。
+- 在同一稳定页面批量执行关联动作, 在页面变化或异步边界回读。确认项目和资源身份,
+  使用 Observe -> Act -> Wait -> Verify 验证到实际业务终态。
+- 使用 [原子操作约定](patterns.md#operation-contract-原子操作调用约定)。`ok: true` 表示稳定
+  终态成功。中间状态报告 `terminal: false`, 提交不明时先回读并按有限重试规则处理。
+- 按 [执行说明](execution.md) 返回最后观察、实际终态、资源 ID 和证据。删除、关机、解绑
+  等有副作用操作按真实对象和已确认授权执行。
+- 优先用 `ready-validated`, `ready-template` 现场确认后执行, `planned` 仅作能力线索。
+  可复用操作先记入 `skill_improvements`, 获得维护授权后再更新操作库和索引。
 
 ## Entry Selection 入口选择
 
 | 用户目标 | 先读 |
 |----------|------|
+| 用途、示例和快速开始 | [README.md](README.md) |
 | 登录、环境、会话复用 | [connection.md](connection.md) |
 | 页面路径、菜单入口 | [navigation.md](navigation.md) |
-| 执行流程、env、截图、报告 | [execution.md](execution.md) |
+| 操作、终态验证和技术取证 | [execution.md](execution.md) |
 | 组件交互 helper | [interactions.md](interactions.md) |
 | 当前控制台探索结果 | [patterns/current-console-discovery.md](patterns/current-console-discovery.md) |
-| 测试编排规则 | [patterns.md](patterns.md) |
+| 原子操作约定及等待 | [patterns.md](patterns.md) |
 | 资源关系和联动 | [relationships.md](relationships.md) |
 
 ## Atomic Operations 原子操作库
@@ -101,11 +83,11 @@ description: "Use when testing or operating EasyStack Cloud Web UI with agent-br
 
 ## Decision Path 决策路径
 
-1. 直接创建、删除、挂载、绑定资源:读 `patterns/login.md` 和对应 `patterns/*-ops.md`。
-2. 执行测试用例:读 `execution.md`、`patterns.md` 和相关原子操作文档。
-3. 查询页面字段、按钮、表格列:先读 `patterns/page-probes.md`,再读对应页面知识库。
-4. 处理跨资源场景:读 `relationships.md` 后再选择原子操作。
-5. 新增操作能力:先按 `patterns/operation-template.md` 在对应 `patterns/*-ops.md` 补 `ready-template`,再同步 `patterns/quick-reference.md`。
+1. 登录、创建、挂载、绑定或查询时, 读取实际操作和目标资源对应的入口。
+2. 用户目标为明确用例、测试计划或发布验证时, 加载 `easystack-release-test`。
+3. 页面字段、按钮和表格检查从 [页面探测](patterns/page-probes.md) 与页面知识库开始。
+4. 稳定的可复用操作按 [操作模板](patterns/operation-template.md) 编写, 同步
+   [常用操作索引](patterns/quick-reference.md)。
 
 ## Execution Feedback 执行反馈
 

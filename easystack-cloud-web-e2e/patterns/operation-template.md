@@ -77,6 +77,9 @@ Web UI 用例验证后才能标记为 `ready-validated`. 必须关联当前文�
 操作, 不是“点击过按钮”. 提交尚未确认时使用 `submission_unconfirmed`, 保留观察
 检查点并继续核实, 不重试有副作用的提交.
 
+返回值必须包含 `id` 字段：资源真实 ID（页面详情或后台查询获得）；未取得时为
+`null` 并写明原因，不能用名称代替。用例结果中的“创建资源清单”必须使用该 ID。
+
 最终失败使用 `ok:false, terminal:true`; 已提交但业务错误仍保留 `submitted:true`.
 观察超时或项目上下文未确认保持 `ok:null, terminal:false`, 记录最后状态与恢复步骤.
 

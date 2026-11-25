@@ -1,0 +1,61 @@
+{
+  "platform": {
+    "url": "https://<platform-host>",
+    "login_path": "/auth_login/",
+    "login_type": null,
+    "username": "<username>",
+    "password": null,
+    "domain_name": null,
+    "verify_tls": null
+  },
+  "test": {
+    "case_source": null,
+    "plan_id": null,
+    "include_cases": [],
+    "skip_cases": [],
+    "skip_long_duration": true,
+    "long_duration_cases": []
+  },
+  "ssh": {
+    "key_name": null,
+    "key_file": null,
+    "user": null,
+    "fallback_users": [],
+    "password": null
+  },
+  "screenshot_dir": null,
+  "resources": {
+    "project_name": "<project-name>",
+    "image_name": null,
+    "encrypted_image_name": null,
+    "flavor": null,
+    "network_name": null,
+    "subnet_name": null,
+    "external_network": null,
+    "volume_type": null,
+    "encrypted_volume_type": null,
+    "volume_size": null,
+    "encryption_key": null
+  },
+  "vm_defaults": {
+    "password": null,
+    "setup_key": null
+  },
+  "services": {
+    "barbican": null,
+    "glia": null,
+    "ceph": null,
+    "cinder_backup": null,
+    "multiattach": null,
+    "allow_fault_injection": false
+  },
+  "evidence": {
+    "result_dir": "test_result",
+    "screenshots_per_step": true,
+    "overall_video": true
+  },
+  "report": {
+    "meterSphere_comment": false,
+    "comment_template": "[执行结果] {result}\n[实际结果] {summary}\n[资源] {resources}\n[环境] {version} / {project} / {type}\n[证据] {video}\n[执行] {executor} / {time}"
+  }
+}

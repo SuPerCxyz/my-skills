@@ -68,11 +68,33 @@
 | 云硬盘快照 | `/ebs/volume-snapshots` | 无 | 当前资料一致 |
 | 云硬盘类型 | `/ebs/volume-types` | 无 | 当前资料一致 |
 | 容器镜像 | `/container-registry/image` | 无 | Workspace 与容器镜像包上传 |
-| VM 镜像 | 从 Computing -> Instance Image 现场识别 | `/glance/images` 仅作历史线索 | 不与容器仓库互换, 见 `patterns/image-ops.md` |
+| VM 镜像 | `/eims/images` | `/glance/images` 仅作历史线索 | 以现场菜单复核 |
 | 网络管理 | `/ens/networks` | `/neutron/networks` | 默认执行入口使用当前主路径 |
 | 路由器 | `/ens/routers` | `/neutron/routers` | 默认执行入口使用当前主路径 |
 | 虚拟网卡 | `/ens/nics` | 无 | 当前资料一致 |
 | 浮动 IP | `/ens/floatingIPs` | `/eec/floating-ips`、`/neutron/floatingips` | 当前 UI 从 Service Catalog -> Network -> Floating IP 进入该路径 |
+
+## Verified Product Paths 已验证产品路径
+
+以下为 EasyStack 控制台通用路径, 不同版本或部署以现场菜单为准。执行前按
+[连接说明](connection.md#project-context-项目上下文契约) 核对目标项目和操作对象。
+
+| 页面 | 路径 | 说明 |
+|---|---|---|
+| 登录 | `/auth_login/` | 提交按钮 `.js-loginBtn` |
+| 概览 | `/overview` | 登录成功落地页 |
+| 云主机 | `/eec/instances` | 四步创建向导 |
+| SSH 密钥对 | `/eec/keypairs` | 创建/导入 |
+| 云硬盘 | `/ebs/volumes` | 创建弹窗：来源/类型/密钥/大小 |
+| 云硬盘快照 | `/ebs/volume-snapshots` | — |
+| 云硬盘类型 | `/ebs/volume-types` | 普通用户可能不可见 |
+| 镜像 | `/eims/images` | 加密属性需看详情 |
+| 网络 | `/ens/networks` | 租户网络/子网按环境确认 |
+| 路由器 | `/ens/routers` | 按环境确认是否需要 |
+| 公网 IP | `/ens/floatingIPs` | 外部网络与池按环境确认 |
+| 安全组 | `/ens/security-groups` | 按用例核对所需协议、端口和允许的来源 |
+| 密钥管理 | `/cert/key` | 创建 AES256 云硬盘加密密钥 |
+| 配额管理 | `/quota-management` | 普通用户通常只读 |
 
 ## Navigation Verification 导航验证
 

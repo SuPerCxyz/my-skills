@@ -12,6 +12,7 @@
 2. 再读对应资源域文档
 3. 优先使用 `ready-validated`;`ready-template` 可作为模板执行但必须现场确认;
    `planned` 只代表后续迁移目标
+4. 按当前操作核对项目、权限和目标资源, 记下实际状态及证据。
 
 ## Click Decisions 点击决策
 
@@ -78,6 +79,7 @@
 6. 服务目录是覆盖层而不是普通跳转页;打开后所有点击都必须限定在目录面板内。
 7. 部分资源动作权限不足时不会弹 modal,而是直接在页面正文给出提示文案;这属于
    产品权限反馈,不是自动化 click 失败。
+8. 当前操作缺少必要参数时, 先从目标环境核实, 必要时向用户确认。
 
 当前修订没有可复核的真实 UI 结果, 所有原有已验证操作降为 `ready-template`.
 离线行为测试只覆盖文档 helper/示例与结果约定, 不证明真实资源操作成功.
@@ -118,4 +120,5 @@
 | `unlock_instance` | `instance` | `patterns/instance-ops.md(待迁移操作)` | `instance` | 无 | 待迁移 | `planned` |
 | `rollback_instance_snapshot` | `instance` | `patterns/instance-ops.md(待迁移操作)` | `instance`、`snapshot_name` | 无 | 待迁移 | `planned` |
 | `delete_instance_snapshot` | `instance` | `patterns/instance-ops.md(待迁移操作)` | `snapshot_name` | 无 | 待迁移 | `planned` |
+| `create_image_from_volume` | `volume` | `patterns/volume-ops.md(待迁移操作)` | `volume`、`image_name` | 无 | 待迁移；页面入口 `More` → `Create Image` | `planned` |
 | `delete_image` | `volume` | `patterns/volume-ops.md(待迁移操作)` | `image_name` | 无 | 待迁移 | `planned` |
